@@ -108,9 +108,83 @@ CCWIdTX cwIdTX;
 CSerialPort serial;
 CIO io;
 
+bool dstarReady(){
+  return m_dstarEnable && m_modemState == STATE_DSTAR;
+}
+
+bool dmrReady(){
+  return m_dmrEnable && m_modemState == STATE_DMR;
+}
+
+bool dmroReady(){
+  return m_duplex;
+}
+
+bool ysfReady(){
+  return m_ysfEnable && m_modemState == STATE_YSF;
+}
+
+bool p25Ready(){
+  return m_p25Enable && m_modemState == STATE_P25;
+}
+
+bool nxdnReady(){
+  return m_nxdnEnable && m_modemState == STATE_NXDN;
+}
+
+bool m17Ready(){
+  return m_m17Enable && m_modemState == STATE_M17;
+}
+
+bool pocsagReady(){
+  return m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy());
+}
+
+bool fmReady(){
+  return m_fmEnable && m_modemState == STATE_FM;
+}
+
+bool ax25Ready(){
+  return m_ax25Enable && (m_modemState == STATE_IDLE || m_modemState == STATE_FM);
+}
+
 void setup()
 {
   serial.start();
+  int m=0;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = &dstarRX;
+  m_mode[m].tx = &dstarTX;
+  m_mode[m].calrx = &calDStarRX;
+  m_mode[m].caltx = &calDStarTX;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = (int*)&dstarReady;
+  m_mode[m].ocondition = 0;
+  m++;
+
+ /* m_mode[m].idlerx = (int*)&dmrIdleRX;
+  m_mode[m].rx = (int*)&dmrRX;
+  m_mode[m].tx = (int*)&dmrTX;
+  m_mode[m].calrx = (int*)&calDMR;
+  m_mode[m].caltx = 0;
+  m_mode[m].orx = (int*)&dmrDMORX;
+  m_mode[m].otx = (int*)&dmrDMOTX;
+  m_mode[m].condition = (int*)&dmrReady;
+  m_mode[m].ocondition = (int*)&dmroReady;
+  m++;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = (int*)&ysfRX;
+  m_mode[m].tx = (int*)&ysfTX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = 0;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = (int*)ysfReady;
+  m_mode[m].ocondition = 0;
+  m++;*/
 }
 
 void loop()
@@ -120,54 +194,14 @@ void loop()
   io.process();
 
   // The following is for transmitting
-#if defined(MODE_DSTAR)
-  if (m_dstarEnable && m_modemState == STATE_DSTAR)
-    dstarTX.process();
-#endif
-
-#if defined(MODE_DMR)
-  if (m_dmrEnable && m_modemState == STATE_DMR) {
-    if (m_duplex)
-      dmrTX.process();
-    else
-      dmrDMOTX.process();
+  for(int i=0; i<24; i++){
+    if (m_mode[i].tx)
+      if (m_mode[i].condition)
+        if(m_mode[i].ocondition)
+          (*m_mode[i].otx).process();
+        else
+          (*m_mode[i].tx).process();
   }
-#endif
-
-#if defined(MODE_YSF)
-  if (m_ysfEnable && m_modemState == STATE_YSF)
-    ysfTX.process();
-#endif
-
-#if defined(MODE_P25)
-  if (m_p25Enable && m_modemState == STATE_P25)
-    p25TX.process();
-#endif
-
-#if defined(MODE_NXDN)
-  if (m_nxdnEnable && m_modemState == STATE_NXDN)
-    nxdnTX.process();
-#endif
-
-#if defined(MODE_M17)
-  if (m_m17Enable && m_modemState == STATE_M17)
-    m17TX.process();
-#endif
-
-#if defined(MODE_POCSAG)
-  if (m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy()))
-    pocsagTX.process();
-#endif
-
-#if defined(MODE_AX25)
-  if (m_ax25Enable && (m_modemState == STATE_IDLE || m_modemState == STATE_FM))
-    ax25TX.process();
-#endif
-
-#if defined(MODE_FM)
-  if (m_fmEnable && m_modemState == STATE_FM)
-    fm.process();
-#endif
 
 #if defined(MODE_DSTAR)
   if (m_modemState == STATE_DSTARCAL)
