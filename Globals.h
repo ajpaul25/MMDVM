@@ -105,6 +105,9 @@ enum MMDVM_STATE {
 #include "Debug.h"
 #include "IO.h"
 #include "FM.h"
+#include "InterfaceRX.h"
+#include "InterfaceTX.h"
+#include "InterfaceCal.h"
 
 const uint8_t  MARK_SLOT1 = 0x08U;
 const uint8_t  MARK_SLOT2 = 0x04U;
@@ -132,6 +135,20 @@ extern bool m_pocsagEnable;
 extern bool m_m17Enable;
 extern bool m_fmEnable;
 extern bool m_ax25Enable;
+
+typedef struct {
+  int* idlerx;
+  InterfaceRX* rx;
+  InterfaceTX* tx;
+  InterfaceCal* calrx;
+  InterfaceCal* caltx;
+  InterfaceRX* orx;
+  InterfaceTX* otx;
+  int* condition;
+  int* ocondition;
+}modeStruct;
+
+modeStruct m_mode[24];
 
 extern bool m_duplex;
 
