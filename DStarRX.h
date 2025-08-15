@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_DSTAR)
 
@@ -31,7 +32,7 @@ enum DSRX_STATE {
   DSRXS_DATA
 };
 
-class CDStarRX {
+class CDStarRX : public InterfaceRX {
 public:
   CDStarRX();
 

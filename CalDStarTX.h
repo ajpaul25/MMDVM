@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_DSTAR)
 
@@ -25,7 +26,7 @@
 
 #include "DStarDefines.h"
 
-class CCalDStarTX {
+class CCalDStarTX : public InterfaceCal {
 public:
   CCalDStarTX();
 

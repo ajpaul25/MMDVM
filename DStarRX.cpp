@@ -237,6 +237,7 @@ const uint16_t CCITT_TABLE[] = {
 const uint16_t NOENDPTR = 9999U;
 
 CDStarRX::CDStarRX() :
+InterfaceRX(),
 m_rxState(DSRXS_NONE),
 m_bitBuffer(),
 m_headerBuffer(),

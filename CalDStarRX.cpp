@@ -37,6 +37,7 @@ const uint32_t DATA_SYNC_MASK  = 0x00FFFFFFU;
 const uint8_t  DATA_SYNC_ERRS  = 2U;
 
 CCalDStarRX::CCalDStarRX() :
+InterfaceCal(),
 m_pll(0U),
 m_prev(false),
 m_patternBuffer(0x00U),

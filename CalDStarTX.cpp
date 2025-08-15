@@ -32,6 +32,7 @@ const uint8_t HEADER[] = {0x00U, 0x00U, 0x00U, 'D', 'I', 'R', 'E', 'C', 'T', ' '
 const uint8_t SLOW_DATA_TEXT[] = {'M', 'M', 'D', 'V', 'M', ' ', 'M', 'o', 'd', 'e', 'm', ' ', 'T', 'e', 's', 't', ' ', ' ', ' ', ' '};
 
 CCalDStarTX::CCalDStarTX() :
+InterfaceCal(),
 m_transmit(false),
 m_count(0U)
 {

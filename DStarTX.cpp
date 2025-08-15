@@ -191,6 +191,7 @@ const uint8_t DSTAR_DATA   = 0x01U;
 const uint8_t DSTAR_EOT    = 0x02U;
 
 CDStarTX::CDStarTX() :
+InterfaceTX(),
 m_buffer(),
 m_modFilter(),
 m_modState(),

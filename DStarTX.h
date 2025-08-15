@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_DSTAR)
 
@@ -25,7 +26,7 @@
 
 #include "RingBuffer.h"
 
-class CDStarTX {
+class CDStarTX : public InterfaceTX {
 public:
   CDStarTX();
 
