@@ -175,7 +175,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_NXDNCAL1K; };
   m++;
 
-  /*m_mode[m].idlerx = 0;
+  m_mode[m].idlerx = 0;
   m_mode[m].rx = &m17RX;
   m_mode[m].tx = &m17TX;
   m_mode[m].calrx = 0;
@@ -191,17 +191,17 @@ void setup()
   m_mode[m].rx = 0;
   m_mode[m].tx = &pocsagTX;
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calPocsag;
+  m_mode[m].caltx = &calPOCSAG;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
   m_mode[m].condition = [](){ return m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy()); };
   m_mode[m].ocondition = [](){ return false; };
-  m_mode[m].calcondition = [](){ return m_modemState == STATE_POCSAGCAL };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_POCSAGCAL; };
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &fmRX;
-  m_mode[m].tx = &fmTX;
+  m_mode[m].rx = 0;
+  m_mode[m].tx = &fm;
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calFM;
   m_mode[m].orx = 0;
@@ -221,7 +221,7 @@ void setup()
   m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
-  m++;*/
+  m++;
 }
 
 void loop()
