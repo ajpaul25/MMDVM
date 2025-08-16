@@ -148,8 +148,6 @@ typedef struct {
   int* ocondition;
 }modeStruct;
 
-modeStruct m_mode[24];
-
 extern bool m_duplex;
 
 extern bool m_tx;

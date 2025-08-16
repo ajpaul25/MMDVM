@@ -26,6 +26,8 @@
 // Global variables
 MMDVM_STATE m_modemState = STATE_IDLE;
 
+modeStruct m_mode[24];
+
 bool m_dstarEnable  = true;
 bool m_dmrEnable    = true;
 bool m_ysfEnable    = true;
