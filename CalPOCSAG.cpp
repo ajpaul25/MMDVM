@@ -25,6 +25,7 @@
 #include "CalPOCSAG.h"
 
 CCalPOCSAG::CCalPOCSAG() :
+InterfaceCal(),
 m_state(POCSAGCAL_IDLE)
 {
 }

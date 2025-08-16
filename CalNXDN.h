@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_NXDN)
 
@@ -29,7 +30,7 @@ enum NXDNCAL1K {
   NXDNCAL1K_TX
 };
 
-class CCalNXDN {
+class CCalNXDN : public InterfaceCal {
 public:
   CCalNXDN();
 

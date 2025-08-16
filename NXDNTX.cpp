@@ -48,6 +48,7 @@ const uint8_t NXDN_PREAMBLE[] = {0x57U, 0x75U, 0xFDU};
 const uint8_t NXDN_SYNC = 0x5FU;
 
 CNXDNTX::CNXDNTX() :
+InterfaceTX(),
 m_buffer(TX_BUFFER_LEN),
 m_modFilter(),
 m_sincFilter(),

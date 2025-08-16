@@ -43,6 +43,7 @@ const uint8_t M17_END_SYNC   = 0xFFU;
 const uint8_t M17_HANG       = 0x00U;
 
 CM17TX::CM17TX() :
+InterfaceTX(),
 m_buffer(TX_BUFFER_LEN),
 m_modFilter(),
 m_modState(),

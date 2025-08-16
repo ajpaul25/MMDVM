@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_M17)
 
@@ -25,7 +26,7 @@
 
 #include "RingBuffer.h"
 
-class CM17TX {
+class CM17TX : public InterfaceTX {
 public:
   CM17TX();
 

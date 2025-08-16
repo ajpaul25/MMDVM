@@ -41,6 +41,7 @@ const struct TONE_TABLE {
 const uint8_t TONE_TABLE_DATA_LEN = 6U;
 
 CCalFM::CCalFM() :
+InterfaceCal(),
 m_frequency(0),
 m_length(0),
 m_tone(NULL),

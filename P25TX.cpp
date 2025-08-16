@@ -46,6 +46,7 @@ const q15_t P25_LEVELD = -1260;
 const uint8_t P25_START_SYNC = 0x77U;
 
 CP25TX::CP25TX() :
+InterfaceTX(),
 m_buffer(TX_BUFFER_LEN),
 m_modFilter(),
 m_lpFilter(),

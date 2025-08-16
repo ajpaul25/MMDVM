@@ -55,6 +55,7 @@ const uint8_t NXDN_CAL1K[4][49] = {
                              0xEEU, 0x8AU, 0x7EU, 0x2BU, 0x26U, 0xCCU, 0xF8U, 0x8AU, 0x08U}};
 
 CCalNXDN::CCalNXDN() :
+InterfaceCal(),
 m_transmit(false),
 m_state(NXDNCAL1K_IDLE),
 m_audioSeq(0U)

@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_M17)
 
@@ -25,7 +26,7 @@
 #define  CALM17_H
 
 
-class CCalM17 {
+class CCalM17 : public InterfaceCal {
 public:
   CCalM17();
 

@@ -30,6 +30,7 @@ const uint16_t FM_SERIAL_BLOCK_SIZE_BYTES = FM_SERIAL_BLOCK_SIZE * 3U;
 
 
 CFM::CFM() :
+InterfaceTX(),
 m_callsign(),
 m_rfAck(),
 m_extAck(),

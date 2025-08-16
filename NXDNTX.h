@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_NXDN)
 
@@ -25,7 +26,7 @@
 
 #include "RingBuffer.h"
 
-class CNXDNTX {
+class CNXDNTX : public InterfaceTX {
 public:
   CNXDNTX();
 

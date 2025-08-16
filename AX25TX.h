@@ -17,13 +17,14 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_AX25)
 
 #if !defined(AX25TX_H)
 #define  AX25TX_H
 
-class CAX25TX {
+class CAX25TX : public InterfaceTX {
 public:
   CAX25TX();
 

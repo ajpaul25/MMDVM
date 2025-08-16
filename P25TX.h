@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_P25)
 
@@ -25,7 +26,7 @@
 
 #include "RingBuffer.h"
 
-class CP25TX {
+class CP25TX : public InterfaceTX {
 public:
   CP25TX();
 

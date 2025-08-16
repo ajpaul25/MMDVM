@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_M17)
 
@@ -31,7 +32,7 @@ enum M17RX_STATE {
   M17RXS_STREAM
 };
 
-class CM17RX {
+class CM17RX : public InterfaceRX {
 public:
   CM17RX();
 

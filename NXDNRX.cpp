@@ -42,6 +42,7 @@ const uint16_t NOENDPTR = 9999U;
 const unsigned int MAX_FSW_FRAMES = 5U + 1U;
 
 CNXDNRX::CNXDNRX() :
+InterfaceRX(),
 m_state(NXDNRXS_NONE),
 m_bitBuffer(),
 m_buffer(),

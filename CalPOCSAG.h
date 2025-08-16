@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_POCSAG)
 
@@ -29,7 +30,7 @@ enum POCSAGCAL {
   POCSAGCAL_TX
 };
 
-class CCalPOCSAG {
+class CCalPOCSAG : public InterfaceCal {
 public:
   CCalPOCSAG();
 

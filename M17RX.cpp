@@ -43,6 +43,7 @@ const uint16_t NOENDPTR = 9999U;
 const unsigned int MAX_SYNC_FRAMES = 3U + 1U;
 
 CM17RX::CM17RX() :
+InterfaceRX(),
 m_state(M17RXS_NONE),
 m_bitBuffer(),
 m_buffer(),

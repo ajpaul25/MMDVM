@@ -19,13 +19,14 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_FM)
 
 #if !defined(CALFM_H)
 #define  CALFM_H
 
-class CCalFM {
+class CCalFM : public InterfaceCal {
 public:
   CCalFM();
 

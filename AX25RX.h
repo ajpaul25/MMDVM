@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_AX25)
 
@@ -25,7 +26,7 @@
 
 #include "AX25Demodulator.h"
 
-class CAX25RX {
+class CAX25RX : public InterfaceRX {
 public:
   CAX25RX();
 

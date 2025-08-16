@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_FM)
 
@@ -51,7 +52,7 @@ enum FM_STATE {
 };
 
 
-class CFM {
+class CFM : public InterfaceTX {
 public:
   CFM();
 

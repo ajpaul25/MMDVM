@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_NXDN)
 
@@ -30,7 +31,7 @@ enum NXDNRX_STATE {
   NXDNRXS_DATA
 };
 
-class CNXDNRX {
+class CNXDNRX : public InterfaceRX {
 public:
   CNXDNRX();
 

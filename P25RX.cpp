@@ -45,6 +45,7 @@ const uint16_t NOENDPTR = 9999U;
 const unsigned int MAX_SYNC_FRAMES = 4U + 1U;
 
 CP25RX::CP25RX() :
+InterfaceRX(),
 m_state(P25RXS_NONE),
 m_bitBuffer(),
 m_buffer(),

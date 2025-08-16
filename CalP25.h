@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_P25)
 
@@ -32,7 +33,7 @@ enum P25CAL1K {
   P25CAL1K_LDU2
 };
 
-class CCalP25 {
+class CCalP25 : public InterfaceCal {
 public:
   CCalP25();
 

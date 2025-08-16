@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_P25)
 
@@ -32,7 +33,7 @@ enum P25RX_STATE {
   P25RXS_LDU
 };
 
-class CP25RX {
+class CP25RX : public InterfaceRX {
 public:
   CP25RX();
 

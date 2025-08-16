@@ -38,6 +38,7 @@ const uint16_t SHAPING_FILTER_LEN = 6U;
 const uint8_t POCSAG_SYNC = 0xAAU;
 
 CPOCSAGTX::CPOCSAGTX() :
+InterfaceTX(),
 m_buffer(4000U),
 m_modFilter(),
 m_modState(),

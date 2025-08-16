@@ -110,30 +110,6 @@ CCWIdTX cwIdTX;
 CSerialPort serial;
 CIO io;
 
-bool p25Ready(){
-  return m_p25Enable && m_modemState == STATE_P25;
-}
-
-bool nxdnReady(){
-  return m_nxdnEnable && m_modemState == STATE_NXDN;
-}
-
-bool m17Ready(){
-  return m_m17Enable && m_modemState == STATE_M17;
-}
-
-bool pocsagReady(){
-  return m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy());
-}
-
-bool fmReady(){
-  return m_fmEnable && m_modemState == STATE_FM;
-}
-
-bool ax25Ready(){
-  return m_ax25Enable && (m_modemState == STATE_IDLE || m_modemState == STATE_FM);
-}
-
 void setup()
 {
   serial.start();
@@ -174,6 +150,78 @@ void setup()
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
   m++;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = &p25RX;
+  m_mode[m].tx = &p25TX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calP25;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_p25Enable && m_modemState == STATE_P25; };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_P25CAL1K; };
+  m++;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = &nxdnRX;
+  m_mode[m].tx = &nxdnTX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calNXDN;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_nxdnEnable && m_modemState == STATE_NXDN; };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_NXDNCAL1K; };
+  m++;
+
+  /*m_mode[m].idlerx = 0;
+  m_mode[m].rx = &m17RX;
+  m_mode[m].tx = &m17TX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calM17;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_m17Enable && m_modemState == STATE_M17; };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_M17CAL; };
+  m++;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = 0;
+  m_mode[m].tx = &pocsagTX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calPocsag;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy()); };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_POCSAGCAL };
+  m++;
+
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = &fmRX;
+  m_mode[m].tx = &fmTX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calFM;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_fmEnable && m_modemState == STATE_FM; };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K; };
+  m++;
+  
+  m_mode[m].idlerx = 0;
+  m_mode[m].rx = &ax25RX;
+  m_mode[m].tx = &ax25TX;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = 0;
+  m_mode[m].orx = 0;
+  m_mode[m].otx = 0;
+  m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
+  m_mode[m].ocondition = [](){ return false; };
+  m_mode[m].calcondition = [](){ return false; };
+  m++;*/
 }
 
 void loop()

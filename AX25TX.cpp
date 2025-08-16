@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_AX25)
 
@@ -52,6 +53,7 @@ const q15_t AUDIO_TABLE_DATA[] = {
 };
 
 CAX25TX::CAX25TX() :
+InterfaceTX(),
 m_poBuffer(),
 m_poLen(0U),
 m_poPtr(0U),

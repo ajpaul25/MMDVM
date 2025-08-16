@@ -62,6 +62,7 @@ q15_t FILTER_COEFFS[] = {
 };
 
 CAX25RX::CAX25RX() :
+InterfaceRX(),
 m_filter(),
 m_state(),
 m_demod1(3),
