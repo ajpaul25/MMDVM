@@ -171,8 +171,8 @@ void setup()
   m_mode[m].idlerx = (int*)&dmrIdleRX;
   m_mode[m].rx = &dmrRX;
   m_mode[m].tx = &dmrTX;
-  m_mode[m].calrx = &calDMR;
-  m_mode[m].caltx = 0;
+  m_mode[m].calrx = 0;
+  m_mode[m].caltx = &calDMR;
   m_mode[m].orx = &dmrDMORX;
   m_mode[m].otx = &dmrDMOTX;
   m_mode[m].condition = dmrReady;
