@@ -110,22 +110,6 @@ CCWIdTX cwIdTX;
 CSerialPort serial;
 CIO io;
 
-bool dstarReady(){
-  return m_dstarEnable && m_modemState == STATE_DSTAR;
-}
-
-bool dmrReady(){
-  return m_dmrEnable && m_modemState == STATE_DMR;
-}
-
-bool dmroReady(){
-  return m_duplex;
-}
-
-bool ysfReady(void){
-  return m_ysfEnable && m_modemState == STATE_YSF;
-}
-
 bool p25Ready(){
   return m_p25Enable && m_modemState == STATE_P25;
 }
@@ -163,7 +147,6 @@ void setup()
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
   m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
-  //m_mode[m].condition = dstarReady;
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DSTARCAL; };
   m++;
