@@ -162,8 +162,10 @@ void setup()
   m_mode[m].caltx = &calDStarTX;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
-  m_mode[m].condition = dstarReady;
+  m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
+  //m_mode[m].condition = dstarReady;
   m_mode[m].ocondition = 0;
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_DSTARCAL; };
   m++;
 
   m_mode[m].idlerx = (int*)&dmrIdleRX;
@@ -175,6 +177,7 @@ void setup()
   m_mode[m].otx = &dmrDMOTX;
   m_mode[m].condition = dmrReady;
   m_mode[m].ocondition = dmroReady;
+  m_mode[m].calcondition = [](){ return m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K; };
   m++;
 
   m_mode[m].idlerx = 0;
@@ -186,6 +189,7 @@ void setup()
   m_mode[m].otx = 0;
   m_mode[m].condition = ysfReady;
   m_mode[m].ocondition = 0;
+  m_mode[m].calcondition = [](){ return false; };
   m++;
 }
 
@@ -200,45 +204,15 @@ void loop()
     if (m_mode[i].tx)
       if (m_mode[i].condition())
         if(m_mode[i].ocondition())
-          (*m_mode[i].otx).process();
+          m_mode[i].otx->process();
         else
-          (*m_mode[i].tx).process();
+          m_mode[i].tx->process();
   }
-
-#if defined(MODE_DSTAR)
-  if (m_modemState == STATE_DSTARCAL)
-    calDStarTX.process();
-#endif
-
-#if defined(MODE_DMR)
-  if (m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K)
-    calDMR.process();
-#endif
-
-#if defined(MODE_FM)
-  if (m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K)
-    calFM.process();
-#endif
-
-#if defined(MODE_P25)
-  if (m_modemState == STATE_P25CAL1K)
-    calP25.process();
-#endif
-
-#if defined(MODE_NXDN)
-  if (m_modemState == STATE_NXDNCAL1K)
-    calNXDN.process();
-#endif
-
-#if defined(MODE_M17)
-  if (m_modemState == STATE_M17CAL)
-    calM17.process();
-#endif
-
-#if defined(MODE_POCSAG)
-  if (m_modemState == STATE_POCSAGCAL)
-    calPOCSAG.process();
-#endif
+  for(int i=0; i<24; i++){
+    if(m_mode[i].caltx)
+      if (m_mode[i].calcondition())
+        m_mode[i].caltx->process();
+  }
 
   if (m_modemState == STATE_IDLE)
     cwIdTX.process();

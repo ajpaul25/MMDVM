@@ -5,6 +5,7 @@ class InterfaceCal {
 public:
     InterfaceCal(void);
     virtual ~InterfaceCal(void);
+    virtual void process();
 };
 
 #endif // INTERFACECAL_H

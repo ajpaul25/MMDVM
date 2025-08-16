@@ -2,3 +2,4 @@
 
 InterfaceCal::InterfaceCal(void) {}
 InterfaceCal::~InterfaceCal(void) {}
+void InterfaceCal::process(void){}
