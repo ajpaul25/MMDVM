@@ -144,8 +144,8 @@ typedef struct {
   InterfaceCal* caltx;
   InterfaceRX* orx;
   InterfaceTX* otx;
-  int* condition;
-  int* ocondition;
+  bool (* condition)();
+  bool (* ocondition)();
 }modeStruct;
 
 extern bool m_duplex;
