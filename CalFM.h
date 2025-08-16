@@ -39,6 +39,8 @@ public:
   void fm30kcal();
 
   uint8_t write(const uint8_t* data, uint16_t length);
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 private:
   uint16_t  m_frequency;

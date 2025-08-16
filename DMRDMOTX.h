@@ -40,6 +40,9 @@ public:
   void setTXDelay(uint8_t delay);
 
   uint8_t getSpace() const;
+  uint8_t getSpace(uint8_t index) const;
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 private:
   CRingBuffer<uint8_t>                        m_fifo;

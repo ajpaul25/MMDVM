@@ -59,8 +59,12 @@ public:
   
   uint8_t getSpace1() const;
   uint8_t getSpace2() const;
+  uint8_t getSpace() const;
+  uint8_t getSpace(uint8_t index) const;
 
   void setColorCode(uint8_t colorCode);
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 private:
   CRingBuffer<uint8_t>                        m_fifo[2U];

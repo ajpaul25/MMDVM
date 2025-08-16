@@ -17,8 +17,6 @@
  */
 
 #include "Config.h"
-#include "InterfaceTX.h"
-
 #if defined(MODE_AX25)
 
 #include "Globals.h"
@@ -178,7 +176,14 @@ void CAX25TX::setTXDelay(uint8_t delay)
 
 uint8_t CAX25TX::getSpace() const
 {
-  return m_poLen == 0U ? 255U : 0U;
+  return getSpace(0);
+}
+
+uint8_t CAX25TX::getSpace(uint8_t index) const
+{
+  if (index==0)
+    return m_poLen == 0U ? 255U : 0U;
+  return 0;
 }
 
 bool CAX25TX::NRZI(bool b)
@@ -187,6 +192,12 @@ bool CAX25TX::NRZI(bool b)
       m_nrzi = !m_nrzi;
 
     return m_nrzi;
+}
+
+uint8_t CAX25TX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  return 0;
 }
 
 #endif

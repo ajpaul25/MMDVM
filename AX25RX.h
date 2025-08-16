@@ -36,6 +36,9 @@ public:
 
   bool canTX() const;
 
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+
 private:
   arm_fir_instance_q15 m_filter;
   q15_t                m_state[160U];    // NoTaps + BlockSize - 1, 130 + 20 - 1 plus some spare

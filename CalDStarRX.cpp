@@ -130,5 +130,10 @@ void CCalDStarRX::process(q15_t value)
   }
 }
 
+uint8_t CCalDStarRX::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
+}
+
 #endif
 

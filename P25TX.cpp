@@ -203,5 +203,12 @@ void CP25TX::setParams(uint8_t txHang)
   m_txHang = txHang * 1200U;
 }
 
+uint8_t CP25TX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  setParams(data[21U]);
+  return 0;
+}
+
 #endif
 

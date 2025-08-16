@@ -137,7 +137,7 @@ extern bool m_fmEnable;
 extern bool m_ax25Enable;
 
 typedef struct {
-  int* idlerx;
+  InterfaceRX* idlerx;
   InterfaceRX* rx;
   InterfaceTX* tx;
   InterfaceCal* calrx;
@@ -147,7 +147,11 @@ typedef struct {
   bool (* condition)();
   bool (* ocondition)();
   bool (* calcondition)();
+  uint8_t spacelen;
+  uint8_t spacepos;
 }modeStruct;
+
+extern modeStruct m_mode[24];
 
 extern bool m_duplex;
 

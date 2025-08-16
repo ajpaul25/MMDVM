@@ -26,8 +26,6 @@
 // Global variables
 MMDVM_STATE m_modemState = STATE_IDLE;
 
-modeStruct m_mode[24];
-
 bool m_dstarEnable  = true;
 bool m_dmrEnable    = true;
 bool m_ysfEnable    = true;
@@ -42,6 +40,8 @@ bool m_duplex = true;
 
 bool m_tx  = false;
 bool m_dcd = false;
+
+modeStruct m_mode[24];
 
 #if defined(MODE_DSTAR)
 CDStarRX dstarRX;
@@ -116,18 +116,21 @@ void setup()
   int m=0;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &dstarRX;
-  m_mode[m].tx = &dstarTX;
+  m_mode[m].rx = new CDStarRX();
+  m_mode[m].tx = new CDStarTX();
   m_mode[m].calrx = &calDStarRX;
-  m_mode[m].caltx = &calDStarTX;
+  m_mode[m].caltx->tx = *m_mode[m].tx;//&calDStarTX;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
   m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DSTARCAL; };
+  m_mode[m].spacepos = 6U;
+  m_mode[m].spacelen = 1U;
+
   m++;
 
-  m_mode[m].idlerx = (int*)&dmrIdleRX;
+  m_mode[m].idlerx = &dmrIdleRX;
   m_mode[m].rx = &dmrRX;
   m_mode[m].tx = &dmrTX;
   m_mode[m].calrx = 0;
@@ -137,6 +140,8 @@ void setup()
   m_mode[m].condition = [](){ return m_dmrEnable && m_modemState == STATE_DMR; };
   m_mode[m].ocondition = [](){ return m_duplex; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K; };
+  m_mode[m].spacepos = 7U;
+  m_mode[m].spacelen = 2U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -149,6 +154,8 @@ void setup()
   m_mode[m].condition = [](){ return  m_ysfEnable && m_modemState == STATE_YSF; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
+  m_mode[m].spacepos = 9U;
+  m_mode[m].spacelen = 1U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -161,6 +168,8 @@ void setup()
   m_mode[m].condition = [](){ return m_p25Enable && m_modemState == STATE_P25; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_P25CAL1K; };
+  m_mode[m].spacepos = 10U;
+  m_mode[m].spacelen = 1U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -173,6 +182,8 @@ void setup()
   m_mode[m].condition = [](){ return m_nxdnEnable && m_modemState == STATE_NXDN; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_NXDNCAL1K; };
+  m_mode[m].spacepos = 11U;
+  m_mode[m].spacelen = 1U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -185,6 +196,8 @@ void setup()
   m_mode[m].condition = [](){ return m_m17Enable && m_modemState == STATE_M17; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_M17CAL; };
+  m_mode[m].spacepos = 12U;
+  m_mode[m].spacelen = 1U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -197,6 +210,8 @@ void setup()
   m_mode[m].condition = [](){ return m_pocsagEnable && (m_modemState == STATE_POCSAG || pocsagTX.busy()); };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_POCSAGCAL; };
+  m_mode[m].spacepos = 14U;
+  m_mode[m].spacelen = 1U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -209,6 +224,8 @@ void setup()
   m_mode[m].condition = [](){ return m_fmEnable && m_modemState == STATE_FM; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K; };
+  m_mode[m].spacepos = 13U;
+  m_mode[m].spacelen = 1U;
   m++;
   
   m_mode[m].idlerx = 0;
@@ -221,6 +238,8 @@ void setup()
   m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
+  m_mode[m].spacepos = 15U;
+  m_mode[m].spacelen = 1U;
   m++;
 }
 

@@ -821,5 +821,10 @@ bool CDStarRX::checksum(const uint8_t* header) const
   return crc8[0U] == header[DSTAR_HEADER_LENGTH_BYTES - 2U] && crc8[1U] == header[DSTAR_HEADER_LENGTH_BYTES - 1U];
 }
 
+uint8_t CDStarRX::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
+}
+
 #endif
 

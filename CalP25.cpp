@@ -100,5 +100,10 @@ uint8_t CCalP25::write(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
+uint8_t CCalP25::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
+}
+
 #endif
 

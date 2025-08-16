@@ -37,6 +37,9 @@ public:
 
   void reset();
 
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+
 private:
   CDMRSlotRX m_slot1RX;
   CDMRSlotRX m_slot2RX;

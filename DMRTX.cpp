@@ -283,14 +283,24 @@ void CDMRTX::writeByte(uint8_t c, uint8_t control)
   io.write(STATE_DMR, outBuffer, DMR_RADIO_SYMBOL_LENGTH * 4U, controlBuffer);
 }
 
+uint8_t CDMRTX::getSpace() const
+{
+  return getSpace(0);
+}
+
+uint8_t CDMRTX::getSpace(uint8_t index) const
+{
+  return m_fifo[index].getSpace() / (DMR_FRAME_LENGTH_BYTES + 2U);
+}
+
 uint8_t CDMRTX::getSpace1() const
 {
-  return m_fifo[0U].getSpace() / (DMR_FRAME_LENGTH_BYTES + 2U);
+  return getSpace(0);
 }
 
 uint8_t CDMRTX::getSpace2() const
 {
-  return m_fifo[1U].getSpace() / (DMR_FRAME_LENGTH_BYTES + 2U);
+  return getSpace(1);
 }
 
 void CDMRTX::createData(uint8_t slotIndex)
@@ -418,6 +428,13 @@ uint32_t CDMRTX::getFrameCount()
 {
   return m_frameCount;
 }
+
+uint8_t CDMRTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setColorCode(data[26U]);
+  return 0;
+}
+
 
 #endif
 

@@ -63,5 +63,10 @@ uint8_t CCalM17::write(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
+uint8_t CCalM17::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
+}
+
 #endif
 

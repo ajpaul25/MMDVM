@@ -208,5 +208,11 @@ uint8_t CAX25RX::rand()
   return uint8_t(m_c);             //low order bits of other variables
 }
 
+uint8_t CAX25RX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setParams(int8_t(data[28U]) - 128, data[30U], data[31U]);
+  return 0;
+}
+
 #endif
 

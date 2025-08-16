@@ -205,5 +205,12 @@ void CNXDNTX::setParams(uint8_t txHang)
   m_txHang = txHang * 600U;
 }
 
+uint8_t CNXDNTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  setParams(data[22U]);
+  return 0;
+}
+
 #endif
 

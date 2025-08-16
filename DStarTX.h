@@ -33,12 +33,14 @@ public:
   uint8_t writeHeader(const uint8_t* header, uint16_t length);
   uint8_t writeData(const uint8_t* data, uint16_t length);
   uint8_t writeEOT();
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
 
   void process();
 
   void setTXDelay(uint8_t delay);
 
   uint8_t getSpace() const;
+  uint8_t getSpace(uint8_t index) const;
 
 private:
   CRingBuffer<uint8_t>             m_buffer;

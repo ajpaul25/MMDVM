@@ -213,5 +213,11 @@ void CDMRIdleRX::setColorCode(uint8_t colorCode)
   m_colorCode = colorCode;
 }
 
+uint8_t CDMRIdleRX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setColorCode(data[26U]);
+  return 0;
+}
+
 #endif
 

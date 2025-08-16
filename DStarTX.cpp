@@ -450,5 +450,18 @@ uint8_t CDStarTX::getSpace() const
   return m_buffer.getSpace() / (DSTAR_DATA_LENGTH_BYTES + 1U);
 }
 
+uint8_t CDStarTX::getSpace(uint8_t index) const
+{
+  if( index == 0 )
+    return getSpace();
+  return 0;
+}
+
+uint8_t CDStarTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[29U]);
+  return 0;
+}
+
 #endif
 

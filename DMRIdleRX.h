@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_DMR)
 
@@ -25,7 +26,7 @@
 
 #include "DMRDefines.h"
 
-class CDMRIdleRX {
+class CDMRIdleRX : public InterfaceRX {
 public:
   CDMRIdleRX();
 
@@ -34,6 +35,9 @@ public:
   void setColorCode(uint8_t colorCode);
 
   void reset();
+
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 private:
   uint32_t m_bitBuffer[DMR_RADIO_SYMBOL_LENGTH];

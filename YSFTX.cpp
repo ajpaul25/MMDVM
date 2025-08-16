@@ -188,10 +188,24 @@ uint8_t CYSFTX::getSpace() const
   return m_buffer.getSpace() / YSF_FRAME_LENGTH_BYTES;
 }
 
+uint8_t CYSFTX::getSpace(uint8_t index) const
+{
+  if( index == 0 )
+    return getSpace();
+  return 0;
+}
+
 void CYSFTX::setParams(bool on, uint8_t txHang)
 {
   m_loDev  = on;
   m_txHang = txHang * 1200U;
+}
+
+uint8_t CYSFTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  setParams((data[0U] & 0x08U) == 0x08U, data[20U]);
+  return 0;
 }
 
 #endif

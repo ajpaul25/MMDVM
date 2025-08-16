@@ -40,6 +40,7 @@ m_count(0U)
 
 void CCalDStarTX::process()
 {
+  CDStarTX dstarTX = *(static_cast<CDStarTX*>(&tx));
   dstarTX.process();
 
   if (!m_transmit)
@@ -168,6 +169,7 @@ void CCalDStarTX::process()
 
 uint8_t CCalDStarTX::write(const uint8_t* data, uint16_t length)
 {
+  CDStarTX dstarTX = *(static_cast<CDStarTX*>(&tx));
   if (length != 1U)
     return 4U;
 
@@ -183,6 +185,11 @@ uint8_t CCalDStarTX::write(const uint8_t* data, uint16_t length)
   m_transmit = transmit;
 
   return 0U;
+}
+
+uint8_t CCalDStarTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
 }
 
 #endif

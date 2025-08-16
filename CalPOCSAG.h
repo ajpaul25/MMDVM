@@ -37,6 +37,8 @@ public:
   void process();
 
   uint8_t write(const uint8_t* data, uint16_t length);
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 private:
   POCSAGCAL m_state;

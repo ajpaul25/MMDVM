@@ -39,6 +39,7 @@ public:
   void samples(const q15_t* samples, const uint16_t* rssi, uint8_t length);
 
   void reset();
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
 
 private:
   DSRX_STATE   m_rxState;

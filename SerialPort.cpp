@@ -176,7 +176,7 @@ void CSerialPort::getStatus()
 {
   io.resetWatchdog();
 
-  uint8_t reply[30U];
+  uint8_t reply[30U] = {0};
 
   // Send all sorts of interesting internal values
   reply[0U]  = MMDVM_FRAME_START;
@@ -210,100 +210,18 @@ void CSerialPort::getStatus()
 
   reply[5U] = 0x00U;
 
-#if defined(MODE_DSTAR)
-  if (m_dstarEnable)
-    reply[6U] = dstarTX.getSpace();
-  else
-    reply[6U] = 0U;
-#else
-  reply[6U] = 0U;
-#endif
-
-#if defined(MODE_DMR)
-  if (m_dmrEnable) {
-    if (m_duplex) {
-      reply[7U] = dmrTX.getSpace1();
-      reply[8U] = dmrTX.getSpace2();
-    } else {
-      reply[7U] = 10U;
-      reply[8U] = dmrDMOTX.getSpace();
+  for(int i=0; i<24; i++)
+  {
+    if (m_mode[i].spacelen > 0)
+    {
+      InterfaceTX tx = m_mode[i].ocondition() ? *m_mode[i].otx : *m_mode[i].tx;
+      if (m_mode[i].spacelen > 1 )
+        for(uint8_t j = 0; j < m_mode[i].spacelen; j++)
+          reply[m_mode[i].spacepos+j] = tx.getSpace(j);
+      else
+        reply[m_mode[i].spacepos] = tx.getSpace();
     }
-  } else {
-    reply[7U] = 0U;
-    reply[8U] = 0U;
   }
-#else
-  reply[7U] = 0U;
-  reply[8U] = 0U;
-#endif
-
-#if defined(MODE_YSF)
-  if (m_ysfEnable)
-    reply[9U] = ysfTX.getSpace();
-  else
-    reply[9U] = 0U;
-#else
-  reply[9U] = 0U;
-#endif
-
-#if defined(MODE_P25)
-  if (m_p25Enable)
-    reply[10U] = p25TX.getSpace();
-  else
-    reply[10U] = 0U;
-#else
-  reply[10U] = 0U;
-#endif
-
-#if defined(MODE_NXDN)
-  if (m_nxdnEnable)
-    reply[11U] = nxdnTX.getSpace();
-  else
-    reply[11U] = 0U;
-#else
-  reply[11U] = 0U;
-#endif
-
-#if defined(MODE_M17)
-  if (m_m17Enable)
-    reply[12U] = m17TX.getSpace();
-  else
-    reply[12U] = 0U;
-#else
-  reply[12U] = 0U;
-#endif
-
-#if defined(MODE_FM)
-  if (m_fmEnable)
-    reply[13U] = fm.getSpace();
-  else
-    reply[13U] = 0U;
-#else
-  reply[13U] = 0U;
-#endif
-
-#if defined(MODE_POCSAG)
-  if (m_pocsagEnable)
-    reply[14U] = pocsagTX.getSpace();
-  else
-    reply[14U] = 0U;
-#else
-  reply[14U] = 0U;
-#endif
-
-#if defined(MODE_AX25)
-  if (m_ax25Enable)
-    reply[15U] = ax25TX.getSpace();
-  else
-    reply[15U] = 0U;
-#else
-  reply[15U] = 0U;
-#endif
-
-  reply[16U] = 0x00U;
-  reply[17U] = 0x00U;
-  reply[18U] = 0x00U;
-  reply[19U] = 0x00U;
 
   writeInt(1U, reply, 20);
 }
@@ -536,29 +454,42 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 
   m_duplex       = !simplex;
 
+  for(int i=0; i<24; i++)
+  {
+    if (m_mode[i].tx)
+      m_mode[i].tx->setConfig(data,length);
+    if (m_mode[i].rx)
+      m_mode[i].rx->setConfig(data,length);
+    if (m_mode[i].otx)
+      m_mode[i].otx->setConfig(data,length);
+    if (m_mode[i].orx)
+      m_mode[i].orx->setConfig(data,length);
+    if (m_mode[i].idlerx)
+      m_mode[i].idlerx->setConfig(data,length);
+  }
 #if defined(MODE_DSTAR)
   m_dstarEnable  = dstarEnable;
-  dstarTX.setTXDelay(txDelay);
+  //dstarTX.setTXDelay(txDelay);
 #endif
 #if defined(MODE_DMR)
   m_dmrEnable    = dmrEnable;
-  dmrDMOTX.setTXDelay(txDelay);
+  //dmrDMOTX.setTXDelay(txDelay);
 
-  dmrTX.setColorCode(colorCode);
-  dmrRX.setColorCode(colorCode);
-  dmrRX.setDelay(dmrDelay);
-  dmrDMORX.setColorCode(colorCode);
-  dmrIdleRX.setColorCode(colorCode);
+  //dmrTX.setColorCode(colorCode);
+  //dmrRX.setColorCode(colorCode);
+  //dmrRX.setDelay(dmrDelay);
+  //dmrDMORX.setColorCode(colorCode);
+  //dmrIdleRX.setColorCode(colorCode);
 #endif
 #if defined(MODE_YSF)
   m_ysfEnable    = ysfEnable;
-  ysfTX.setTXDelay(txDelay);
-  ysfTX.setParams(ysfLoDev, ysfTXHang);
+  //ysfTX.setTXDelay(txDelay);
+  //ysfTX.setParams(ysfLoDev, ysfTXHang);
 #endif
 #if defined(MODE_P25)
   m_p25Enable    = p25Enable;
-  p25TX.setTXDelay(txDelay);
-  p25TX.setParams(p25TXHang);
+  //p25TX.setTXDelay(txDelay);
+  //p25TX.setParams(p25TXHang);
 #endif
 #if defined(MODE_NXDN)
   m_nxdnEnable   = nxdnEnable;

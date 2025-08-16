@@ -23,6 +23,7 @@
 #if defined(MODE_DMR)
 
 #include "Globals.h"
+#include "DMRDMOTX.h"
 #include "DMRSlotType.h"
 
 // Generated using rcosdesign(0.2, 8, 5, 'sqrt') in MATLAB
@@ -156,6 +157,14 @@ uint8_t CDMRDMOTX::getSpace() const
 {
   return m_fifo.getSpace() / (DMR_FRAME_LENGTH_BYTES + 2U);
 }
+uint8_t CDMRDMOTX::getSpace(uint8_t index) const
+{
+  if (index == 0)
+    return 10U;
+  if (index == 1)
+    return getSpace();
+  return 0;
+}
 
 void CDMRDMOTX::setTXDelay(uint8_t delay)
 {
@@ -163,6 +172,12 @@ void CDMRDMOTX::setTXDelay(uint8_t delay)
 
   if (m_txDelay > 1200U)
     m_txDelay = 1200U;
+}
+
+uint8_t CDMRDMOTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  return 0;
 }
 
 #endif

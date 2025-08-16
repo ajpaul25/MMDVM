@@ -39,6 +39,7 @@ public:
 
   void reset();
 
+
 private:
   YSFRX_STATE m_state;
   uint32_t    m_bitBuffer[YSF_RADIO_SYMBOL_LENGTH];

@@ -225,5 +225,10 @@ uint8_t CCalDMR::write(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
+uint8_t CCalDMR::setConfig(const uint8_t* data, uint16_t length)
+{
+  return 0;
+}
+
 #endif
 

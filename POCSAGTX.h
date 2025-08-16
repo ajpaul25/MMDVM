@@ -42,6 +42,9 @@ public:
 
   bool busy();
 
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+
 private:
   CRingBuffer<uint8_t>            m_buffer;
   arm_fir_instance_q15 m_modFilter;

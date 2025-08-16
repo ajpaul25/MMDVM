@@ -152,5 +152,11 @@ uint8_t CPOCSAGTX::getSpace() const
   return m_buffer.getSpace() / POCSAG_FRAME_LENGTH_BYTES;
 }
 
+uint8_t CPOCSAGTX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setTXDelay(data[3U]);
+  return 0;
+}
+
 #endif
 

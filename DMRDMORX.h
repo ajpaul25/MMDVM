@@ -44,6 +44,9 @@ public:
 
   void reset();
 
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+
 private:
   uint32_t    m_bitBuffer[DMR_RADIO_SYMBOL_LENGTH];
   q15_t       m_buffer[DMO_BUFFER_LENGTH_SAMPLES];

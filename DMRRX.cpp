@@ -72,5 +72,12 @@ void CDMRRX::reset()
   m_slot2RX.reset();
 }
 
+uint8_t CDMRRX::setConfig(const uint8_t* data, uint16_t length)
+{
+  setColorCode(data[26U]);
+  setDelay(data[27U]);
+  return 0;
+}
+
 #endif
 
