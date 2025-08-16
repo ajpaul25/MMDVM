@@ -164,7 +164,7 @@ void setup()
   m_mode[m].otx = 0;
   m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
   //m_mode[m].condition = dstarReady;
-  m_mode[m].ocondition = 0;
+  m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DSTARCAL; };
   m++;
 
@@ -175,8 +175,8 @@ void setup()
   m_mode[m].caltx = &calDMR;
   m_mode[m].orx = &dmrDMORX;
   m_mode[m].otx = &dmrDMOTX;
-  m_mode[m].condition = dmrReady;
-  m_mode[m].ocondition = dmroReady;
+  m_mode[m].condition = [](){ return m_dmrEnable && m_modemState == STATE_DMR; };
+  m_mode[m].ocondition = [](){ return m_duplex; };
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K; };
   m++;
 
@@ -187,8 +187,8 @@ void setup()
   m_mode[m].caltx = 0;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
-  m_mode[m].condition = ysfReady;
-  m_mode[m].ocondition = 0;
+  m_mode[m].condition = [](){ return  m_ysfEnable && m_modemState == STATE_YSF; };
+  m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
   m++;
 }
