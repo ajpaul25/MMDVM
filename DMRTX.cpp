@@ -60,6 +60,7 @@ const uint32_t STARTUP_COUNT = 20U;
 const uint32_t ABORT_COUNT = 6U;
 
 CDMRTX::CDMRTX() :
+InterfaceTX(),
 m_fifo(),
 m_modFilter(),
 m_modState(),

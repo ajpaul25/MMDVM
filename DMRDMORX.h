@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_DMR)
 
@@ -33,7 +34,7 @@ enum DMORX_STATE {
   DMORXS_DATA
 };
 
-class CDMRDMORX {
+class CDMRDMORX : public InterfaceRX {
 public:
   CDMRDMORX();
 

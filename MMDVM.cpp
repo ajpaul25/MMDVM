@@ -122,7 +122,7 @@ bool dmroReady(){
   return m_duplex;
 }
 
-bool ysfReady(){
+bool ysfReady(void){
   return m_ysfEnable && m_modemState == STATE_YSF;
 }
 
@@ -162,31 +162,31 @@ void setup()
   m_mode[m].caltx = &calDStarTX;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
-  m_mode[m].condition = (int*)&dstarReady;
+  m_mode[m].condition = dstarReady;
   m_mode[m].ocondition = 0;
   m++;
 
- /* m_mode[m].idlerx = (int*)&dmrIdleRX;
-  m_mode[m].rx = (int*)&dmrRX;
-  m_mode[m].tx = (int*)&dmrTX;
-  m_mode[m].calrx = (int*)&calDMR;
+  m_mode[m].idlerx = (int*)&dmrIdleRX;
+  m_mode[m].rx = &dmrRX;
+  m_mode[m].tx = &dmrTX;
+  m_mode[m].calrx = &calDMR;
   m_mode[m].caltx = 0;
-  m_mode[m].orx = (int*)&dmrDMORX;
-  m_mode[m].otx = (int*)&dmrDMOTX;
-  m_mode[m].condition = (int*)&dmrReady;
-  m_mode[m].ocondition = (int*)&dmroReady;
+  m_mode[m].orx = &dmrDMORX;
+  m_mode[m].otx = &dmrDMOTX;
+  m_mode[m].condition = dmrReady;
+  m_mode[m].ocondition = dmroReady;
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = (int*)&ysfRX;
-  m_mode[m].tx = (int*)&ysfTX;
+  m_mode[m].rx = &ysfRX;
+  m_mode[m].tx = &ysfTX;
   m_mode[m].calrx = 0;
   m_mode[m].caltx = 0;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
-  m_mode[m].condition = (int*)ysfReady;
+  m_mode[m].condition = ysfReady;
   m_mode[m].ocondition = 0;
-  m++;*/
+  m++;
 }
 
 void loop()
@@ -198,8 +198,8 @@ void loop()
   // The following is for transmitting
   for(int i=0; i<24; i++){
     if (m_mode[i].tx)
-      if (m_mode[i].condition)
-        if(m_mode[i].ocondition)
+      if (m_mode[i].condition())
+        if(m_mode[i].ocondition())
           (*m_mode[i].otx).process();
         else
           (*m_mode[i].tx).process();

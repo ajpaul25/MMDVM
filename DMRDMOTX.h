@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_DMR)
 
@@ -28,7 +29,7 @@
 
 #include "RingBuffer.h"
 
-class CDMRDMOTX {
+class CDMRDMOTX : public InterfaceTX {
 public:
   CDMRDMOTX();
 

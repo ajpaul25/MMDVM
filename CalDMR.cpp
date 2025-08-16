@@ -78,6 +78,7 @@ const uint8_t SYNCEMB_DMO1K[6][7] = {
 const uint8_t SHORTLC_1K[] = {0x33U, 0x3AU, 0xA0U, 0x30U, 0x00U, 0x55U, 0xA6U, 0x5FU, 0x50U};
 
 CCalDMR::CCalDMR() :
+InterfaceCal(),
 m_transmit(false),
 m_state(DMRCAL1K_IDLE),
 m_frame_start(0U),

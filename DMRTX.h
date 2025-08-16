@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_DMR)
 
@@ -37,7 +38,7 @@ enum DMRTXSTATE {
   DMRTXSTATE_CAL
 };
 
-class CDMRTX {
+class CDMRTX : public InterfaceTX {
 public:
   CDMRTX();
 

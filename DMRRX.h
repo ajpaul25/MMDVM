@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_DMR)
 
@@ -25,7 +26,7 @@
 
 #include "DMRSlotRX.h"
 
-class CDMRRX {
+class CDMRRX : public InterfaceRX {
 public:
   CDMRRX();
 

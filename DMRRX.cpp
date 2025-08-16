@@ -24,6 +24,7 @@
 #include "DMRRX.h"
 
 CDMRRX::CDMRRX() :
+InterfaceRX(),
 m_slot1RX(false),
 m_slot2RX(true)
 {

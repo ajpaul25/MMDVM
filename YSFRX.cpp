@@ -42,6 +42,7 @@ const uint16_t NOENDPTR = 9999U;
 const unsigned int MAX_SYNC_FRAMES = 4U + 1U;
 
 CYSFRX::CYSFRX() :
+InterfaceRX(),
 m_state(YSFRXS_NONE),
 m_bitBuffer(),
 m_buffer(),

@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceRX.h"
 
 #if defined(MODE_YSF)
 
@@ -30,7 +31,7 @@ enum YSFRX_STATE {
   YSFRXS_DATA
 };
 
-class CYSFRX {
+class CYSFRX : public InterfaceRX {
 public:
   CYSFRX();
 

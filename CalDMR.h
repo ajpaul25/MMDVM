@@ -18,6 +18,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceCal.h"
 
 #if defined(MODE_DMR)
 
@@ -34,7 +35,7 @@ enum DMRCAL1K {
   DMRCAL1K_WAIT
 };
 
-class CCalDMR {
+class CCalDMR : public InterfaceCal {
 public:
   CCalDMR();
 

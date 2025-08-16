@@ -43,6 +43,7 @@ const uint8_t CONTROL_VOICE = 0x20U;
 const uint8_t CONTROL_DATA  = 0x40U;
 
 CDMRDMORX::CDMRDMORX() :
+InterfaceRX(),
 m_bitBuffer(),
 m_buffer(),
 m_bitPtr(0U),

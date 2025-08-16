@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "InterfaceTX.h"
 
 #if defined(MODE_YSF)
 
@@ -25,7 +26,7 @@
 
 #include "RingBuffer.h"
 
-class CYSFTX {
+class CYSFTX : public InterfaceTX {
 public:
   CYSFTX();
 
