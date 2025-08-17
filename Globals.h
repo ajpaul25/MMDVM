@@ -149,6 +149,7 @@ typedef struct {
   bool (* calcondition)();
   uint8_t spacelen;
   uint8_t spacepos;
+  uint8_t stateid;
 }modeStruct;
 
 extern modeStruct m_mode[24];

@@ -127,6 +127,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DSTARCAL; };
   m_mode[m].spacepos = 6U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_DSTAR;
 
   m++;
 
@@ -142,6 +143,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K; };
   m_mode[m].spacepos = 7U;
   m_mode[m].spacelen = 2U;
+  m_mode[m].stateid = STATE_DMR;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -156,6 +158,7 @@ void setup()
   m_mode[m].calcondition = [](){ return false; };
   m_mode[m].spacepos = 9U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_YSF;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -170,6 +173,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_P25CAL1K; };
   m_mode[m].spacepos = 10U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_P25;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -184,6 +188,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_NXDNCAL1K; };
   m_mode[m].spacepos = 11U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_NXDN;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -198,6 +203,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_M17CAL; };
   m_mode[m].spacepos = 12U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_M17;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -212,6 +218,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_POCSAGCAL; };
   m_mode[m].spacepos = 14U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_POCSAG;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -226,6 +233,7 @@ void setup()
   m_mode[m].calcondition = [](){ return m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K; };
   m_mode[m].spacepos = 13U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_FM;
   m++;
   
   m_mode[m].idlerx = 0;
@@ -240,6 +248,7 @@ void setup()
   m_mode[m].calcondition = [](){ return false; };
   m_mode[m].spacepos = 15U;
   m_mode[m].spacelen = 1U;
+  m_mode[m].stateid = STATE_AX25;
   m++;
 }
 
