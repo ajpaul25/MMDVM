@@ -165,7 +165,7 @@ extern CIO io;
 
 #if defined(MODE_DSTAR)
 extern CDStarRX dstarRX;
-extern CDStarTX dstarTX;
+//extern CDStarTX dstarTX;
 
 extern CCalDStarRX calDStarRX;
 extern CCalDStarTX calDStarTX;
@@ -174,7 +174,7 @@ extern CCalDStarTX calDStarTX;
 #if defined(MODE_DMR)
 extern CDMRIdleRX dmrIdleRX;
 extern CDMRRX dmrRX;
-extern CDMRTX dmrTX;
+//extern CDMRTX dmrTX;
 
 extern CDMRDMORX dmrDMORX;
 extern CDMRDMOTX dmrDMOTX;

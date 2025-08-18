@@ -49,6 +49,9 @@ public:
 
   uint8_t setConfig(const uint8_t* data, uint16_t length);
 
+  CDMRTX tx;
+
+
 private:
   bool      m_transmit;
   DMRCAL1K  m_state;

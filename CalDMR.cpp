@@ -94,10 +94,10 @@ void CCalDMR::process()
     case STATE_DMRCAL:
     case STATE_LFCAL:
       if (m_transmit) {
-        dmrTX.setCal(true);
-        dmrTX.process();
+        tx.setCal(true);
+        tx.process();
       } else {
-        dmrTX.setCal(false);
+        tx.setCal(false);
       }
       break;
     case STATE_DMRCAL1K:
@@ -135,23 +135,23 @@ void CCalDMR::createDataDMO1k(uint8_t n)
 
 void CCalDMR::dmr1kcal()
 {
-  dmrTX.process();
+  tx.process();
 
-  uint16_t space = dmrTX.getSpace2();
+  uint16_t space = tx.getSpace2();
   if (space < 1U)
     return;
 
   switch (m_state) {
     case DMRCAL1K_VH:
-      dmrTX.setColorCode(1U);
-      dmrTX.writeShortLC(SHORTLC_1K, 9U);
-      dmrTX.writeData2(VH_1K, DMR_FRAME_LENGTH_BYTES + 1U);
-      dmrTX.setStart(true);
+      tx.setColorCode(1U);
+      tx.writeShortLC(SHORTLC_1K, 9U);
+      tx.writeData2(VH_1K, DMR_FRAME_LENGTH_BYTES + 1U);
+      tx.setStart(true);
       m_state = DMRCAL1K_VOICE;
       break;
     case DMRCAL1K_VOICE:
       createData1k(m_audioSeq);
-      dmrTX.writeData2(m_dmr1k, DMR_FRAME_LENGTH_BYTES + 1U);
+      tx.writeData2(m_dmr1k, DMR_FRAME_LENGTH_BYTES + 1U);
       if(m_audioSeq == 5U) {
         m_audioSeq = 0U;
         if(!m_transmit)
@@ -160,14 +160,14 @@ void CCalDMR::dmr1kcal()
         m_audioSeq++;
       break;
     case DMRCAL1K_VT:
-      dmrTX.writeData2(VT_1K, DMR_FRAME_LENGTH_BYTES + 1U);
-      m_frame_start = dmrTX.getFrameCount();
+      tx.writeData2(VT_1K, DMR_FRAME_LENGTH_BYTES + 1U);
+      m_frame_start = tx.getFrameCount();
       m_state = DMRCAL1K_WAIT;
       break;
     case DMRCAL1K_WAIT:
-      if (dmrTX.getFrameCount() > (m_frame_start + 30U)) {
-        dmrTX.setStart(false);
-        dmrTX.resetFifo2();
+      if (tx.getFrameCount() > (m_frame_start + 30U)) {
+        tx.setStart(false);
+        tx.resetFifo2();
         m_audioSeq = 0U;
         m_state = DMRCAL1K_IDLE;
       }

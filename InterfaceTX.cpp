@@ -8,3 +8,4 @@ uint8_t InterfaceTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_
 uint8_t InterfaceTX::getSpace() const {return 0;}
 uint8_t InterfaceTX::getSpace(uint8_t index) const {return 0;}
 uint8_t InterfaceTX::setConfig(const uint8_t* data, uint16_t length) {return 0;};
+void InterfaceTX::setStart(bool start) {};

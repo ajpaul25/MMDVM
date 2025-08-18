@@ -339,10 +339,9 @@ void CIO::process()
     // Two seconds timeout
     if (m_watchdog >= 48000U) {
       if (m_modemState == STATE_DSTAR || m_modemState == STATE_DMR || m_modemState == STATE_YSF || m_modemState == STATE_P25 || m_modemState == STATE_NXDN || m_modemState == STATE_M17 || m_modemState == STATE_POCSAG) {
-#if defined(MODE_DMR)
-        if (m_modemState == STATE_DMR && m_tx)
-          dmrTX.setStart(false);
-#endif
+        for (int i=0; i<24; i++)
+          if( m_modemState == m_mode[i].stateid and m_tx )
+            m_mode[i].tx->setStart(false);
         setMode(STATE_IDLE);
       }
 
