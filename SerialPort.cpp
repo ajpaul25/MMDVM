@@ -51,7 +51,7 @@ const uint8_t MMDVM_DMR_DATA2    = 0x1AU;
 const uint8_t MMDVM_DMR_LOST2    = 0x1BU;
 const uint8_t MMDVM_DMR_SHORTLC  = 0x1CU;
 const uint8_t MMDVM_DMR_START    = 0x1DU;
-const uint8_t MMDVM_DMR_ABORT    = 0x1EU;*/
+const uint8_t MMDVM_DMR_ABORT    = 0x1EU;
 
 const uint8_t MMDVM_YSF_DATA     = 0x20U;
 const uint8_t MMDVM_YSF_LOST     = 0x21U;
@@ -69,17 +69,17 @@ const uint8_t MMDVM_M17_PACKET     = 0x47U;
 const uint8_t MMDVM_M17_LOST       = 0x48U;
 const uint8_t MMDVM_M17_EOT        = 0x49U;
 
-const uint8_t MMDVM_POCSAG_DATA  = 0x50U;
+const uint8_t MMDVM_POCSAG_DATA  = 0x50U;*/
 
-const uint8_t MMDVM_AX25_DATA    = 0x55U;
+//const uint8_t MMDVM_AX25_DATA    = 0x55U;
 
-const uint8_t MMDVM_FM_PARAMS1   = 0x60U;
+/*const uint8_t MMDVM_FM_PARAMS1   = 0x60U;
 const uint8_t MMDVM_FM_PARAMS2   = 0x61U;
 const uint8_t MMDVM_FM_PARAMS3   = 0x62U;
 const uint8_t MMDVM_FM_PARAMS4   = 0x63U;
 const uint8_t MMDVM_FM_DATA      = 0x65U;
 const uint8_t MMDVM_FM_STATUS    = 0x66U;
-const uint8_t MMDVM_FM_EOT       = 0x67U;
+const uint8_t MMDVM_FM_EOT       = 0x67U;*/
 
 const uint8_t MMDVM_ACK          = 0x70U;
 const uint8_t MMDVM_NAK          = 0x7FU;
@@ -1067,23 +1067,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       }
       break;
 
-#if defined(MODE_YSF)
-    case MMDVM_YSF_DATA:
-      if (m_ysfEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_YSF)
-          err = ysfTX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_YSF);
-      } else {
-        DEBUG2("Received invalid System Fusion data", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_P25)
+/*#if defined(MODE_P25)
     case MMDVM_P25_HDR:
       if (m_p25Enable) {
         if (m_modemState == STATE_IDLE || m_modemState == STATE_P25)
@@ -1216,7 +1200,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
         sendNAK(type, err);
       }
       break;
-#endif
+#endif*/
 
     case MMDVM_TRANSPARENT:
     case MMDVM_QSO_INFO:

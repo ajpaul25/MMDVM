@@ -121,6 +121,20 @@ void CYSFTX::process()
   }
 }
 
+uint8_t CYSFTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_YSF_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid NXDN data", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CYSFTX::writeData(const uint8_t* data, uint16_t length)
 {
   if (length != (YSF_FRAME_LENGTH_BYTES + 1U))

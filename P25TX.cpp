@@ -124,6 +124,25 @@ void CP25TX::process()
   }
 }
 
+uint8_t CP25TX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_P25_HDR:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid P25 header", err);
+      break;
+    case MMDVM_P25_LDU:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid P25 LDU", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CP25TX::writeData(const uint8_t* data, uint16_t length)
 {
   if (length < (P25_TERM_FRAME_LENGTH_BYTES + 1U))

@@ -26,6 +26,9 @@
 
 #include "RingBuffer.h"
 
+const uint8_t MMDVM_YSF_DATA     = 0x20U;
+const uint8_t MMDVM_YSF_LOST     = 0x21U;
+
 class CYSFTX : public InterfaceTX {
 public:
   CYSFTX();
@@ -42,6 +45,9 @@ public:
   void setParams(bool on, uint8_t txHang);
 
   uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
+
 
 
 private:

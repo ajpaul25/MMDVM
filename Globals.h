@@ -177,38 +177,38 @@ extern CDMRRX dmrRX;
 //extern CDMRTX dmrTX;
 
 extern CDMRDMORX dmrDMORX;
-extern CDMRDMOTX dmrDMOTX;
+//extern CDMRDMOTX dmrDMOTX;
 
 extern CCalDMR calDMR;
 #endif
 
 #if defined(MODE_YSF)
 extern CYSFRX ysfRX;
-extern CYSFTX ysfTX;
+//extern CYSFTX ysfTX;
 #endif
 
 #if defined(MODE_P25)
 extern CP25RX p25RX;
-extern CP25TX p25TX;
+//extern CP25TX p25TX;
 
 extern CCalP25 calP25;
 #endif
 
 #if defined(MODE_NXDN)
 extern CNXDNRX nxdnRX;
-extern CNXDNTX nxdnTX;
+//extern CNXDNTX nxdnTX;
 
 extern CCalNXDN calNXDN;
 #endif
 
 #if defined(MODE_POCSAG)
-extern CPOCSAGTX  pocsagTX;
+//extern CPOCSAGTX  pocsagTX;
 extern CCalPOCSAG calPOCSAG;
 #endif
 
 #if defined(MODE_M17)
 extern CM17RX m17RX;
-extern CM17TX m17TX;
+//extern CM17TX m17TX;
 
 extern CCalM17 calM17;
 #endif
@@ -220,7 +220,7 @@ extern CCalFM calFM;
 
 #if defined(MODE_AX25)
 extern CAX25RX ax25RX;
-extern CAX25TX ax25TX;
+//extern CAX25TX ax25TX;
 #endif
 
 extern CCalRSSI calRSSI;

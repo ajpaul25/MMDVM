@@ -26,6 +26,10 @@
 
 #include "RingBuffer.h"
 
+const uint8_t MMDVM_P25_HDR      = 0x30U;
+const uint8_t MMDVM_P25_LDU      = 0x31U;
+const uint8_t MMDVM_P25_LOST     = 0x32U;
+
 class CP25TX : public InterfaceTX {
 public:
   CP25TX();
@@ -41,6 +45,8 @@ public:
   void setParams(uint8_t txHang);
 
   uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
 
 private:

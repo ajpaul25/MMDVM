@@ -92,6 +92,20 @@ void CPOCSAGTX::process()
   }
 }
 
+uint8_t CPOCSAGTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_POCSAG_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid POCSAG data", err);
+      break;
+    }
+
+    return err;
+}
+
 bool CPOCSAGTX::busy()
 {
   if (m_poLen > 0U || m_buffer.getData() > 0U)

@@ -180,20 +180,20 @@ void CCalDMR::dmr1kcal()
 
 void CCalDMR::dmrdmo1k()
 {
-  dmrDMOTX.process();
+  otx.process();
 
-  uint16_t space = dmrDMOTX.getSpace();
+  uint16_t space = otx.getSpace();
   if (space < 1U)
     return;
 
   switch (m_state) {
     case DMRCAL1K_VH:
-      dmrDMOTX.writeData(VH_DMO1K, DMR_FRAME_LENGTH_BYTES + 1U);
+      otx.writeData(VH_DMO1K, DMR_FRAME_LENGTH_BYTES + 1U);
       m_state = DMRCAL1K_VOICE;
       break;
     case DMRCAL1K_VOICE:
       createDataDMO1k(m_audioSeq);
-      dmrDMOTX.writeData(m_dmr1k, DMR_FRAME_LENGTH_BYTES + 1U);
+      otx.writeData(m_dmr1k, DMR_FRAME_LENGTH_BYTES + 1U);
       if(m_audioSeq == 5U) {
         m_audioSeq = 0U;
         if(!m_transmit)
@@ -202,7 +202,7 @@ void CCalDMR::dmrdmo1k()
         m_audioSeq++;
       break;
     case DMRCAL1K_VT:
-      dmrDMOTX.writeData(VT_DMO1K, DMR_FRAME_LENGTH_BYTES + 1U);
+      otx.writeData(VT_DMO1K, DMR_FRAME_LENGTH_BYTES + 1U);
       m_state = DMRCAL1K_IDLE;
       break;
     default:

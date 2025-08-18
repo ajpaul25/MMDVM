@@ -24,6 +24,8 @@
 #if !defined(AX25TX_H)
 #define  AX25TX_H
 
+const uint8_t MMDVM_AX25_DATA    = 0x55U;
+
 class CAX25TX : public InterfaceTX {
 public:
   CAX25TX();
@@ -38,6 +40,8 @@ public:
   uint8_t getSpace(uint8_t index) const;
 
   uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
 
 private:

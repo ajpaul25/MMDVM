@@ -41,16 +41,16 @@ m_transmit(false)
 
 void CCalM17::process()
 {
-  m17TX.process();
+  tx.process();
 
   if (!m_transmit)
     return;
 
-  uint16_t space = m17TX.getSpace();
+  uint16_t space = tx.getSpace();
   if (space < 2U)
     return;
 
-  m17TX.writeData(PREAMBLE, M17_FRAME_LENGTH_BYTES + 1U);
+  tx.writeData(PREAMBLE, M17_FRAME_LENGTH_BYTES + 1U);
 }
 
 uint8_t CCalM17::write(const uint8_t* data, uint16_t length)

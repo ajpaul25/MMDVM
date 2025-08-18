@@ -33,6 +33,7 @@ public:
     virtual uint8_t getSpace(uint8_t index) const;
     virtual uint8_t setConfig(const uint8_t* data, uint16_t length);
     virtual void setStart(bool start);
+    virtual uint8_t writeData(const uint8_t* data, uint16_t length);
 };
 
 #endif // INTERFACETX_H

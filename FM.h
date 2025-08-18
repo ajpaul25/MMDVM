@@ -36,6 +36,14 @@
 #include "FMUpSampler.h"
 #include "FMNoiseSquelch.h"
 
+const uint8_t MMDVM_FM_PARAMS1   = 0x60U;
+const uint8_t MMDVM_FM_PARAMS2   = 0x61U;
+const uint8_t MMDVM_FM_PARAMS3   = 0x62U;
+const uint8_t MMDVM_FM_PARAMS4   = 0x63U;
+const uint8_t MMDVM_FM_DATA      = 0x65U;
+const uint8_t MMDVM_FM_STATUS    = 0x66U;
+const uint8_t MMDVM_FM_EOT       = 0x67U;
+
 enum FM_STATE {
   FS_LISTENING,
   FS_KERCHUNK_RF,
@@ -70,6 +78,9 @@ public:
   uint8_t getSpace() const;
 
   uint8_t writeData(const uint8_t* data, uint16_t length);
+
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
+
 
 private:
   CFMKeyer             m_callsign;

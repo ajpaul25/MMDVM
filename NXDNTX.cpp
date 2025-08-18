@@ -126,6 +126,19 @@ void CNXDNTX::process()
     }
   }
 }
+uint8_t CNXDNTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_NXDN_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid System Fusion data", err);
+      break;
+    }
+
+    return err;
+}
 
 uint8_t CNXDNTX::writeData(const uint8_t* data, uint16_t length)
 {

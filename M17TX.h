@@ -26,6 +26,12 @@
 
 #include "RingBuffer.h"
 
+const uint8_t MMDVM_M17_LINK_SETUP = 0x45U;
+const uint8_t MMDVM_M17_STREAM     = 0x46U;
+const uint8_t MMDVM_M17_PACKET     = 0x47U;
+const uint8_t MMDVM_M17_LOST       = 0x48U;
+const uint8_t MMDVM_M17_EOT        = 0x49U;
+
 class CM17TX : public InterfaceTX {
 public:
   CM17TX();
@@ -41,6 +47,8 @@ public:
   void setParams(uint8_t txHang);
 
   uint8_t setConfig(const uint8_t* data, uint16_t length);
+
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
 
 private:

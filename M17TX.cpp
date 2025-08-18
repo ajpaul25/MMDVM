@@ -115,6 +115,30 @@ void CM17TX::process()
   }
 }
 
+uint8_t CM17TX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_M17_LINK_SETUP:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid M17 link setup data", err);
+      break;
+    case MMDVM_M17_STREAM:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid M17 stream data", err);
+      break;
+    case MMDVM_M17_EOT:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid M17 EOT", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CM17TX::writeData(const uint8_t* data, uint16_t length)
 {
   if (length != (M17_FRAME_LENGTH_BYTES + 1U))

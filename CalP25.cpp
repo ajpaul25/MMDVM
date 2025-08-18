@@ -63,19 +63,19 @@ m_state(P25CAL1K_IDLE)
 
 void CCalP25::process()
 {
-  p25TX.process();
+  tx.process();
 
-  uint16_t space = p25TX.getSpace();
+  uint16_t space = tx.getSpace();
   if (space < 1U)
     return;
 
   switch (m_state) {
     case P25CAL1K_LDU1:
-      p25TX.writeData(LDU1_1K, P25_LDU_FRAME_LENGTH_BYTES + 1U);
+      tx.writeData(LDU1_1K, P25_LDU_FRAME_LENGTH_BYTES + 1U);
       m_state = P25CAL1K_LDU2;
       break;
     case P25CAL1K_LDU2:
-      p25TX.writeData(LDU2_1K, P25_LDU_FRAME_LENGTH_BYTES + 1U);
+      tx.writeData(LDU2_1K, P25_LDU_FRAME_LENGTH_BYTES + 1U);
       if(!m_transmit)
         m_state = P25CAL1K_IDLE;
       else

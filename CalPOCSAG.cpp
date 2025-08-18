@@ -39,7 +39,7 @@ void CCalPOCSAG::process()
   if (space <= 165U)
     return;
 
-  pocsagTX.writeByte(0xAAU);
+  tx.writeByte(0xAAU);
 }
 
 uint8_t CCalPOCSAG::write(const uint8_t* data, uint16_t length)

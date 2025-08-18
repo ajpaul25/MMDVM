@@ -9,6 +9,7 @@ public:
     virtual ~InterfaceCal(void);
     virtual void process();
     InterfaceTX tx;
+    InterfaceTX otx;
     virtual uint8_t setConfig(const uint8_t* data, uint16_t length);
 };
 

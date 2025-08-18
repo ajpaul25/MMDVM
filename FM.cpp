@@ -368,6 +368,20 @@ void CFM::process()
   }
 }
 
+uint8_t CFM::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_FM_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid FM data", err);
+      break;
+    }
+
+    return err;
+}
+
 void CFM::reset()
 {
   m_state = FS_LISTENING;

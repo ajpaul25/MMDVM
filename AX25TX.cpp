@@ -92,6 +92,20 @@ void CAX25TX::process()
   }
 }
 
+uint8_t CAX25TX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_AX25_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid AX.25 data", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CAX25TX::writeData(const uint8_t* data, uint16_t length)
 {
   CAX25Frame frame(data, length);
