@@ -128,6 +128,7 @@ void setup()
   m_mode[m].spacepos = 6U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_DSTAR;
+  m_mode[m].enabled = &m_dstarEnable;
 
   m++;
 
@@ -144,6 +145,8 @@ void setup()
   m_mode[m].spacepos = 7U;
   m_mode[m].spacelen = 2U;
   m_mode[m].stateid = STATE_DMR;
+  m_mode[m].enabled = &m_dmrEnable;
+
   m++;
 
   m_mode[m].idlerx = 0;
@@ -159,6 +162,7 @@ void setup()
   m_mode[m].spacepos = 9U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_YSF;
+  m_mode[m].enabled = &m_ysfEnable;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -174,6 +178,7 @@ void setup()
   m_mode[m].spacepos = 10U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_P25;
+  m_mode[m].enabled = &m_p25Enable;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -189,6 +194,7 @@ void setup()
   m_mode[m].spacepos = 11U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_NXDN;
+  m_mode[m].enabled = &m_nxdnEnable;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -204,6 +210,7 @@ void setup()
   m_mode[m].spacepos = 12U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_M17;
+  m_mode[m].enabled = &m_m17Enable;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -219,6 +226,7 @@ void setup()
   m_mode[m].spacepos = 14U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_POCSAG;
+  m_mode[m].enabled = &m_pocsagEnable;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -234,6 +242,7 @@ void setup()
   m_mode[m].spacepos = 13U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_FM;
+  m_mode[m].enabled = &m_fmEnable;
   m++;
   
   m_mode[m].idlerx = 0;
@@ -243,12 +252,13 @@ void setup()
   m_mode[m].caltx = 0;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
-  m_mode[m].condition = [](){ return m_dstarEnable && m_modemState == STATE_DSTAR; };
+  m_mode[m].condition = [](){ return m_ax25Enable && m_modemState == STATE_AX25; };
   m_mode[m].ocondition = [](){ return false; };
   m_mode[m].calcondition = [](){ return false; };
   m_mode[m].spacepos = 15U;
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_AX25;
+  m_mode[m].enabled = &m_ax25Enable;
   m++;
 }
 

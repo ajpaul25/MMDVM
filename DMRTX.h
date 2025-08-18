@@ -29,6 +29,14 @@
 
 #include "RingBuffer.h"
 
+const uint8_t MMDVM_DMR_DATA1    = 0x18U;
+const uint8_t MMDVM_DMR_LOST1    = 0x19U;
+const uint8_t MMDVM_DMR_DATA2    = 0x1AU;
+const uint8_t MMDVM_DMR_LOST2    = 0x1BU;
+const uint8_t MMDVM_DMR_SHORTLC  = 0x1CU;
+const uint8_t MMDVM_DMR_START    = 0x1DU;
+const uint8_t MMDVM_DMR_ABORT    = 0x1EU;
+
 enum DMRTXSTATE {
   DMRTXSTATE_IDLE,
   DMRTXSTATE_SLOT1,
@@ -64,6 +72,7 @@ public:
 
   void setColorCode(uint8_t colorCode);
   uint8_t setConfig(const uint8_t* data, uint16_t length);
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
 
 private:

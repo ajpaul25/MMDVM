@@ -150,6 +150,7 @@ typedef struct {
   uint8_t spacelen;
   uint8_t spacepos;
   uint8_t stateid;
+  bool* enabled;
 }modeStruct;
 
 extern modeStruct m_mode[24];

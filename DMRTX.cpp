@@ -148,6 +148,55 @@ void CDMRTX::process()
   }
 }
 
+uint8_t CDMRTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_DMR_DATA1:
+      err = writeData1(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid DMR data", err);
+      break;
+
+    case MMDVM_DMR_DATA2:
+      err = writeData2(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid DMR data", err);
+      break;
+
+    case MMDVM_DMR_START:
+      err = 4U;
+      if (length == 1U) {
+        if (buffer[0U] == 0x01U && m_modemState == STATE_DMR) {
+          if (!m_tx)
+            setStart(true);
+          err = 0U;
+        } else if (buffer[0U] == 0x00U && m_modemState == STATE_DMR) {
+          if (m_tx)
+            setStart(false);
+          err = 0U;
+        }
+      }
+      if (err != 0U)
+        DEBUG2("Received invalid DMR start", err);
+      break;
+
+    case MMDVM_DMR_SHORTLC:
+      err = writeShortLC(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid DMR Short LC", err);
+      break;
+
+      case MMDVM_DMR_ABORT:
+      err = writeAbort(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid DMR Abort", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CDMRTX::writeData1(const uint8_t* data, uint16_t length)
 {
   if (length != (DMR_FRAME_LENGTH_BYTES + 1U))

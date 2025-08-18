@@ -43,7 +43,7 @@ const uint8_t MMDVM_SEND_CWID    = 0x0AU;
 /*const uint8_t MMDVM_DSTAR_HEADER = 0x10U;
 const uint8_t MMDVM_DSTAR_DATA   = 0x11U;
 const uint8_t MMDVM_DSTAR_LOST   = 0x12U;
-const uint8_t MMDVM_DSTAR_EOT    = 0x13U;*/
+const uint8_t MMDVM_DSTAR_EOT    = 0x13U;
 
 const uint8_t MMDVM_DMR_DATA1    = 0x18U;
 const uint8_t MMDVM_DMR_LOST1    = 0x19U;
@@ -51,7 +51,7 @@ const uint8_t MMDVM_DMR_DATA2    = 0x1AU;
 const uint8_t MMDVM_DMR_LOST2    = 0x1BU;
 const uint8_t MMDVM_DMR_SHORTLC  = 0x1CU;
 const uint8_t MMDVM_DMR_START    = 0x1DU;
-const uint8_t MMDVM_DMR_ABORT    = 0x1EU;
+const uint8_t MMDVM_DMR_ABORT    = 0x1EU;*/
 
 const uint8_t MMDVM_YSF_DATA     = 0x20U;
 const uint8_t MMDVM_YSF_LOST     = 0x21U;
@@ -1067,125 +1067,6 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       }
       break;
 
-#if defined(MODE_DSTAR)
-    case MMDVM_DSTAR_HEADER:
-      if (m_dstarEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_DSTAR)
-          err = dstarTX.writeHeader(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_DSTAR);
-      } else {
-        DEBUG2("Received invalid D-Star header", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DSTAR_DATA:
-      if (m_dstarEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_DSTAR)
-          err = dstarTX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_DSTAR);
-      } else {
-        DEBUG2("Received invalid D-Star data", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DSTAR_EOT:
-      if (m_dstarEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_DSTAR)
-          err = dstarTX.writeEOT();
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_DSTAR);
-      } else {
-        DEBUG2("Received invalid D-Star EOT", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_DMR)
-    case MMDVM_DMR_DATA1:
-      if (m_dmrEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_DMR) {
-          if (m_duplex)
-            err = dmrTX.writeData1(buffer, length);
-        }
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_DMR);
-      } else {
-        DEBUG2("Received invalid DMR data", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DMR_DATA2:
-      if (m_dmrEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_DMR) {
-          if (m_duplex)
-            err = dmrTX.writeData2(buffer, length);
-          else
-            err = dmrDMOTX.writeData(buffer, length);
-        }
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_DMR);
-      } else {
-        DEBUG2("Received invalid DMR data", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DMR_START:
-      if (m_dmrEnable) {
-        err = 4U;
-        if (length == 1U) {
-          if (buffer[0U] == 0x01U && m_modemState == STATE_DMR) {
-            if (!m_tx)
-              dmrTX.setStart(true);
-            err = 0U;
-          } else if (buffer[0U] == 0x00U && m_modemState == STATE_DMR) {
-            if (m_tx)
-              dmrTX.setStart(false);
-            err = 0U;
-          }
-        }
-      }
-      if (err != 0U) {
-        DEBUG2("Received invalid DMR start", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DMR_SHORTLC:
-      if (m_dmrEnable)
-        err = dmrTX.writeShortLC(buffer, length);
-      if (err != 0U) {
-        DEBUG2("Received invalid DMR Short LC", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_DMR_ABORT:
-      if (m_dmrEnable)
-        err = dmrTX.writeAbort(buffer, length);
-      if (err != 0U) {
-        DEBUG2("Received invalid DMR Abort", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
 #if defined(MODE_YSF)
     case MMDVM_YSF_DATA:
       if (m_ysfEnable) {
@@ -1362,18 +1243,20 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       bool success = false;
       for (int i=0; i<24; i++) //step through all of our mode structs
         if(m_mode[i].tx)
-          if (m_modemState == STATE_IDLE || m_modemState == m_mode[i].stateid)
+          if (m_modemState == STATE_IDLE || m_mode[i].condition())
           {
-            // Handle this, send a NAK back
-            err = m_mode[i].tx->processMessage( type, buffer, length);
-            if (err == 0 or err == 255) // 255 is success but no subsequent state change
+            if (m_mode[i].ocondition())
+              err = m_mode[i].otx->processMessage( type, buffer, length);
+            else
+              err = m_mode[i].tx->processMessage( type, buffer, length);
+            if (err == 0 or err == 255) // 255 is also success but no subsequent state change
             {
               success = true;
               if (m_modemState == STATE_IDLE and err == 0)
                 setMode(MMDVM_STATE(m_mode[i].stateid));
             }
           }
-      if( !success )
+      if( !success ) // Handle this, send a NAK back
           sendNAK(type, 1U);
       break;
   }

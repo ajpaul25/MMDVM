@@ -109,6 +109,19 @@ void CDMRDMOTX::process()
   }
 }
 
+uint8_t CDMRDMOTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_DMR_DATA2:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid DMR data", err);
+      break;
+  }
+    return err;
+}
+
 uint8_t CDMRDMOTX::writeData(const uint8_t* data, uint16_t length)
 {
   if (length != (DMR_FRAME_LENGTH_BYTES + 1U))
