@@ -28,6 +28,7 @@ public:
     InterfaceTX(void);
     virtual ~InterfaceTX(void);
     virtual void process();
+    virtual uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
     virtual uint8_t getSpace() const;
     virtual uint8_t getSpace(uint8_t index) const;
     virtual uint8_t setConfig(const uint8_t* data, uint16_t length);

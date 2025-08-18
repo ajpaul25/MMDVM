@@ -284,6 +284,32 @@ void CDStarTX::process()
   }
 }
 
+uint8_t CDStarTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  switch (type) {
+    case MMDVM_DSTAR_HEADER:
+      err = writeHeader(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid D-Star header", err);
+      break;
+
+    case MMDVM_DSTAR_DATA:
+      err = writeData(buffer, length);
+      if (err != 0U)
+        DEBUG2("Received invalid D-Star data", err);
+      break;
+
+    case MMDVM_DSTAR_EOT:
+      err = writeEOT();
+      if (err != 0U)
+        DEBUG2("Received invalid D-Star EOT", err);
+      break;
+    }
+
+    return err;
+}
+
 uint8_t CDStarTX::writeHeader(const uint8_t* header, uint16_t length)
 {
   if (length != DSTAR_HEADER_LENGTH_BYTES)

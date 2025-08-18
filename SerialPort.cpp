@@ -40,10 +40,10 @@ const uint8_t MMDVM_RSSI_DATA    = 0x09U;
 
 const uint8_t MMDVM_SEND_CWID    = 0x0AU;
 
-const uint8_t MMDVM_DSTAR_HEADER = 0x10U;
+/*const uint8_t MMDVM_DSTAR_HEADER = 0x10U;
 const uint8_t MMDVM_DSTAR_DATA   = 0x11U;
 const uint8_t MMDVM_DSTAR_LOST   = 0x12U;
-const uint8_t MMDVM_DSTAR_EOT    = 0x13U;
+const uint8_t MMDVM_DSTAR_EOT    = 0x13U;*/
 
 const uint8_t MMDVM_DMR_DATA1    = 0x18U;
 const uint8_t MMDVM_DMR_LOST1    = 0x19U;
@@ -493,22 +493,22 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 #endif
 #if defined(MODE_NXDN)
   m_nxdnEnable   = nxdnEnable;
-  nxdnTX.setTXDelay(txDelay);
-  nxdnTX.setParams(nxdnTXHang);
+  //nxdnTX.setTXDelay(txDelay);
+  //nxdnTX.setParams(nxdnTXHang);
 #endif
 #if defined(MODE_M17)
   m_m17Enable    = m17Enable;
-  m17TX.setTXDelay(txDelay);
-  m17TX.setParams(m17TXHang);
+  //m17TX.setTXDelay(txDelay);
+  //m17TX.setParams(m17TXHang);
 #endif
 #if defined(MODE_POCSAG)
   m_pocsagEnable = pocsagEnable;
-  pocsagTX.setTXDelay(txDelay);
+  //pocsagTX.setTXDelay(txDelay);
 #endif
 #if defined(MODE_AX25)
   m_ax25Enable   = ax25Enable;
-  ax25TX.setTXDelay(ax25TXDelay);
-  ax25RX.setParams(ax25RXTwist, ax25SlotTime, ax25PPersist);
+  //ax25TX.setTXDelay(ax25TXDelay);
+  //ax25RX.setParams(ax25RXTwist, ax25SlotTime, ax25PPersist);
 #endif
 #if defined(MODE_FM)
   m_fmEnable     = fmEnable;
@@ -1359,8 +1359,22 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
 #endif
 
     default:
-      // Handle this, send a NAK back
-      sendNAK(type, 1U);
+      bool success = false;
+      for (int i=0; i<24; i++) //step through all of our mode structs
+        if(m_mode[i].tx)
+          if (m_modemState == STATE_IDLE || m_modemState == m_mode[i].stateid)
+          {
+            // Handle this, send a NAK back
+            err = m_mode[i].tx->processMessage( type, buffer, length);
+            if (err == 0 or err == 255) // 255 is success but no subsequent state change
+            {
+              success = true;
+              if (m_modemState == STATE_IDLE and err == 0)
+                setMode(MMDVM_STATE(m_mode[i].stateid));
+            }
+          }
+      if( !success )
+          sendNAK(type, 1U);
       break;
   }
 

@@ -26,6 +26,11 @@
 
 #include "RingBuffer.h"
 
+const uint8_t MMDVM_DSTAR_HEADER = 0x10U;
+const uint8_t MMDVM_DSTAR_DATA   = 0x11U;
+const uint8_t MMDVM_DSTAR_LOST   = 0x12U;
+const uint8_t MMDVM_DSTAR_EOT    = 0x13U;
+
 class CDStarTX : public InterfaceTX {
 public:
   CDStarTX();
@@ -36,6 +41,7 @@ public:
   uint8_t setConfig(const uint8_t* data, uint16_t length);
 
   void process();
+  uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
   void setTXDelay(uint8_t delay);
 
