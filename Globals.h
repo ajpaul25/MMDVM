@@ -158,6 +158,7 @@ typedef struct {
   uint16_t filterlen;
   uint8_t filterStateSize;
   arm_fir_instance_q15 firFilter;
+  q15_t txlevel;
 }modeStruct;
 
 extern modeStruct m_mode[24];

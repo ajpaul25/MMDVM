@@ -87,16 +87,6 @@ private:
   bool                 m_pttInvert;
   q15_t                m_rxLevel;
   q15_t                m_cwIdTXLevel;
-  //todo: not generic
-  q15_t                m_dstarTXLevel;
-  q15_t                m_dmrTXLevel;
-  q15_t                m_ysfTXLevel;
-  q15_t                m_p25TXLevel;
-  q15_t                m_nxdnTXLevel;
-  q15_t                m_m17TXLevel;
-  q15_t                m_pocsagTXLevel;
-  q15_t                m_fmTXLevel;
-  q15_t                m_ax25TXLevel;
 
   uint16_t             m_rxDCOffset;
   uint16_t             m_txDCOffset;

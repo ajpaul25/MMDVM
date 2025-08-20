@@ -43,16 +43,6 @@ m_dcState(),
 m_pttInvert(false),
 m_rxLevel(128 * 128),
 m_cwIdTXLevel(128 * 128),
-//todo: not generic
-m_dstarTXLevel(128 * 128),
-m_dmrTXLevel(128 * 128),
-m_ysfTXLevel(128 * 128),
-m_p25TXLevel(128 * 128),
-m_nxdnTXLevel(128 * 128),
-m_m17TXLevel(128 * 128),
-m_pocsagTXLevel(128 * 128),
-m_fmTXLevel(128 * 128),
-m_ax25TXLevel(128 * 128),
 m_rxDCOffset(DC_OFFSET),
 m_txDCOffset(DC_OFFSET),
 m_useCOSAsLockout(false),
@@ -374,40 +364,10 @@ void CIO::write(MMDVM_STATE mode, q15_t* samples, uint16_t length, const uint8_t
     DEBUG1("TX ON");
   }
 
-  //todo: not generic
-  q15_t txLevel = 0;
-  switch (mode) {
-    case STATE_DSTAR:
-      txLevel = m_dstarTXLevel;
-      break;
-    case STATE_DMR:
-      txLevel = m_dmrTXLevel;
-      break;
-    case STATE_YSF:
-      txLevel = m_ysfTXLevel;
-      break;
-    case STATE_P25:
-      txLevel = m_p25TXLevel;
-      break;
-    case STATE_NXDN:
-      txLevel = m_nxdnTXLevel;
-      break;
-    case STATE_M17:
-      txLevel = m_m17TXLevel;
-      break;
-    case STATE_POCSAG:
-      txLevel = m_pocsagTXLevel;
-      break;
-    case STATE_FM:
-      txLevel = m_fmTXLevel;
-      break;
-    case STATE_AX25:
-      txLevel = m_ax25TXLevel;
-      break;
-    default:
-      txLevel = m_cwIdTXLevel;
-      break;
-  }
+  q15_t txLevel = m_cwIdTXLevel;
+  for( int i=0; i<24; i++ )
+    if( m_mode[i].tx && m_mode[i].stateid==mode )
+      txLevel = m_mode[i].txlevel;
 
   for (uint16_t i = 0U; i < length; i++) {
     q31_t res1 = samples[i] * txLevel;
@@ -485,15 +445,27 @@ void CIO::setParameters(bool rxInvert, bool txInvert, bool pttInvert, uint8_t rx
 
   m_rxLevel       = q15_t(rxLevel * 128);
   m_cwIdTXLevel   = q15_t(cwIdTXLevel * 128);
-  m_dstarTXLevel  = q15_t(dstarTXLevel * 128);
-  m_dmrTXLevel    = q15_t(dmrTXLevel * 128);
-  m_ysfTXLevel    = q15_t(ysfTXLevel * 128);
-  m_p25TXLevel    = q15_t(p25TXLevel * 128);
-  m_nxdnTXLevel   = q15_t(nxdnTXLevel * 128);
-  m_m17TXLevel    = q15_t(m17TXLevel * 128);
-  m_pocsagTXLevel = q15_t(pocsagTXLevel * 128);
-  m_fmTXLevel     = q15_t(fmTXLevel * 128);
-  m_ax25TXLevel   = q15_t(ax25TXLevel * 128);
+
+  for( int i=0; i<24; i++ )
+  {
+    if( m_mode[i].tx )
+    {
+      q15_t tmpTxLevel = 0;
+      switch( m_mode[i].stateid )
+      {
+        case STATE_DSTAR:   tmpTxLevel = dstarTXLevel;  break;
+        case STATE_DMR:     tmpTxLevel = dmrTXLevel;    break;
+        case STATE_YSF:     tmpTxLevel = ysfTXLevel;    break;
+        case STATE_P25:     tmpTxLevel = p25TXLevel;    break;
+        case STATE_NXDN:    tmpTxLevel = nxdnTXLevel;   break;
+        case STATE_M17:     tmpTxLevel = m17TXLevel;    break;
+        case STATE_POCSAG:  tmpTxLevel = pocsagTXLevel; break;
+        case STATE_FM:      tmpTxLevel = fmTXLevel;     break;
+        case STATE_AX25:    tmpTxLevel = ax25TXLevel;   break;
+      }
+      m_mode[i].txlevel = q15_t(tmpTxLevel * 128 * txInvert ? -1 : 1);
+    }
+  }
 
   m_rxDCOffset   = DC_OFFSET + rxDCOffset;
   m_txDCOffset   = DC_OFFSET + txDCOffset;
@@ -502,16 +474,6 @@ void CIO::setParameters(bool rxInvert, bool txInvert, bool pttInvert, uint8_t rx
   
   if (rxInvert)
     m_rxLevel = -m_rxLevel;
-  
-  if (txInvert) {
-    m_dstarTXLevel  = -m_dstarTXLevel;
-    m_dmrTXLevel    = -m_dmrTXLevel;
-    m_ysfTXLevel    = -m_ysfTXLevel;
-    m_p25TXLevel    = -m_p25TXLevel;
-    m_nxdnTXLevel   = -m_nxdnTXLevel;
-    m_m17TXLevel    = -m_m17TXLevel;
-    m_pocsagTXLevel = -m_pocsagTXLevel;
-  }
 }
 
 void CIO::getOverflow(bool& adcOverflow, bool& dacOverflow)
