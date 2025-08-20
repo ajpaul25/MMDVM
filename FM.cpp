@@ -377,6 +377,108 @@ uint8_t CFM::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length
       if (err != 0U)
         DEBUG2("Received invalid FM data", err);
       break;
+    case MMDVM_FM_PARAMS1:
+      if (length < 8U)
+        err = 4U;
+      else
+      {
+        uint8_t  speed     = buffer[0U];;
+        uint16_t frequency = buffer[1U] * 10U;
+        uint8_t  time      = buffer[2U];
+        uint8_t  holdoff   = buffer[3U];
+        uint8_t  highLevel = buffer[4U];
+        uint8_t  lowLevel  = buffer[5U];
+
+        bool callAtStart = (buffer[6U] & 0x01U) == 0x01U;
+        bool callAtEnd   = (buffer[6U] & 0x02U) == 0x02U;
+        bool callAtLatch = (buffer[6U] & 0x04U) == 0x04U;
+
+        char callsign[50U];
+        uint8_t n = 0U;
+        for (uint8_t i = 7U; i < length; i++, n++)
+          callsign[n] = buffer[i];
+        callsign[n] = '\0';
+
+        err = setCallsign(callsign, speed, frequency, time, holdoff, highLevel, lowLevel, callAtStart, callAtEnd, callAtLatch);
+      }
+      if (err != 0U)
+        DEBUG2("Received invalid FM params 1", err);
+      break;
+    case MMDVM_FM_PARAMS2:
+      if (length < 6U)
+        err = 4U;
+      else
+      {
+        uint8_t  speed     = buffer[0U];
+        uint16_t frequency = buffer[1U] * 10U;
+        uint8_t  minTime   = buffer[2U];
+        uint16_t delay     = buffer[3U] * 10U;
+        uint8_t  level     = buffer[4U];
+
+        char ack[50U];
+        uint8_t n = 0U;
+        for (uint8_t i = 5U; i < length; i++, n++)
+          ack[n] = buffer[i];
+        ack[n] = '\0';
+
+        err =  setAck(ack, speed, frequency, minTime, delay, level);
+      }
+      if (err != 0U)
+        DEBUG2("Received invalid FM params 2", err);
+      break;
+    case MMDVM_FM_PARAMS3:
+      if (length < 14U)
+        err = 4U;
+      else
+      {
+        uint16_t timeout        = buffer[0U] * 5U;
+        uint8_t  timeoutLevel   = buffer[1U];
+
+        uint8_t  ctcssFrequency     = buffer[2U];
+        uint8_t  ctcssHighThreshold = buffer[3U];
+        uint8_t  ctcssLowThreshold  = buffer[4U];
+        uint8_t  ctcssLevel         = buffer[5U];
+
+        uint8_t  kerchunkTime   = buffer[6U];
+        uint8_t  hangTime       = buffer[7U];
+
+        uint8_t  accessMode     = buffer[8U] & 0x0FU;
+        bool     linkMode       = (buffer[8U] & 0x20U) == 0x20U;
+        bool     noiseSquelch   = (buffer[8U] & 0x40U) == 0x40U;
+        bool     cosInvert      = (buffer[8U] & 0x80U) == 0x80U;
+
+        uint8_t  rfAudioBoost   = buffer[9U];
+        uint8_t  maxDev         = buffer[10U];
+        uint8_t  rxLevel        = buffer[11U];
+
+        uint8_t  squelchHighThreshold = buffer[12U];
+        uint8_t  squelchLowThreshold  = buffer[13U];
+
+        err = setMisc(timeout, timeoutLevel, ctcssFrequency, ctcssHighThreshold, ctcssLowThreshold, ctcssLevel, kerchunkTime, hangTime, accessMode, linkMode, cosInvert, noiseSquelch, squelchHighThreshold, squelchLowThreshold, rfAudioBoost, maxDev, rxLevel);
+      }
+      if (err != 0U)
+        DEBUG2("Received invalid FM params 3", err);
+      break;
+    case MMDVM_FM_PARAMS4:
+      if (length < 4U)
+        err =  4U;
+      else
+      {
+        uint8_t  audioBoost = buffer[0U];
+        uint8_t  speed      = buffer[1U];
+        uint16_t frequency  = buffer[2U] * 10U;
+        uint8_t  level      = buffer[3U];
+
+        char ack[50U];
+        uint8_t n = 0U;
+        for (uint8_t i = 4U; i < length; i++, n++)
+          ack[n] = buffer[i];
+        ack[n] = '\0';
+        err = setExt(ack, audioBoost, speed, frequency, level);
+      }
+      if (err != 0U)
+        DEBUG2("Received invalid FM params 4", err);
+      break;
     }
 
     return err;

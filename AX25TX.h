@@ -43,6 +43,9 @@ public:
 
   uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
+  CAX25RX rx;
+
+
 
 private:
   uint8_t    m_poBuffer[600U];

@@ -57,7 +57,8 @@ m_poLen(0U),
 m_poPtr(0U),
 m_txDelay(360U),
 m_tablePtr(0U),
-m_nrzi(false)
+m_nrzi(false),
+rx()
 {
 }
 
@@ -68,7 +69,7 @@ void CAX25TX::process()
 
   if (!m_duplex) {
     if (m_poPtr == 0U) {
-      bool tx = ax25RX.canTX();
+      bool tx = rx.canTX();
       if (!tx)
         return;
     }

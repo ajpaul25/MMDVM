@@ -483,107 +483,6 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 }
 
 //todo: not generic
-#if defined(MODE_FM)
-uint8_t CSerialPort::setFMParams1(const uint8_t* data, uint16_t length)
-{
-  if (length < 8U)
-    return 4U;
-
-  uint8_t  speed     = data[0U];;
-  uint16_t frequency = data[1U] * 10U;
-  uint8_t  time      = data[2U];
-  uint8_t  holdoff   = data[3U];
-  uint8_t  highLevel = data[4U];
-  uint8_t  lowLevel  = data[5U];
-
-  bool callAtStart = (data[6U] & 0x01U) == 0x01U;
-  bool callAtEnd   = (data[6U] & 0x02U) == 0x02U;
-  bool callAtLatch = (data[6U] & 0x04U) == 0x04U;
-
-  char callsign[50U];
-  uint8_t n = 0U;
-  for (uint8_t i = 7U; i < length; i++, n++)
-    callsign[n] = data[i];
-  callsign[n] = '\0';
-
-  return fm.setCallsign(callsign, speed, frequency, time, holdoff, highLevel, lowLevel, callAtStart, callAtEnd, callAtLatch);
-}
-
-//todo: not generic
-uint8_t CSerialPort::setFMParams2(const uint8_t* data, uint16_t length)
-{
-  if (length < 6U)
-    return 4U;
-
-  uint8_t  speed     = data[0U];
-  uint16_t frequency = data[1U] * 10U;
-  uint8_t  minTime   = data[2U];
-  uint16_t delay     = data[3U] * 10U;
-  uint8_t  level     = data[4U];
-
-  char ack[50U];
-  uint8_t n = 0U;
-  for (uint8_t i = 5U; i < length; i++, n++)
-    ack[n] = data[i];
-  ack[n] = '\0';
-
-  return fm.setAck(ack, speed, frequency, minTime, delay, level);
-}
-
-//todo: not generic
-uint8_t CSerialPort::setFMParams3(const uint8_t* data, uint16_t length)
-{
-  if (length < 14U)
-    return 4U;
-
-  uint16_t timeout        = data[0U] * 5U;
-  uint8_t  timeoutLevel   = data[1U];
-
-  uint8_t  ctcssFrequency     = data[2U];
-  uint8_t  ctcssHighThreshold = data[3U];
-  uint8_t  ctcssLowThreshold  = data[4U];
-  uint8_t  ctcssLevel         = data[5U];
-
-  uint8_t  kerchunkTime   = data[6U];
-  uint8_t  hangTime       = data[7U];
-
-  uint8_t  accessMode     = data[8U] & 0x0FU;
-  bool     linkMode       = (data[8U] & 0x20U) == 0x20U;
-  bool     noiseSquelch   = (data[8U] & 0x40U) == 0x40U;
-  bool     cosInvert      = (data[8U] & 0x80U) == 0x80U;
-
-  uint8_t  rfAudioBoost   = data[9U];
-  uint8_t  maxDev         = data[10U];
-  uint8_t  rxLevel        = data[11U];
-
-  uint8_t  squelchHighThreshold = data[12U];
-  uint8_t  squelchLowThreshold  = data[13U];
-
-  return fm.setMisc(timeout, timeoutLevel, ctcssFrequency, ctcssHighThreshold, ctcssLowThreshold, ctcssLevel, kerchunkTime, hangTime, accessMode, linkMode, cosInvert, noiseSquelch, squelchHighThreshold, squelchLowThreshold, rfAudioBoost, maxDev, rxLevel);
-}
-
-//todo: not generic
-uint8_t CSerialPort::setFMParams4(const uint8_t* data, uint16_t length)
-{
-  if (length < 4U)
-    return 4U;
-
-  uint8_t  audioBoost = data[0U];
-  uint8_t  speed      = data[1U];
-  uint16_t frequency  = data[2U] * 10U;
-  uint8_t  level      = data[3U];
-
-  char ack[50U];
-  uint8_t n = 0U;
-  for (uint8_t i = 4U; i < length; i++, n++)
-    ack[n] = data[i];
-  ack[n] = '\0';
-
-  return fm.setExt(ack, audioBoost, speed, frequency, level);
-}
-#endif
-
-//todo: not generic
 uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
 {
   if (length < 1U)
@@ -746,43 +645,23 @@ void CSerialPort::setMode(MMDVM_STATE modemState)
       break;
   }
 
-#if defined(MODE_DSTAR)
-  if (modemState != STATE_DSTAR)
-    dstarRX.reset();
-#endif
-
-#if defined(MODE_DMR)
-  if (modemState != STATE_DMR) {
-    dmrIdleRX.reset();
-    dmrDMORX.reset();
-    dmrRX.reset();
+  for(int i=0; i<24; i++)
+  {
+    if(modemState != m_mode[i].stateid)
+    {
+      if (m_mode[i].rx)
+        m_mode[i].rx->reset();
+      if (m_mode[i].idlerx)
+        m_mode[i].idlerx->reset();
+      if (m_mode[i].orx)
+        m_mode[i].orx->reset();
+      if (m_mode[i].stateid == STATE_FM)
+      {
+        CFM fm = *(static_cast<CFM*>(m_mode[i].tx));
+        fm.reset();
+      }
+    }
   }
-#endif
-
-#if defined(MODE_YSF)
-  if (modemState != STATE_YSF)
-    ysfRX.reset();
-#endif
-
-#if defined(MODE_P25)
-  if (modemState != STATE_P25)
-    p25RX.reset();
-#endif
-
-#if defined(MODE_NXDN)
-  if (modemState != STATE_NXDN)
-    nxdnRX.reset();
-#endif
-
-#if defined(MODE_M17)
-  if (modemState != STATE_M17)
-    m17RX.reset();
-#endif
-
-#if defined(MODE_FM)
-  if (modemState != STATE_FM)
-    fm.reset();
-#endif
 
   cwIdTX.reset();
 
@@ -939,47 +818,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       break;
 
 //todo: not generic
-#if defined(MODE_FM)
-    case MMDVM_FM_PARAMS1:
-      err = setFMParams1(buffer, length);
-      if (err == 0U) {
-        sendACK(type);
-      } else {
-        DEBUG2("Received invalid FM params 1", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_FM_PARAMS2:
-      err = setFMParams2(buffer, length);
-      if (err == 0U) {
-        sendACK(type);
-      } else {
-        DEBUG2("Received invalid FM params 2", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_FM_PARAMS3:
-      err = setFMParams3(buffer, length);
-      if (err == 0U) {
-        sendACK(type);
-      } else {
-        DEBUG2("Received invalid FM params 3", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_FM_PARAMS4:
-      err = setFMParams4(buffer, length);
-      if (err == 0U) {
-        sendACK(type);
-      } else {
-        DEBUG2("Received invalid FM params 4", err);
-        sendNAK(type, err);
-      }
-      break;
-#else
+#if !defined(MODE_FM)
     case MMDVM_FM_PARAMS1:
     case MMDVM_FM_PARAMS2:
     case MMDVM_FM_PARAMS3:

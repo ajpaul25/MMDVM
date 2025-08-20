@@ -47,7 +47,7 @@ modeStruct m_mode[24];
 
 //todo: not generic
 #if defined(MODE_DSTAR)
-CDStarRX dstarRX;
+//CDStarRX dstarRX;
 //CDStarTX dstarTX;
 
 CCalDStarRX calDStarRX;
@@ -55,37 +55,37 @@ CCalDStarTX calDStarTX;
 #endif
 
 #if defined(MODE_DMR)
-CDMRIdleRX dmrIdleRX;
-CDMRRX dmrRX;
+//CDMRIdleRX dmrIdleRX;
+//CDMRRX dmrRX;
 //CDMRTX dmrTX;
 
-CDMRDMORX dmrDMORX;
+//CDMRDMORX dmrDMORX;
 //CDMRDMOTX dmrDMOTX;
 
 CCalDMR calDMR;
 #endif
 
 #if defined(MODE_YSF)
-CYSFRX ysfRX;
+//CYSFRX ysfRX;
 //CYSFTX ysfTX;
 #endif
 
 #if defined(MODE_P25)
-CP25RX p25RX;
+//CP25RX p25RX;
 //CP25TX p25TX;
 
 CCalP25 calP25;
 #endif
 
 #if defined(MODE_NXDN)
-CNXDNRX nxdnRX;
+//CNXDNRX nxdnRX;
 //CNXDNTX nxdnTX;
 
 CCalNXDN calNXDN;
 #endif
 
 #if defined(MODE_M17)
-CM17RX m17RX;
+//CM17RX m17RX;
 //CM17TX m17TX;
 
 CCalM17 calM17;
@@ -97,12 +97,12 @@ CCalPOCSAG calPOCSAG;
 #endif
 
 #if defined(MODE_FM)
-CFM    fm;
+//CFM    fm;
 CCalFM calFM;
 #endif
 
 #if defined(MODE_AX25)
-CAX25RX ax25RX;
+//CAX25RX ax25RX;
 //CAX25TX ax25TX;
 #endif
 
@@ -138,13 +138,13 @@ void setup()
   m_mode[m].filterStateSize = 40U;
   m++;
 
-  m_mode[m].idlerx = &dmrIdleRX;
-  m_mode[m].rx = &dmrRX;
+  m_mode[m].idlerx = new CDMRIdleRX();
+  m_mode[m].rx = new CDMRRX();
   m_mode[m].tx = new CDMRTX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calDMR;
   m_mode[m].caltx->tx = *m_mode[m].tx;
-  m_mode[m].orx = &dmrDMORX;
+  m_mode[m].orx = new CDMRDMORX();
   m_mode[m].otx = new CDMRDMOTX();
   m_mode[m].caltx->otx = *m_mode[m].otx;
   m_mode[m].condition = [](){ return m_dmrEnable && m_modemState == STATE_DMR; };
@@ -160,7 +160,7 @@ void setup()
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &ysfRX;
+  m_mode[m].rx = new CYSFRX();
   m_mode[m].tx = new CYSFTX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = 0;
@@ -179,7 +179,7 @@ void setup()
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &p25RX;
+  m_mode[m].rx = new CP25RX();
   m_mode[m].tx = new CP25TX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calP25;
@@ -199,8 +199,8 @@ void setup()
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &nxdnRX;
-  m_mode[m].tx = new CNXDNTX;
+  m_mode[m].rx = new CNXDNRX();
+  m_mode[m].tx = new CNXDNTX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calNXDN;
   m_mode[m].caltx->tx = *m_mode[m].tx;
@@ -225,7 +225,7 @@ void setup()
   m++;
 
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &m17RX;
+  m_mode[m].rx = new CM17RX();
   m_mode[m].tx = new CM17TX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calM17;
@@ -266,7 +266,7 @@ void setup()
 
   m_mode[m].idlerx = 0;
   m_mode[m].rx = 0;
-  m_mode[m].tx = &fm;
+  m_mode[m].tx = new CFM();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = &calFM;
   m_mode[m].caltx->tx = *m_mode[m].tx;
@@ -282,7 +282,7 @@ void setup()
   m++;
   
   m_mode[m].idlerx = 0;
-  m_mode[m].rx = &ax25RX;
+  m_mode[m].rx = new CAX25RX();
   m_mode[m].tx = new CAX25TX();
   m_mode[m].calrx = 0;
   m_mode[m].caltx = 0;
