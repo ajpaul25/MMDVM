@@ -181,11 +181,11 @@ extern CCalDStarTX calDStarTX;
 #endif
 
 #if defined(MODE_DMR)
-extern CDMRIdleRX dmrIdleRX;
+//extern CDMRIdleRX dmrIdleRX;
 //extern CDMRRX dmrRX;
 //extern CDMRTX dmrTX;
 
-extern CDMRDMORX dmrDMORX;
+//extern CDMRDMORX dmrDMORX;
 //extern CDMRDMOTX dmrDMOTX;
 
 extern CCalDMR calDMR;
