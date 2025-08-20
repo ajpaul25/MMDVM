@@ -103,7 +103,8 @@ uint8_t CAX25TX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t le
         DEBUG2("Received invalid AX.25 data", err);
       break;
     }
-
+    if( err==0U )
+      err = 255; //suppress setMode
     return err;
 }
 

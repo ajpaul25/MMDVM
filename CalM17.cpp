@@ -53,6 +53,16 @@ void CCalM17::process()
   tx.writeData(PREAMBLE, M17_FRAME_LENGTH_BYTES + 1U);
 }
 
+uint8_t CCalM17::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_M17CAL)
+  if (err != 0U)
+    DEBUG2("Received invalid M17 calibration data", err);
+
+  return err;
+}
+
 uint8_t CCalM17::write(const uint8_t* data, uint16_t length)
 {
   if (length != 1U)

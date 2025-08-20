@@ -42,6 +42,17 @@ void CCalPOCSAG::process()
   tx.writeByte(0xAAU);
 }
 
+uint8_t CCalPOCSAG::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_POCSAGCAL)
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid POCSAG calibration data", err);
+
+  return err;
+}
+
 uint8_t CCalPOCSAG::write(const uint8_t* data, uint16_t length)
 {
   if (length != 1U)

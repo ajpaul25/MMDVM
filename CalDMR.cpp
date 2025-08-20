@@ -111,6 +111,17 @@ void CCalDMR::process()
   }
 }
 
+uint8_t CCalDMR::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K)
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid DMR calibration data", err);
+
+  return err;
+}
+
 void CCalDMR::createData1k(uint8_t n)
 {
   for(uint8_t i = 0; i < 5U; i++)

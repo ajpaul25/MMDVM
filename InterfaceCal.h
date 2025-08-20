@@ -11,6 +11,8 @@ public:
     InterfaceTX tx;
     InterfaceTX otx;
     virtual uint8_t setConfig(const uint8_t* data, uint16_t length);
+    virtual uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
+
 };
 
 #endif // INTERFACECAL_H

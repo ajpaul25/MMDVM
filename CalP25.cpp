@@ -87,6 +87,17 @@ void CCalP25::process()
   }
 }
 
+uint8_t CCalP25::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_P25CAL1K)
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid P25 calibration data", err);
+
+  return err;
+}
+
 uint8_t CCalP25::write(const uint8_t* data, uint16_t length)
 {
   if (length != 1U)

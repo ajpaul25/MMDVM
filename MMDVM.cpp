@@ -50,8 +50,8 @@ modeStruct m_mode[24];
 //CDStarRX dstarRX;
 //CDStarTX dstarTX;
 
-CCalDStarRX calDStarRX;
-CCalDStarTX calDStarTX;
+//CCalDStarRX calDStarRX;
+//CCalDStarTX calDStarTX;
 #endif
 
 #if defined(MODE_DMR)
@@ -62,7 +62,7 @@ CCalDStarTX calDStarTX;
 //CDMRDMORX dmrDMORX;
 //CDMRDMOTX dmrDMOTX;
 
-CCalDMR calDMR;
+//CCalDMR calDMR;
 #endif
 
 #if defined(MODE_YSF)
@@ -74,31 +74,31 @@ CCalDMR calDMR;
 //CP25RX p25RX;
 //CP25TX p25TX;
 
-CCalP25 calP25;
+//CCalP25 calP25;
 #endif
 
 #if defined(MODE_NXDN)
 //CNXDNRX nxdnRX;
 //CNXDNTX nxdnTX;
 
-CCalNXDN calNXDN;
+//CCalNXDN calNXDN;
 #endif
 
 #if defined(MODE_M17)
 //CM17RX m17RX;
 //CM17TX m17TX;
 
-CCalM17 calM17;
+//CCalM17 calM17;
 #endif
 
 #if defined(MODE_POCSAG)
 //CPOCSAGTX  pocsagTX;
-CCalPOCSAG calPOCSAG;
+//CCalPOCSAG calPOCSAG;
 #endif
 
 #if defined(MODE_FM)
 //CFM    fm;
-CCalFM calFM;
+//CCalFM calFM;
 #endif
 
 #if defined(MODE_AX25)
@@ -122,7 +122,8 @@ void setup()
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CDStarRX();
   m_mode[m].tx = new CDStarTX();
-  m_mode[m].calrx = &calDStarRX;
+  m_mode[m].calrx = new CCalDStarRX();
+  m_mode[m].caltx = new CCalDStarTX();
   m_mode[m].caltx->tx = *m_mode[m].tx;//&calDStarTX;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
@@ -142,7 +143,7 @@ void setup()
   m_mode[m].rx = new CDMRRX();
   m_mode[m].tx = new CDMRTX();
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calDMR;
+  m_mode[m].caltx = new CCalDMR();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = new CDMRDMORX();
   m_mode[m].otx = new CDMRDMOTX();
@@ -182,7 +183,7 @@ void setup()
   m_mode[m].rx = new CP25RX();
   m_mode[m].tx = new CP25TX();
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calP25;
+  m_mode[m].caltx = new CCalP25();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
@@ -202,7 +203,7 @@ void setup()
   m_mode[m].rx = new CNXDNRX();
   m_mode[m].tx = new CNXDNTX();
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calNXDN;
+  m_mode[m].caltx = new CCalNXDN();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
@@ -228,7 +229,7 @@ void setup()
   m_mode[m].rx = new CM17RX();
   m_mode[m].tx = new CM17TX();
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calM17;
+  m_mode[m].caltx = new CCalM17();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
@@ -249,7 +250,7 @@ void setup()
   CPOCSAGTX *ptx = new CPOCSAGTX();
   m_mode[m].tx = ptx;
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calPOCSAG;
+  m_mode[m].caltx = new CCalPOCSAG();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;
@@ -268,7 +269,7 @@ void setup()
   m_mode[m].rx = 0;
   m_mode[m].tx = new CFM();
   m_mode[m].calrx = 0;
-  m_mode[m].caltx = &calFM;
+  m_mode[m].caltx = new CCalFM();
   m_mode[m].caltx->tx = *m_mode[m].tx;
   m_mode[m].orx = 0;
   m_mode[m].otx = 0;

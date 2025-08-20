@@ -119,6 +119,16 @@ void CCalFM::process()
   }
 }
 
+uint8_t CCalFM::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K)
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid FM calibration data", err);
+
+  return err;
+}
 
 uint8_t CCalFM::write(const uint8_t* data, uint16_t length)
 {

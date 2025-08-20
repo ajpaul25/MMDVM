@@ -84,6 +84,17 @@ void CCalNXDN::process()
   }
 }
 
+uint8_t CCalNXDN::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_NXDNCAL1K )
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid NXDN calibration data", err);
+
+  return err;
+}
+
 uint8_t CCalNXDN::write(const uint8_t* data, uint16_t length)
 {
   if (length != 1U)

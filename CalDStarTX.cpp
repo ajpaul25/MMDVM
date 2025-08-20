@@ -167,6 +167,17 @@ void CCalDStarTX::process()
   m_count = (m_count + 1U) % (30U * 21U);
 }
 
+uint8_t CCalDStarTX::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length)
+{
+  uint8_t err = 2U;
+  if (m_modemState == STATE_DSTARCAL)
+    err = write(buffer, length);
+  if (err != 0U)
+    DEBUG2("Received invalid DStar calibration data", err);
+
+  return err;
+}
+
 uint8_t CCalDStarTX::write(const uint8_t* data, uint16_t length)
 {
   CDStarTX dstarTX = *(static_cast<CDStarTX*>(&tx));

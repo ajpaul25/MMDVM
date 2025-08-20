@@ -828,34 +828,10 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
 #endif
 
     case MMDVM_CAL_DATA:
-#if defined(MODE_DSTAR)
-      if (m_modemState == STATE_DSTARCAL)
-        err = calDStarTX.write(buffer, length);
-#endif
-#if defined(MODE_DMR)
-      if (m_modemState == STATE_DMRCAL || m_modemState == STATE_LFCAL || m_modemState == STATE_DMRCAL1K || m_modemState == STATE_DMRDMO1K)
-        err = calDMR.write(buffer, length);
-#endif
-#if defined(MODE_FM)
-      if (m_modemState == STATE_FMCAL10K || m_modemState == STATE_FMCAL12K || m_modemState == STATE_FMCAL15K || m_modemState == STATE_FMCAL20K || m_modemState == STATE_FMCAL25K || m_modemState == STATE_FMCAL30K)
-        err = calFM.write(buffer, length);
-#endif
-#if defined(MODE_P25)
-      if (m_modemState == STATE_P25CAL1K)
-        err = calP25.write(buffer, length);
-#endif
-#if defined(MODE_NXDN)
-      if (m_modemState == STATE_NXDNCAL1K)
-        err = calNXDN.write(buffer, length);
-#endif
-#if defined(MODE_M17)
-      if (m_modemState == STATE_M17CAL)
-        err = calM17.write(buffer, length);
-#endif
-#if defined(MODE_POCSAG)
-      if (m_modemState == STATE_POCSAGCAL)
-        err = calPOCSAG.write(buffer, length);
-#endif
+      for (int i=0; i<24; i++) //step through all of our mode structs
+        if( m_mode[i].caltx )
+          err = m_mode[i].caltx->processMessage( type, buffer, length );
+
       if (err == 0U) {
         sendACK(type);
       } else {

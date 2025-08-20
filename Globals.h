@@ -176,8 +176,8 @@ extern CIO io;
 //extern CDStarRX dstarRX;
 //extern CDStarTX dstarTX;
 
-extern CCalDStarRX calDStarRX;
-extern CCalDStarTX calDStarTX;
+//extern CCalDStarRX calDStarRX;
+//extern CCalDStarTX calDStarTX;
 #endif
 
 #if defined(MODE_DMR)
@@ -188,7 +188,7 @@ extern CCalDStarTX calDStarTX;
 //extern CDMRDMORX dmrDMORX;
 //extern CDMRDMOTX dmrDMOTX;
 
-extern CCalDMR calDMR;
+//extern CCalDMR calDMR;
 #endif
 
 #if defined(MODE_YSF)
@@ -200,31 +200,31 @@ extern CCalDMR calDMR;
 //extern CP25RX p25RX;
 //extern CP25TX p25TX;
 
-extern CCalP25 calP25;
+//extern CCalP25 calP25;
 #endif
 
 #if defined(MODE_NXDN)
 //extern CNXDNRX nxdnRX;
 //extern CNXDNTX nxdnTX;
 
-extern CCalNXDN calNXDN;
+//extern CCalNXDN calNXDN;
 #endif
 
 #if defined(MODE_POCSAG)
 //extern CPOCSAGTX  pocsagTX;
-extern CCalPOCSAG calPOCSAG;
+//extern CCalPOCSAG calPOCSAG;
 #endif
 
 #if defined(MODE_M17)
 //extern CM17RX m17RX;
 //extern CM17TX m17TX;
 
-extern CCalM17 calM17;
+//extern CCalM17 calM17;
 #endif
 
 #if defined(MODE_FM)
 //extern CFM    fm;
-extern CCalFM calFM;
+//extern CCalFM calFM;
 #endif
 
 #if defined(MODE_AX25)
