@@ -45,67 +45,6 @@ bool m_dcd = false;
 
 modeStruct m_mode[24];
 
-//todo: not generic
-#if defined(MODE_DSTAR)
-//CDStarRX dstarRX;
-//CDStarTX dstarTX;
-
-//CCalDStarRX calDStarRX;
-//CCalDStarTX calDStarTX;
-#endif
-
-#if defined(MODE_DMR)
-//CDMRIdleRX dmrIdleRX;
-//CDMRRX dmrRX;
-//CDMRTX dmrTX;
-
-//CDMRDMORX dmrDMORX;
-//CDMRDMOTX dmrDMOTX;
-
-//CCalDMR calDMR;
-#endif
-
-#if defined(MODE_YSF)
-//CYSFRX ysfRX;
-//CYSFTX ysfTX;
-#endif
-
-#if defined(MODE_P25)
-//CP25RX p25RX;
-//CP25TX p25TX;
-
-//CCalP25 calP25;
-#endif
-
-#if defined(MODE_NXDN)
-//CNXDNRX nxdnRX;
-//CNXDNTX nxdnTX;
-
-//CCalNXDN calNXDN;
-#endif
-
-#if defined(MODE_M17)
-//CM17RX m17RX;
-//CM17TX m17TX;
-
-//CCalM17 calM17;
-#endif
-
-#if defined(MODE_POCSAG)
-//CPOCSAGTX  pocsagTX;
-//CCalPOCSAG calPOCSAG;
-#endif
-
-#if defined(MODE_FM)
-//CFM    fm;
-//CCalFM calFM;
-#endif
-
-#if defined(MODE_AX25)
-//CAX25RX ax25RX;
-//CAX25TX ax25TX;
-#endif
-
 CCalRSSI calRSSI;
 
 CCWIdTX cwIdTX;
