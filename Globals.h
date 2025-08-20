@@ -173,7 +173,7 @@ extern CIO io;
 
 //todo: not generic
 #if defined(MODE_DSTAR)
-extern CDStarRX dstarRX;
+//extern CDStarRX dstarRX;
 //extern CDStarTX dstarTX;
 
 extern CCalDStarRX calDStarRX;
@@ -182,7 +182,7 @@ extern CCalDStarTX calDStarTX;
 
 #if defined(MODE_DMR)
 extern CDMRIdleRX dmrIdleRX;
-extern CDMRRX dmrRX;
+//extern CDMRRX dmrRX;
 //extern CDMRTX dmrTX;
 
 extern CDMRDMORX dmrDMORX;
@@ -192,19 +192,19 @@ extern CCalDMR calDMR;
 #endif
 
 #if defined(MODE_YSF)
-extern CYSFRX ysfRX;
+//extern CYSFRX ysfRX;
 //extern CYSFTX ysfTX;
 #endif
 
 #if defined(MODE_P25)
-extern CP25RX p25RX;
+//extern CP25RX p25RX;
 //extern CP25TX p25TX;
 
 extern CCalP25 calP25;
 #endif
 
 #if defined(MODE_NXDN)
-extern CNXDNRX nxdnRX;
+//extern CNXDNRX nxdnRX;
 //extern CNXDNTX nxdnTX;
 
 extern CCalNXDN calNXDN;
@@ -216,19 +216,19 @@ extern CCalPOCSAG calPOCSAG;
 #endif
 
 #if defined(MODE_M17)
-extern CM17RX m17RX;
+//extern CM17RX m17RX;
 //extern CM17TX m17TX;
 
 extern CCalM17 calM17;
 #endif
 
 #if defined(MODE_FM)
-extern CFM    fm;
+//extern CFM    fm;
 extern CCalFM calFM;
 #endif
 
 #if defined(MODE_AX25)
-extern CAX25RX ax25RX;
+//extern CAX25RX ax25RX;
 //extern CAX25TX ax25TX;
 #endif
 
