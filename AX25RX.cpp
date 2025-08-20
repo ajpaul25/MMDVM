@@ -87,10 +87,12 @@ m_c(0xF6U)
   initRand();
 }
 
-void CAX25RX::samples(q15_t* samples, uint8_t length)
+void CAX25RX::samples(const q15_t* samples, const uint16_t* rssi, uint8_t length)
 {
+  q15_t input[RX_BLOCK_SIZE];
   q15_t output[RX_BLOCK_SIZE];
-  ::arm_fir_fast_q15(&m_filter, samples, output, RX_BLOCK_SIZE);
+  memcpy(input,samples,RX_BLOCK_SIZE);
+  ::arm_fir_fast_q15(&m_filter, input, output, RX_BLOCK_SIZE);
 
   m_count++;
 

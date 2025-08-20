@@ -22,6 +22,7 @@
 
 #include "Config.h"
 #include "Globals.h"
+#include "Filters.h"
 
 // Global variables
 MMDVM_STATE m_modemState = STATE_IDLE;
@@ -129,7 +130,9 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_DSTAR;
   m_mode[m].enabled = &m_dstarEnable;
-
+  m_mode[m].filtertaps = GAUSSIAN_0_5_FILTER;
+  m_mode[m].filterlen = GAUSSIAN_0_5_FILTER_LEN;
+  m_mode[m].filterStateSize = 40U;
   m++;
 
   m_mode[m].idlerx = &dmrIdleRX;
@@ -148,7 +151,9 @@ void setup()
   m_mode[m].spacelen = 2U;
   m_mode[m].stateid = STATE_DMR;
   m_mode[m].enabled = &m_dmrEnable;
-
+  m_mode[m].filtertaps = RRC_0_2_FILTER;
+  m_mode[m].filterlen = RRC_0_2_FILTER_LEN;
+  m_mode[m].filterStateSize = 70U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -165,6 +170,9 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_YSF;
   m_mode[m].enabled = &m_ysfEnable;
+  m_mode[m].filtertaps = RRC_0_2_FILTER;
+  m_mode[m].filterlen = RRC_0_2_FILTER_LEN;
+  m_mode[m].filterStateSize = 70U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -182,6 +190,9 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_P25;
   m_mode[m].enabled = &m_p25Enable;
+  m_mode[m].filtertaps = BOXCAR5_FILTER;
+  m_mode[m].filterlen = BOXCAR5_FILTER_LEN;
+  m_mode[m].filterStateSize = 30U;
   m++;
 
   m_mode[m].idlerx = 0;
@@ -199,6 +210,15 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_NXDN;
   m_mode[m].enabled = &m_nxdnEnable;
+  #if defined(USE_NXDN_BOXCAR)
+  m_mode[m].filtertaps = BOXCAR10_FILTER;
+  m_mode[m].filterlen = BOXCAR10_FILTER_LEN;
+  m_mode[m].filterStateSize = 40U;
+  #else
+  m_mode[m].filtertaps = NXDN_0_2_FILTER;
+  m_mode[m].filterlen = NXDN_0_2_FILTER_LEN;
+  m_mode[m].filterStateSize = 110U;
+  #endif
   m++;
 
   m_mode[m].idlerx = 0;
@@ -216,6 +236,9 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_M17;
   m_mode[m].enabled = &m_m17Enable;
+  m_mode[m].filtertaps = RRC_0_5_FILTER;
+  m_mode[m].filterlen = RRC_0_5_FILTER_LEN;
+  m_mode[m].filterStateSize = 70U;
   m++;
 
   m_mode[m].idlerx = 0;

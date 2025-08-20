@@ -151,6 +151,10 @@ typedef struct {
   uint8_t spacepos;
   uint8_t stateid;
   bool* enabled;
+  q15_t *filtertaps;
+  uint16_t filterlen;
+  uint8_t filterStateSize;
+  arm_fir_instance_q15 firFilter;
 }modeStruct;
 
 extern modeStruct m_mode[24];
@@ -228,4 +232,3 @@ extern CCalRSSI calRSSI;
 extern CCWIdTX cwIdTX;
 
 #endif
-

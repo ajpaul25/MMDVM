@@ -76,41 +76,11 @@ private:
   q31_t                        m_dcState[4];
 #endif
 
-#if defined(MODE_DSTAR)
-  arm_fir_instance_q15 m_gaussianFilter;
-  q15_t                m_gaussianState[40U];      // NoTaps + BlockSize - 1, 12 + 20 - 1 plus some spare
-#endif
-
-#if defined(MODE_DMR)
-  arm_fir_instance_q15 m_rrc02Filter1;
-  q15_t                m_rrc02State1[70U];         // NoTaps + BlockSize - 1, 42 + 20 - 1 plus some spare
-#endif
-
-#if defined(MODE_YSF)
-  arm_fir_instance_q15 m_rrc02Filter2;
-  q15_t                m_rrc02State2[70U];         // NoTaps + BlockSize - 1, 42 + 20 - 1 plus some spare
-#endif
-
-#if defined(MODE_P25)
-  arm_fir_instance_q15 m_boxcar5Filter;
-  q15_t                m_boxcar5State[30U];        // NoTaps + BlockSize - 1,  6 + 20 - 1 plus some spare
-#endif
-
 #if defined(MODE_NXDN)
-#if defined(USE_NXDN_BOXCAR)
-  arm_fir_instance_q15 m_boxcar10Filter;
-  q15_t                m_boxcar10State[40U];      // NoTaps + BlockSize - 1, 10 + 20 - 1 plus some spare
-#else
-  arm_fir_instance_q15 m_nxdnFilter;
+#if !defined(USE_NXDN_BOXCAR)
   arm_fir_instance_q15 m_nxdnISincFilter;
-  q15_t                m_nxdnState[110U];         // NoTaps + BlockSize - 1, 82 + 20 - 1 plus some spare
   q15_t                m_nxdnISincState[60U];     // NoTaps + BlockSize - 1, 32 + 20 - 1 plus some spare
 #endif
-#endif
-
-#if defined(MODE_M17)
-  arm_fir_instance_q15 m_rrc05Filter;
-  q15_t                m_rrc05State[70U];         // NoTaps + BlockSize - 1, 42 + 20 - 1 plus some spare
 #endif
 
   bool                 m_pttInvert;

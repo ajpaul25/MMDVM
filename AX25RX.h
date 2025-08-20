@@ -30,7 +30,7 @@ class CAX25RX : public InterfaceRX {
 public:
   CAX25RX();
 
-  void samples(q15_t* samples, uint8_t length);
+  void samples(const q15_t* samples, const uint16_t* rssi, uint8_t length);
 
   void setParams(int8_t twist, uint8_t slotTime, uint8_t pPersist);
 
