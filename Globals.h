@@ -40,6 +40,7 @@
 
 #include <arm_math.h>
 
+//todo: not generic
 enum MMDVM_STATE {
   STATE_IDLE      = 0,
   STATE_DSTAR     = 1,
@@ -74,6 +75,7 @@ enum MMDVM_STATE {
 };
 
 #include "SerialPort.h"
+//todo: not generic
 #include "DMRIdleRX.h"
 #include "DMRDMORX.h"
 #include "DMRDMOTX.h"
@@ -126,6 +128,7 @@ const uint16_t TX_BUFFER_LEN = 4000U;
 
 extern MMDVM_STATE m_modemState;
 
+//todo: not generic
 extern bool m_dstarEnable;
 extern bool m_dmrEnable;
 extern bool m_ysfEnable;
@@ -167,6 +170,7 @@ extern bool m_dcd;
 extern CSerialPort serial;
 extern CIO io;
 
+//todo: not generic
 #if defined(MODE_DSTAR)
 extern CDStarRX dstarRX;
 //extern CDStarTX dstarTX;

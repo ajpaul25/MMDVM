@@ -36,6 +36,7 @@ public:
 
   void process();
 
+  //todo: not generic
 #if defined(MODE_DSTAR)
   void writeDStarHeader(const uint8_t* header, uint8_t length);
   void writeDStarData(const uint8_t* data, uint8_t length);
@@ -118,6 +119,7 @@ private:
   void    setMode(MMDVM_STATE modemState);
   void    processMessage(uint8_t type, const uint8_t* data, uint16_t length);
 
+  //todo: not generic
 #if defined(MODE_FM)
   uint8_t setFMParams1(const uint8_t* data, uint16_t length);
   uint8_t setFMParams2(const uint8_t* data, uint16_t length);

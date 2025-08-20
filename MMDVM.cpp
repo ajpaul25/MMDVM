@@ -27,6 +27,7 @@
 // Global variables
 MMDVM_STATE m_modemState = STATE_IDLE;
 
+//todo: not generic
 bool m_dstarEnable  = true;
 bool m_dmrEnable    = true;
 bool m_ysfEnable    = true;
@@ -44,6 +45,7 @@ bool m_dcd = false;
 
 modeStruct m_mode[24];
 
+//todo: not generic
 #if defined(MODE_DSTAR)
 CDStarRX dstarRX;
 //CDStarTX dstarTX;
@@ -111,6 +113,7 @@ CCWIdTX cwIdTX;
 CSerialPort serial;
 CIO io;
 
+//todo: not generic
 void setup()
 {
   serial.start();

@@ -236,6 +236,7 @@ void CSerialPort::getVersion()
 
   reply[3U] = PROTOCOL_VERSION;
 
+  //todo: not generic
   // Return two bytes of mode capabilities
   reply[4U] = 0x00U;
 #if defined(MODE_DSTAR)
@@ -284,6 +285,7 @@ void CSerialPort::getVersion()
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 {
   if (length < 37U)
@@ -521,6 +523,7 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
+//todo: not generic
 #if defined(MODE_FM)
 uint8_t CSerialPort::setFMParams1(const uint8_t* data, uint16_t length)
 {
@@ -547,6 +550,7 @@ uint8_t CSerialPort::setFMParams1(const uint8_t* data, uint16_t length)
   return fm.setCallsign(callsign, speed, frequency, time, holdoff, highLevel, lowLevel, callAtStart, callAtEnd, callAtLatch);
 }
 
+//todo: not generic
 uint8_t CSerialPort::setFMParams2(const uint8_t* data, uint16_t length)
 {
   if (length < 6U)
@@ -567,6 +571,7 @@ uint8_t CSerialPort::setFMParams2(const uint8_t* data, uint16_t length)
   return fm.setAck(ack, speed, frequency, minTime, delay, level);
 }
 
+//todo: not generic
 uint8_t CSerialPort::setFMParams3(const uint8_t* data, uint16_t length)
 {
   if (length < 14U)
@@ -598,6 +603,7 @@ uint8_t CSerialPort::setFMParams3(const uint8_t* data, uint16_t length)
   return fm.setMisc(timeout, timeoutLevel, ctcssFrequency, ctcssHighThreshold, ctcssLowThreshold, ctcssLevel, kerchunkTime, hangTime, accessMode, linkMode, cosInvert, noiseSquelch, squelchHighThreshold, squelchLowThreshold, rfAudioBoost, maxDev, rxLevel);
 }
 
+//todo: not generic
 uint8_t CSerialPort::setFMParams4(const uint8_t* data, uint16_t length)
 {
   if (length < 4U)
@@ -618,6 +624,7 @@ uint8_t CSerialPort::setFMParams4(const uint8_t* data, uint16_t length)
 }
 #endif
 
+//todo: not generic
 uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
 {
   if (length < 1U)
@@ -702,6 +709,7 @@ uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
+//todo: not generic
 void CSerialPort::setMode(MMDVM_STATE modemState)
 {
   switch (modemState) {
@@ -971,6 +979,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       sendACK(type);
       break;
 
+//todo: not generic
 #if defined(MODE_FM)
     case MMDVM_FM_PARAMS1:
       err = setFMParams1(buffer, length);
@@ -1067,141 +1076,6 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       }
       break;
 
-/*#if defined(MODE_P25)
-    case MMDVM_P25_HDR:
-      if (m_p25Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_P25)
-          err = p25TX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_P25);
-      } else {
-        DEBUG2("Received invalid P25 header", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_P25_LDU:
-      if (m_p25Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_P25)
-          err = p25TX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_P25);
-      } else {
-        DEBUG2("Received invalid P25 LDU", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_NXDN)
-    case MMDVM_NXDN_DATA:
-      if (m_nxdnEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_NXDN)
-          err = nxdnTX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_NXDN);
-      } else {
-        DEBUG2("Received invalid NXDN data", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_M17)
-    case MMDVM_M17_LINK_SETUP:
-      if (m_m17Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_M17)
-          err = m17TX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_M17);
-      } else {
-        DEBUG2("Received invalid M17 link setup data", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_M17_STREAM:
-      if (m_m17Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_M17)
-          err = m17TX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_M17);
-      } else {
-        DEBUG2("Received invalid M17 stream data", err);
-        sendNAK(type, err);
-      }
-      break;
-
-    case MMDVM_M17_EOT:
-      if (m_m17Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_M17)
-          err = m17TX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_M17);
-      } else {
-        DEBUG2("Received invalid M17 EOT", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_POCSAG)
-    case MMDVM_POCSAG_DATA:
-      if (m_pocsagEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_POCSAG)
-          err = pocsagTX.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_POCSAG);
-      } else {
-        DEBUG2("Received invalid POCSAG data", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_FM)
-    case MMDVM_FM_DATA:
-      if (m_fmEnable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_FM)
-          err = fm.writeData(buffer, length);
-      }
-      if (err == 0U) {
-        if (m_modemState == STATE_IDLE)
-          setMode(STATE_FM);
-      } else {
-        DEBUG2("Received invalid FM data", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif
-
-#if defined(MODE_AX25)
-    case MMDVM_AX25_DATA:
-      if (m_ax25Enable) {
-        if (m_modemState == STATE_IDLE || m_modemState == STATE_FM)
-          err = ax25TX.writeData(buffer, length);
-      }
-      if (err != 0U) {
-        DEBUG2("Received invalid AX.25 data", err);
-        sendNAK(type, err);
-      }
-      break;
-#endif*/
-
     case MMDVM_TRANSPARENT:
     case MMDVM_QSO_INFO:
       // Do nothing on the MMDVM.
@@ -1249,6 +1123,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
   m_len = 0U;
 }
 
+//todo: not generic
 #if defined(MODE_DSTAR)
 void CSerialPort::writeDStarHeader(const uint8_t* header, uint8_t length)
 {
@@ -1272,6 +1147,7 @@ void CSerialPort::writeDStarHeader(const uint8_t* header, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeDStarData(const uint8_t* data, uint8_t length)
 {
   if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
@@ -1295,6 +1171,7 @@ void CSerialPort::writeDStarData(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeDStarLost()
 {
   if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
@@ -1312,6 +1189,7 @@ void CSerialPort::writeDStarLost()
   writeInt(1U, reply, 3);
 }
 
+//todo: not generic
 void CSerialPort::writeDStarEOT()
 {
   if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
@@ -1330,6 +1208,7 @@ void CSerialPort::writeDStarEOT()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_DMR)
 void CSerialPort::writeDMRData(bool slot, const uint8_t* data, uint8_t length)
 {
@@ -1372,6 +1251,7 @@ void CSerialPort::writeDMRLost(bool slot)
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_YSF)
 void CSerialPort::writeYSFData(const uint8_t* data, uint8_t length)
 {
@@ -1414,6 +1294,7 @@ void CSerialPort::writeYSFLost()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_P25)
 void CSerialPort::writeP25Hdr(const uint8_t* data, uint8_t length)
 {
@@ -1438,6 +1319,7 @@ void CSerialPort::writeP25Hdr(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeP25Ldu(const uint8_t* data, uint8_t length)
 {
   if (m_modemState != STATE_P25 && m_modemState != STATE_IDLE)
@@ -1461,6 +1343,7 @@ void CSerialPort::writeP25Ldu(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeP25Lost()
 {
   if (m_modemState != STATE_P25 && m_modemState != STATE_IDLE)
@@ -1479,6 +1362,7 @@ void CSerialPort::writeP25Lost()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_NXDN)
 void CSerialPort::writeNXDNData(const uint8_t* data, uint8_t length)
 {
@@ -1503,6 +1387,7 @@ void CSerialPort::writeNXDNData(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeNXDNLost()
 {
   if (m_modemState != STATE_NXDN && m_modemState != STATE_IDLE)
@@ -1521,6 +1406,7 @@ void CSerialPort::writeNXDNLost()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_M17)
 void CSerialPort::writeM17LinkSetup(const uint8_t* data, uint8_t length)
 {
@@ -1545,6 +1431,7 @@ void CSerialPort::writeM17LinkSetup(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeM17Stream(const uint8_t* data, uint8_t length)
 {
   if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
@@ -1568,6 +1455,7 @@ void CSerialPort::writeM17Stream(const uint8_t* data, uint8_t length)
   writeInt(1U, reply, count);
 }
 
+//todo: not generic
 void CSerialPort::writeM17EOT()
 {
   if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
@@ -1585,6 +1473,7 @@ void CSerialPort::writeM17EOT()
   writeInt(1U, reply, 3);
 }
 
+//todo: not generic
 void CSerialPort::writeM17Lost()
 {
   if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
@@ -1603,6 +1492,7 @@ void CSerialPort::writeM17Lost()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_FM)
 void CSerialPort::writeFMData(const uint8_t* data, uint16_t length)
 {
@@ -1636,6 +1526,7 @@ void CSerialPort::writeFMData(const uint8_t* data, uint16_t length)
   }
 }
 
+//todo: not generic
 void CSerialPort::writeFMStatus(uint8_t status)
 {
   if (m_modemState != STATE_FM && m_modemState != STATE_IDLE)
@@ -1654,6 +1545,7 @@ void CSerialPort::writeFMStatus(uint8_t status)
   writeInt(1U, reply, 4U);
 }
 
+//todo: not generic
 void CSerialPort::writeFMEOT()
 {
   if (m_modemState != STATE_FM && m_modemState != STATE_IDLE)
@@ -1672,6 +1564,7 @@ void CSerialPort::writeFMEOT()
 }
 #endif
 
+//todo: not generic
 #if defined(MODE_AX25)
 void CSerialPort::writeAX25Data(const uint8_t* data, uint16_t length)
 {
@@ -1744,6 +1637,7 @@ void CSerialPort::writeI2CData(const uint8_t* data, uint8_t length)
 }
 #endif
 
+//todo: not generic
 void CSerialPort::writeCalData(const uint8_t* data, uint8_t length)
 {
   if (m_modemState != STATE_DSTARCAL)

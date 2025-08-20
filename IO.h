@@ -76,6 +76,7 @@ private:
   q31_t                        m_dcState[4];
 #endif
 
+//todo: not generic
 #if defined(MODE_NXDN)
 #if !defined(USE_NXDN_BOXCAR)
   arm_fir_instance_q15 m_nxdnISincFilter;
@@ -86,6 +87,7 @@ private:
   bool                 m_pttInvert;
   q15_t                m_rxLevel;
   q15_t                m_cwIdTXLevel;
+  //todo: not generic
   q15_t                m_dstarTXLevel;
   q15_t                m_dmrTXLevel;
   q15_t                m_ysfTXLevel;
@@ -123,6 +125,7 @@ private:
   void setPTTInt(bool on);
   void setCOSInt(bool on);
 
+  //todo: not generic
   void setDStarInt(bool on);
   void setDMRInt(bool on);
   void setYSFInt(bool on);
