@@ -19,6 +19,7 @@
 #include "Config.h"
 #include "Globals.h"
 #include "SerialPort.h"
+#include <thread>
 
 #if defined(SIMULATOR)
 
@@ -31,6 +32,7 @@ void CSerialPort::beginInt(uint8_t n, int speed)
 
 int CSerialPort::availableForReadInt(uint8_t n)
 {
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
   return false;
 }
 
