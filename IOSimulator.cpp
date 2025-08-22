@@ -52,81 +52,103 @@ extern "C" {
   }
 }
 
+void debug(const char* msg, const char* fname = __builtin_FUNCTION())
+{
+  cout << "DEBUG " << fname << "(): " << msg << "\n";
+}
+
 void CIO::initInt()
 {
-  cout << "loading simulator io\n";
+  debug("loading simulator io");
 }
 
 void CIO::startInt()
 {
-
+  debug("-");
 }
 
 void CIO::interrupt()
 {
-
+  debug("-");
 }
 
 bool CIO::getCOSInt()
 {
+    debug("-");
     return true;
 }
 
 void CIO::setLEDInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setPTTInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setCOSInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setDStarInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setDMRInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setYSFInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setP25Int(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setNXDNInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setM17Int(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setPOCSAGInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::setFMInt(bool on)
 {
+  debug( on ? "on" : "off" );
 }
 
 void CIO::delayInt(unsigned int dly)
 {
+  char sdly[10];
+  sprintf(sdly,"%ld",dly);
+  debug(sdly);
 }
 
 uint8_t CIO::getCPU() const
 {
+  debug("");
   return 0U;
 }
 
 void CIO::getUDID(uint8_t* buffer)
 {
+  debug("");
 }
 
 #endif
