@@ -1,5 +1,4 @@
 #include "simulator.h"
-#include <iostream>
 using namespace std;
 
 void arm_fir_fast_q15 	( 	const arm_fir_instance_q15 *  	S,
