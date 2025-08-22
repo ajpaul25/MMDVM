@@ -98,7 +98,7 @@ else ifdef SystemRoot
 	CLEANCMD=del /S *.o *.hex *.bin *.elf GitVersion.h
 	MDDIRS=md $@
 else
-	CLEANCMD=rm -f $(OBJ_F4) $(OBJ_F7) $(OBJ_SIMULATOR) $(BINDIR)/*.hex $(BINDIR)/*.bin $(BINDIR)/*.elf $(BINDIR)/*.map $(MMDVM_SIMULATOR) GitVersion.h
+	CLEANCMD=rm -f $(OBJ_F4) $(OBJ_F7) $(OBJ_SIMULATOR) $(BINDIR)/*.hex $(BINDIR)/*.bin $(BINDIR)/*.elf $(BINDIR)/*.map $(BINDIR)/$(MMDVM_SIMULATOR) GitVersion.h
 	MDDIRS=mkdir $@
 endif
 
