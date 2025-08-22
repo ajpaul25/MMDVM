@@ -32,3 +32,8 @@ void arm_biquad_cascade_df1_q31 (const arm_biquad_casd_df1_inst_q31 *S, const q3
 {
 
 }
+
+q31_t arm_sin_q31 (q31_t x)
+{
+
+}
