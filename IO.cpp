@@ -307,13 +307,16 @@ void CIO::process()
       {
         q15_t modeVals[RX_BLOCK_SIZE];
         InterfaceRX *rx = m_mode[i].rx;
+#if defined(MODE_FM)
         if( m_mode[i].stateid == STATE_FM ) //todo: not generic
         {
           bool cos = getCOSInt();
           CFM fm = *(static_cast<CFM*>(m_mode[i].tx));
           fm.samples(cos, pfSamples, RX_BLOCK_SIZE);
         }
-        else if ( m_mode[i].stateid == STATE_DSTARCAL ) //todo: not generic
+        else
+#endif
+        if ( m_mode[i].stateid == STATE_DSTARCAL ) //todo: not generic
         {
           CCalDStarRX caldstarrx = *(static_cast<CCalDStarRX*>(m_mode[i].calrx));
           ::arm_fir_fast_q15(&m_mode[i].firFilter, pfSamples, modeVals, RX_BLOCK_SIZE);
@@ -330,6 +333,7 @@ void CIO::process()
             else
               rx = m_mode[i].orx;
           }
+  #if defined (MODE_NXDN)
   #if !defined(USE_NXDN_BOXCAR)
           else if( m_mode[i].stateid == STATE_NXDN ) //todo: not generic
           {
@@ -337,6 +341,7 @@ void CIO::process()
             ::arm_fir_fast_q15(&m_nxdnISincFilter, modeVals, tmpModeVals, RX_BLOCK_SIZE); //additional filter for NXDN
             *modeVals = *tmpModeVals;
           }
+  #endif
   #endif
           rx->samples(modeVals, rssi, RX_BLOCK_SIZE);
         }

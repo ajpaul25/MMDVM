@@ -1,6 +1,7 @@
 #ifndef INTERFACECAL_H
 #define INTERFACECAL_H
 
+#include "base.h"
 #include "InterfaceTX.h"
 
 class InterfaceCal {

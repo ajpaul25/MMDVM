@@ -18,7 +18,7 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if defined(STM32F4XX) || defined(STM32F7XX)
+#if defined(STM32F4XX) || defined(STM32F7XX) || defined(SIMULATOR)
 
 #include "Config.h"
 #include "Globals.h"
@@ -58,6 +58,7 @@ void setup()
   serial.start();
   int m=0;
 
+#if defined(MODE_DSTAR)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CDStarRX();
   m_mode[m].tx = new CDStarTX();
@@ -77,7 +78,9 @@ void setup()
   m_mode[m].filterlen = GAUSSIAN_0_5_FILTER_LEN;
   m_mode[m].filterStateSize = 40U;
   m++;
+#endif
 
+#if defined(MODE_DMR)
   m_mode[m].idlerx = new CDMRIdleRX();
   m_mode[m].rx = new CDMRRX();
   m_mode[m].tx = new CDMRTX();
@@ -98,7 +101,9 @@ void setup()
   m_mode[m].filterlen = RRC_0_2_FILTER_LEN;
   m_mode[m].filterStateSize = 70U;
   m++;
+#endif
 
+#if defined(MODE_YSF)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CYSFRX();
   m_mode[m].tx = new CYSFTX();
@@ -117,7 +122,9 @@ void setup()
   m_mode[m].filterlen = RRC_0_2_FILTER_LEN;
   m_mode[m].filterStateSize = 70U;
   m++;
+#endif
 
+#if defined(MODE_P25)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CP25RX();
   m_mode[m].tx = new CP25TX();
@@ -137,7 +144,9 @@ void setup()
   m_mode[m].filterlen = BOXCAR5_FILTER_LEN;
   m_mode[m].filterStateSize = 30U;
   m++;
+#endif
 
+#if defined(MODE_NXDN)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CNXDNRX();
   m_mode[m].tx = new CNXDNTX();
@@ -153,17 +162,19 @@ void setup()
   m_mode[m].spacelen = 1U;
   m_mode[m].stateid = STATE_NXDN;
   m_mode[m].enabled = &m_nxdnEnable;
-  #if defined(USE_NXDN_BOXCAR)
+#if defined(USE_NXDN_BOXCAR)
   m_mode[m].filtertaps = BOXCAR10_FILTER;
   m_mode[m].filterlen = BOXCAR10_FILTER_LEN;
   m_mode[m].filterStateSize = 40U;
-  #else
+#else
   m_mode[m].filtertaps = NXDN_0_2_FILTER;
   m_mode[m].filterlen = NXDN_0_2_FILTER_LEN;
   m_mode[m].filterStateSize = 110U;
-  #endif
+#endif
   m++;
+#endif
 
+#if defined(MODE_M17)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CM17RX();
   m_mode[m].tx = new CM17TX();
@@ -183,7 +194,9 @@ void setup()
   m_mode[m].filterlen = RRC_0_5_FILTER_LEN;
   m_mode[m].filterStateSize = 70U;
   m++;
+#endif
 
+#if defined(MODE_POCSAG)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = 0;
   CPOCSAGTX *ptx = new CPOCSAGTX();
@@ -203,7 +216,9 @@ void setup()
   m_mode[m].stateid = STATE_POCSAG;
   m_mode[m].enabled = &m_pocsagEnable;
   m++;
+#endif
 
+#if defined(MODE_FM)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = 0;
   m_mode[m].tx = new CFM();
@@ -220,7 +235,8 @@ void setup()
   m_mode[m].stateid = STATE_FM;
   m_mode[m].enabled = &m_fmEnable;
   m++;
-  
+
+#if defined(MODE_AX25)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CAX25RX();
   m_mode[m].tx = new CAX25TX();
@@ -236,6 +252,8 @@ void setup()
   m_mode[m].stateid = STATE_AX25;
   m_mode[m].enabled = &m_ax25Enable;
   m++;
+#endif //MODE_AX25
+#endif //MODE_FM
 }
 
 void loop()

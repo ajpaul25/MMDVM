@@ -21,6 +21,7 @@ MMDVM_PATH=.
 # STM32 library paths
 F4_LIB_PATH=./STM32F4XX_Lib
 F7_LIB_PATH=./STM32F7XX_Lib
+SIMULATOR_LIB_PATH=./Simulator_Lib
 
 # MCU external clock frequency (Hz)
 CLK_MMDVM_PI=12000000
@@ -31,6 +32,7 @@ CLK_12MHZ=12000000
 BINDIR=bin
 OBJDIR_F4=obj_f4
 OBJDIR_F7=obj_f7
+OBJDIR_SIMULATOR=obj_simulator
 
 # Output files
 BINELF_F4=mmdvm_f4.elf
@@ -39,22 +41,29 @@ BINBIN_F4=mmdvm_f4.bin
 BINELF_F7=mmdvm_f7.elf
 BINHEX_F7=mmdvm_f7.hex
 BINBIN_F7=mmdvm_f7.bin
+MMDVM_SIMULATOR=mmdvms
 
 # Header directories
 INC_F4= . $(F4_LIB_PATH)/CMSIS/Include/ $(F4_LIB_PATH)/Device/ $(F4_LIB_PATH)/STM32F4xx_StdPeriph_Driver/include/
 INCLUDES_F4=$(INC_F4:%=-I%)
 INC_F7= . $(F7_LIB_PATH)/CMSIS/Include/ $(F7_LIB_PATH)/Device/ $(F7_LIB_PATH)/STM32F7xx_StdPeriph_Driver/inc/
 INCLUDES_F7=$(INC_F7:%=-I%)
+INC_SIMULATOR= . $(SIMULATOR_LIB_PATH)
+INCLUDES_SIMULATOR=$(INC_SIMULATOR:%=-I%)
 
 # CMSIS libraries
 INCLUDES_LIBS_F4=$(F4_LIB_PATH)/CMSIS/Lib/GCC/libarm_cortexM4lf_math.a
 INCLUDES_LIBS_F7=$(F7_LIB_PATH)/CMSIS/Lib/GCC/libarm_cortexM7lfsp_math.a
+INCLUDES_LIBS_SIMULATOR=
 
 # STM32F4 Standard Peripheral Libraries source path
 STD_LIB_F4=$(F4_LIB_PATH)/STM32F4xx_StdPeriph_Driver/source
 
 # STM32F7 Standard Peripheral Libraries source path
 STD_LIB_F7=$(F7_LIB_PATH)/STM32F7xx_StdPeriph_Driver/src
+
+# Simulator Standard Libraries source path
+STD_LIB_SIMULATOR=$(SIMULATOR_LIB_PATH)
 
 # STM32F4 system source path
 SYS_DIR_F4=$(F4_LIB_PATH)/Device
@@ -64,7 +73,12 @@ STARTUP_DIR_F4=$(F4_LIB_PATH)/Device/startup
 SYS_DIR_F7=$(F7_LIB_PATH)/Device
 STARTUP_DIR_F7=$(F7_LIB_PATH)/Device/startup
 
-# GNU ARM Embedded Toolchain
+#Simulator system source path
+SYS_DIR_SIMULATOR=#$(F7_LIB_PATH)/Device
+STARTUP_DIR_SIMULATOR=#$(F7_LIB_PATH)/Device/startup
+
+sysCC:=$(CC)
+sysCXX:=$(CXX)
 CC=arm-none-eabi-gcc
 CXX=arm-none-eabi-g++
 LD=arm-none-eabi-ld
@@ -84,7 +98,7 @@ else ifdef SystemRoot
 	CLEANCMD=del /S *.o *.hex *.bin *.elf GitVersion.h
 	MDDIRS=md $@
 else
-	CLEANCMD=rm -f $(OBJ_F4) $(OBJ_F7) $(BINDIR)/*.hex $(BINDIR)/*.bin $(BINDIR)/*.elf GitVersion.h
+	CLEANCMD=rm -f $(OBJ_F4) $(OBJ_F7) $(OBJ_SIMULATOR) $(BINDIR)/*.hex $(BINDIR)/*.bin $(BINDIR)/*.elf $(BINDIR)/*.map $(MMDVM_SIMULATOR) GitVersion.h
 	MDDIRS=mkdir $@
 endif
 
@@ -109,12 +123,16 @@ STARTUP_F4=$(wildcard $(STARTUP_DIR_F4)/*.c)
 CSRC_STD_F7=$(wildcard $(STD_LIB_F7)/*.c)
 SYS_F7=$(wildcard $(SYS_DIR_F7)/*.c)
 STARTUP_F7=$(wildcard $(STARTUP_DIR_F7)/*.c)
+CSRC_STD_SIMULATOR=$(wildcard $(STD_LIB_SIMULATOR)/*.cpp)
 OBJ_F4=$(CXXSRC:$(MMDVM_PATH)/%.cpp=$(OBJDIR_F4)/%.o) $(CSRC_STD_F4:$(STD_LIB_F4)/%.c=$(OBJDIR_F4)/%.o) $(SYS_F4:$(SYS_DIR_F4)/%.c=$(OBJDIR_F4)/%.o) $(STARTUP_F4:$(STARTUP_DIR_F4)/%.c=$(OBJDIR_F4)/%.o)
 OBJ_F7=$(CXXSRC:$(MMDVM_PATH)/%.cpp=$(OBJDIR_F7)/%.o) $(CSRC_STD_F7:$(STD_LIB_F7)/%.c=$(OBJDIR_F7)/%.o) $(SYS_F7:$(SYS_DIR_F7)/%.c=$(OBJDIR_F7)/%.o) $(STARTUP_F7:$(STARTUP_DIR_F7)/%.c=$(OBJDIR_F7)/%.o)
+OBJ_SIMULATOR=$(CXXSRC:$(MMDVM_PATH)/%.cpp=$(OBJDIR_SIMULATOR)/%.o) $(CSRC_STD_SIMULATOR:$(STD_LIB_SIMULATOR)/%.cpp=$(OBJDIR_SIMULATOR)/%.o)
+
 
 # MCU flags
 MCFLAGS_F4=-mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork
 MCFLAGS_F7=-mcpu=cortex-m7 -mthumb -mlittle-endian -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb-interwork
+MCFLAGS_SIMULATOR=
 
 # Compile flags
 # STM32F4 Discovery board:
@@ -145,6 +163,8 @@ DEFS_DRCC_DVM=-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DSTM32F446xx -DDRCC_DVM -DHSE_
 DEFS_EDA_405=-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DSTM32F40_41xxx -DSTM32F4_EDA_405 -DHSE_VALUE=$(OSC) -DMADEBYMAKEFILE
 # WA0EDA F446 MTR2K, MASTR3 board:
 DEFS_EDA_446=-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DSTM32F446xx -DSTM32F4_EDA_446 -DHSE_VALUE=$(OSC) -DMADEBYMAKEFILE
+# SIMULATOR:
+DEFS_SIMULATOR=-DSIMULATOR -DMADEBYMAKEFILE
 
 
 # Build compiler flags
@@ -152,11 +172,14 @@ CFLAGS_F4=-c $(MCFLAGS_F4) $(INCLUDES_F4)
 CXXFLAGS_F4=-c $(MCFLAGS_F4) $(INCLUDES_F4)
 CFLAGS_F7=-c $(MCFLAGS_F7) $(INCLUDES_F7)
 CXXFLAGS_F7=-c $(MCFLAGS_F7) $(INCLUDES_F7)
+CFLAGS_SIMULATOR=-c $(MCFLAGS_SIMULATOR) $(INCLUDES_SIMULATOR)
+CXXFLAGS_SIMULATOR=-c $(MCFLAGS_SIMULATOR) $(INCLUDES_SIMULATOR)
 
 # Linker flags
 LDFLAGS_F4 =-T stm32f4xx_link.ld $(MCFLAGS_F4) --specs=nosys.specs $(INCLUDES_LIBS_F4)
 LDFLAGS_F767 =-T stm32f767_link.ld $(MCFLAGS_F7) --specs=nosys.specs $(INCLUDES_LIBS_F7)
 LDFLAGS_F722 =-T stm32f722_link.ld $(MCFLAGS_F7) --specs=nosys.specs $(INCLUDES_LIBS_F7)
+LDFLAGS_SIMULATOR =
 
 # Common flags
 CFLAGS=-Os -ffunction-sections -fdata-sections -fno-builtin -Wno-implicit -DCUSTOM_NEW -DNO_EXCEPTIONS
@@ -164,7 +187,7 @@ CXXFLAGS=-Os -fno-exceptions -ffunction-sections -fdata-sections -fno-builtin -f
 LDFLAGS=-Os --specs=nano.specs -Wl,-Map=bin/mmdvm.map
 
 # Build Rules
-.PHONY: all release dis pi pi-f722 f4m nucleo f767 dvm drcc_nqf clean
+.PHONY: all release dis pi pi-f722 f4m nucleo f767 dvm drcc_nqf simulator clean
 
 # Default target: Nucleo-64 F446RE board
 all: nucleo
@@ -259,6 +282,14 @@ eda446: CXXFLAGS+=$(CXXFLAGS_F4) $(DEFS_EDA_446)
 eda446: LDFLAGS+=$(LDFLAGS_F4)
 eda446: release_f4
 
+simulator: CC=${sysCC}
+simulator: CXX=${sysCXX}
+simulator: GitVersion.h
+simulator: CFLAGS+=$(CFLAGS_SIMULATOR) $(DEFS_SIMULATOR)
+simulator: CXXFLAGS+=$(CXXFLAGS_SIMULATOR) $(DEFS_SIMULATOR)
+simulator: LDFLAGS+=$(LDFLAGS_SIMULATOR)
+simulator: release_simulator
+
 release_f4: $(BINDIR)
 release_f4: $(OBJDIR_F4)
 release_f4: $(BINDIR)/$(BINHEX_F4)
@@ -269,6 +300,10 @@ release_f7: $(OBJDIR_F7)
 release_f7: $(BINDIR)/$(BINHEX_F7)
 release_f7: $(BINDIR)/$(BINBIN_F7)
 
+release_simulator: $(BINDIR)
+release_simulator: $(OBJDIR_SIMULATOR)
+release_simulator: $(MMDVM_SIMULATOR)
+
 $(BINDIR):
 	$(MDDIRS)
 
@@ -276,6 +311,9 @@ $(OBJDIR_F4):
 	$(MDDIRS)
 
 $(OBJDIR_F7):
+	$(MDDIRS)
+
+$(OBJDIR_SIMULATOR):
 	$(MDDIRS)
 
 $(BINDIR)/$(BINHEX_F4): $(BINDIR)/$(BINELF_F4)
@@ -304,6 +342,10 @@ $(BINDIR)/$(BINELF_F7): $(OBJ_F7)
 	@echo "Linking complete!\n"
 	$(SIZE) $(BINDIR)/$(BINELF_F7)
 
+$(MMDVM_SIMULATOR): $(OBJ_SIMULATOR)
+	$(CXX) $(OBJ_SIMULATOR) -Os -v -o $(MMDVM_SIMULATOR)
+	@echo "Linking complete!\n"
+
 $(OBJDIR_F4)/%.o: $(MMDVM_PATH)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
@@ -312,6 +354,12 @@ $(OBJDIR_F7)/%.o: $(MMDVM_PATH)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
 
+$(OBJDIR_SIMULATOR)/%.o: $(MMDVM_PATH)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@
+	@echo "Compiled "$<"!\n"
+
+
+
 $(OBJDIR_F4)/%.o: $(STD_LIB_F4)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
@@ -319,6 +367,12 @@ $(OBJDIR_F4)/%.o: $(STD_LIB_F4)/%.c
 $(OBJDIR_F7)/%.o: $(STD_LIB_F7)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
+
+$(OBJDIR_SIMULATOR)/%.o: $(STD_LIB_SIMULATOR)/%.cpp
+	$(CXX) $(CFLAGS) $< -o $@
+	@echo "Compiled "$<"!\n"
+
+
 
 $(OBJDIR_F4)/%.o: $(SYS_DIR_F4)/%.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -335,6 +389,14 @@ $(OBJDIR_F7)/%.o: $(SYS_DIR_F7)/%.c
 $(OBJDIR_F7)/%.o: $(STARTUP_DIR_F7)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
+
+#$(OBJDIR_SIMULATOR)/%.o: $(SYS_DIR_SIMULATOR)/%.c
+#	$(CC) $(CFLAGS) $< -o $@
+#	@echo "Compiled "$<"!\n"
+
+#$(OBJDIR_SIMULATOR)/%.o: $(STARTUP_DIR_SIMULATOR)/%.c
+#	$(CC) $(CFLAGS) $< -o $@
+#	@echo "Compiled "$<"!\n"
 
 clean:
 	$(CLEANCMD)

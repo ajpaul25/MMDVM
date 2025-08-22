@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2015,2016,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2016,2017 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,18 +16,43 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(UTILS_H)
-#define  UTILS_H
+#include "Config.h"
+#include "Globals.h"
+#include "SerialPort.h"
+#include <iostream>
+using namespace std;
 
-#include "base.h"
+#if defined(SIMULATOR)
 
-uint8_t countBits8(uint8_t bits);
 
-uint8_t countBits16(uint16_t bits);
+void CSerialPort::beginInt(uint8_t n, int speed)
+{
+    cout << "running beginInt serial simulator with parameters '";
+    cout << n;
+    cout << "' and '";
+    cout << speed;
+    cout << "'\n";
+}
 
-uint8_t countBits32(uint32_t bits);
+int CSerialPort::availableForReadInt(uint8_t n)
+{
+  return true;
+}
 
-uint8_t countBits64(uint64_t bits);
+int CSerialPort::availableForWriteInt(uint8_t n)
+{
+  return true;
+}
+
+uint8_t CSerialPort::readInt(uint8_t n)
+{
+  return 0U;
+}
+
+void CSerialPort::writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush)
+{
+
+}
 
 #endif
 

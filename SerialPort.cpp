@@ -655,11 +655,13 @@ void CSerialPort::setMode(MMDVM_STATE modemState)
         m_mode[i].idlerx->reset();
       if (m_mode[i].orx)
         m_mode[i].orx->reset();
+#if defined(MODE_FM)
       if (m_mode[i].stateid == STATE_FM)
       {
         CFM fm = *(static_cast<CFM*>(m_mode[i].tx));
         fm.reset();
       }
+#endif
     }
   }
 
@@ -818,14 +820,14 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       break;
 
 //todo: not generic
-#if !defined(MODE_FM)
+/*#if !defined(MODE_FM)
     case MMDVM_FM_PARAMS1:
     case MMDVM_FM_PARAMS2:
     case MMDVM_FM_PARAMS3:
     case MMDVM_FM_PARAMS4:
       sendACK(type);
       break;
-#endif
+#endif*/
 
     case MMDVM_CAL_DATA:
       for (int i=0; i<24; i++) //step through all of our mode structs
