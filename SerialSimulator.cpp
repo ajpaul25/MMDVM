@@ -36,7 +36,7 @@ void CSerialPort::beginInt(uint8_t n, int speed)
 
 int CSerialPort::availableForReadInt(uint8_t n)
 {
-  return true;
+  return false;
 }
 
 int CSerialPort::availableForWriteInt(uint8_t n)
