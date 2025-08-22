@@ -19,19 +19,14 @@
 #include "Config.h"
 #include "Globals.h"
 #include "SerialPort.h"
-#include <iostream>
-using namespace std;
 
 #if defined(SIMULATOR)
 
-
 void CSerialPort::beginInt(uint8_t n, int speed)
 {
-    cout << "running beginInt serial simulator with parameters '";
-    cout << n;
-    cout << "' and '";
-    cout << speed;
-    cout << "'\n";
+    char msg[50];
+    snprintf(msg, 50, "parameters %u and %d", n, speed);
+    debug(msg);
 }
 
 int CSerialPort::availableForReadInt(uint8_t n)
@@ -51,7 +46,9 @@ uint8_t CSerialPort::readInt(uint8_t n)
 
 void CSerialPort::writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush)
 {
-
+  char port[5];
+  snprintf(port, 5, "port %d", n);
+  debug(port);
 }
 
 #endif

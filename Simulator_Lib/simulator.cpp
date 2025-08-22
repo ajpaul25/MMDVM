@@ -1,4 +1,6 @@
 #include "simulator.h"
+#include <iostream>
+using namespace std;
 
 void arm_fir_fast_q15 	( 	const arm_fir_instance_q15 *  	S,
 		const q15_t *  	pSrc,
@@ -36,4 +38,9 @@ void arm_biquad_cascade_df1_q31 (const arm_biquad_casd_df1_inst_q31 *S, const q3
 q31_t arm_sin_q31 (q31_t x)
 {
 
+}
+
+void debug(const char* msg, const char* fname )
+{
+  cout << "DEBUG " << fname << "(): " << msg << "\n";
 }

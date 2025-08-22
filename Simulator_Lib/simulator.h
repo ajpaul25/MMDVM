@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <cstdio>
 
 typedef int16_t 	q15_t;
 typedef int32_t 	q31_t;
@@ -80,5 +81,7 @@ void 	arm_q15_to_q31 (const q15_t *pSrc, q31_t *pDst, uint32_t blockSize);
 void 	arm_biquad_cascade_df1_q31 (const arm_biquad_casd_df1_inst_q31 *S, const q31_t *pSrc, q31_t *pDst, uint32_t blockSize);
 
 q31_t 	arm_sin_q31 (q31_t x);
+
+void debug(const char* msg, const char* fname = __builtin_FUNCTION());
 
 #endif // SIMULATOR_H

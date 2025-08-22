@@ -21,9 +21,6 @@
 #include "Config.h"
 #include "Globals.h"
 #include "IO.h"
-#include <iostream>
-
-using namespace std;
 
 #if defined(SIMULATOR)
 
@@ -50,11 +47,6 @@ extern "C" {
   {
     io.interrupt();
   }
-}
-
-void debug(const char* msg, const char* fname = __builtin_FUNCTION())
-{
-  cout << "DEBUG " << fname << "(): " << msg << "\n";
 }
 
 void CIO::initInt()
@@ -136,7 +128,7 @@ void CIO::setFMInt(bool on)
 void CIO::delayInt(unsigned int dly)
 {
   char sdly[10];
-  sprintf(sdly,"%ld",dly);
+  snprintf(sdly,10,"%u",dly);
   debug(sdly);
 }
 
