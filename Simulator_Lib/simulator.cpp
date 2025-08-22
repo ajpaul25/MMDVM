@@ -45,5 +45,5 @@ void debug(const char* msg, const char* fname, const char* file, const int line 
     << msg
 	<< " (" << file
 	<< ", line " << line
-	<< "\n";
+	<< ")\n";
 }
