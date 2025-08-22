@@ -32,17 +32,20 @@ void CSerialPort::beginInt(uint8_t n, int speed)
 
 int CSerialPort::availableForReadInt(uint8_t n)
 {
+  debug("-");
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   return false;
 }
 
 int CSerialPort::availableForWriteInt(uint8_t n)
 {
+  debug("-");
   return true;
 }
 
 uint8_t CSerialPort::readInt(uint8_t n)
 {
+  debug("-");
   return 0U;
 }
 
