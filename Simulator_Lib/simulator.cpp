@@ -40,7 +40,11 @@ q31_t arm_sin_q31 (q31_t x)
 
 }
 
-void debug(const char* msg, const char* fname )
+void debug(const char* msg, const char* fname, const char* file, const int line )
 {
-  cout << "DEBUG " << fname << "(): " << msg << "\n";
+  cout << "DEBUG " << fname << "(): "
+    << msg
+	<< " (" << file
+	<< ", line " << line
+	<< "\n";
 }
