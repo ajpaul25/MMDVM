@@ -302,7 +302,7 @@ release_f7: $(BINDIR)/$(BINBIN_F7)
 
 release_simulator: $(BINDIR)
 release_simulator: $(OBJDIR_SIMULATOR)
-release_simulator: $(MMDVM_SIMULATOR)
+release_simulator: $(BINDIR)/$(MMDVM_SIMULATOR)
 
 $(BINDIR):
 	$(MDDIRS)
@@ -342,9 +342,9 @@ $(BINDIR)/$(BINELF_F7): $(OBJ_F7)
 	@echo "Linking complete!\n"
 	$(SIZE) $(BINDIR)/$(BINELF_F7)
 
-$(MMDVM_SIMULATOR): $(OBJ_SIMULATOR)
-	$(CXX) $(OBJ_SIMULATOR) -Os -v -o $(MMDVM_SIMULATOR)
-	@echo "Linking complete!\n"
+$(BINDIR)/$(MMDVM_SIMULATOR): $(OBJ_SIMULATOR)
+	$(CXX) $(OBJ_SIMULATOR) -Os -v -o $@
+	@echo "Simulator compiled at $(BINDIR)/$(MMDVM_SIMULATOR)\n"
 
 $(OBJDIR_F4)/%.o: $(MMDVM_PATH)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
