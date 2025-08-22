@@ -304,6 +304,9 @@ release_simulator: $(BINDIR)
 release_simulator: $(OBJDIR_SIMULATOR)
 release_simulator: $(BINDIR)/$(MMDVM_SIMULATOR)
 
+run_simulator: simulator
+	$(BINDIR)/$(MMDVM_SIMULATOR)
+
 $(BINDIR):
 	$(MDDIRS)
 
