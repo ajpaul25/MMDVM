@@ -62,6 +62,24 @@ void CIO::startInt()
 void CIO::interrupt()
 {
   debug("-");
+  TSample sample = {DC_OFFSET, MARK_NONE};
+
+    m_txBuffer.get(sample);
+    //todo: do something with this sample
+
+    //todo: create a way to input samples;
+    //sample.sample = ADC->ADC_CDR[ADC_CDR_Chan];
+    sample.sample = 2048;
+    m_rxBuffer.put(sample);
+
+    //todo: create a way to input rssi data
+#if defined(SEND_RSSI_DATA)
+    //m_rssiBuffer.put(ADC->ADC_CDR[RSSI_CDR_Chan]);
+#else
+    m_rssiBuffer.put(0U);
+#endif
+
+    m_watchdog++;
 }
 
 bool CIO::getCOSInt()
