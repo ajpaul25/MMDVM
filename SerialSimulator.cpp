@@ -51,8 +51,8 @@ uint8_t CSerialPort::readInt(uint8_t n)
 
 void CSerialPort::writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush)
 {
-  char port[5];
-  snprintf(port, 5, "port %d", n);
+  char port[128];
+  snprintf(port, 128, "port: %d, data: %d", n, *data);
   debug(port);
 }
 
