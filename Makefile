@@ -393,14 +393,6 @@ $(OBJDIR_F7)/%.o: $(STARTUP_DIR_F7)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "Compiled "$<"!\n"
 
-#$(OBJDIR_SIMULATOR)/%.o: $(SYS_DIR_SIMULATOR)/%.c
-#	$(CC) $(CFLAGS) $< -o $@
-#	@echo "Compiled "$<"!\n"
-
-#$(OBJDIR_SIMULATOR)/%.o: $(STARTUP_DIR_SIMULATOR)/%.c
-#	$(CC) $(CFLAGS) $< -o $@
-#	@echo "Compiled "$<"!\n"
-
 clean:
 	$(CLEANCMD)
 
