@@ -85,4 +85,6 @@ q31_t 	arm_sin_q31 (q31_t x);
 
 void debug(const char* msg, const char* fname = __builtin_FUNCTION(), const char* file = __builtin_FILE(), const int line = __builtin_LINE());
 
+void timerThread();
+
 #endif // SIMULATOR_H

@@ -1,4 +1,7 @@
 #include "simulator.h"
+#include "Globals.h"
+#include <thread>
+
 using namespace std;
 
 void arm_fir_fast_q15 	( 	const arm_fir_instance_q15 *  	S,
@@ -47,3 +50,13 @@ void debug(const char* msg, const char* fname, const char* file, const int line 
 	<< ", line " << line
 	<< ")\n";
 }
+
+void timerThread()
+{
+	for(;;)
+	{
+  		io.interrupt();
+  		this_thread::sleep_for(std::chrono::milliseconds(200));
+	}
+}
+

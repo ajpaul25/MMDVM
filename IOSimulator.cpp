@@ -21,6 +21,10 @@
 #include "Config.h"
 #include "Globals.h"
 #include "IO.h"
+#include <thread>
+#include "Simulator_Lib/simulator.h"
+
+using namespace std;
 
 #if defined(SIMULATOR)
 
@@ -52,6 +56,7 @@ extern "C" {
 void CIO::initInt()
 {
   debug("loading simulator io");
+  thread* t1 = new thread(timerThread);
 }
 
 void CIO::startInt()
