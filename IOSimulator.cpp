@@ -60,6 +60,7 @@ extern "C" {
 
 void CIO::initInt()
 {
+  initSimulator();
   debug("loading simulator io");
   uint8_t i=0;
   statArray[i++]={"cos", cosInt};

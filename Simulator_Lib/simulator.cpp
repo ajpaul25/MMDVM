@@ -5,6 +5,7 @@
 using namespace std;
 
 char screenbuf[20*50];
+char debugScreenbuf[40*100];
 
 void arm_fir_fast_q15 	( 	const arm_fir_instance_q15 *  	S,
 		const q15_t *  	pSrc,
@@ -67,11 +68,15 @@ void setIOStatus(status s[20], uint8_t size)
 
 void debug(const char* msg, const char* fname, const char* file, const int line )
 {
-  cout << "DEBUG " << fname << "(): "
-    << msg
-	<< " (" << file
-	<< ", line " << line
-	<< ")\n";
+	for(int i=0; i<39; i++)
+		for(int j=0; j<100; j++)
+			debugScreenbuf[i*100+j] = debugScreenbuf[(i+1)*100+j];
+	char row[100];
+	snprintf(row,100,"DEBUG %s (): %s (%s, line %d)",fname, msg, file, line);
+	for(int i=strlen(row); i<100; i++)
+		row[i] = ' ';
+	for(int i=0; i<100; i++)
+		debugScreenbuf[3900+i] = row[i];
 }
 
 void timerThread()
@@ -80,6 +85,7 @@ void timerThread()
 	{
   		io.interrupt();
 		printAt(screenbuf,1,120,20,50,1);
+		printAt(debugScreenbuf,1,1,40,100,1);
   		this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 }
