@@ -11,8 +11,6 @@ typedef int32_t 	q31_t;
 typedef float 	    float32_t;
 typedef int64_t     q63_t;
 
-
-
 /**
   \brief   Signed Saturate
   \details Saturates a signed value.
@@ -86,5 +84,18 @@ q31_t 	arm_sin_q31 (q31_t x);
 void debug(const char* msg, const char* fname = __builtin_FUNCTION(), const char* file = __builtin_FILE(), const int line = __builtin_LINE());
 
 void timerThread();
+
+void printAt(char* str, uint8_t top, uint8_t left, uint8_t height, uint8_t width, uint8_t border);
+
+struct status
+{
+  const char* name;
+  char* status;
+};
+
+void setIOStatus(status s[20], uint8_t size);
+
+void initSimulator();
+
 
 #endif // SIMULATOR_H

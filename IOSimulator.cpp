@@ -22,6 +22,7 @@
 #include "Globals.h"
 #include "IO.h"
 #include <thread>
+#include <string>
 #include "Simulator_Lib/simulator.h"
 
 using namespace std;
@@ -44,6 +45,10 @@ using namespace std;
 #define DACC_MR_USER_SEL_Chan  DACC_MR_USER_SEL_CHANNEL0 // DAC on Due DAC0
 #define DACC_CHER_Chan         DACC_CHER_CH0
 
+char cosInt[20], ledInt[20], pttInt[20], dStarInt[20], dmrInt[20], ysfInt[20], p25Int[20], nxdnInt[20], m17Int[20], pocsagInt[20], fmInt[20], dly[20];
+status statArray[20];
+uint8_t statArraySize;
+
 const uint16_t DC_OFFSET = 2048U;
 
 extern "C" {
@@ -56,6 +61,24 @@ extern "C" {
 void CIO::initInt()
 {
   debug("loading simulator io");
+  uint8_t i=0;
+  statArray[i++]={"cos", cosInt};
+  statArray[i++]={"led", ledInt};
+  statArray[i++]={"ptt", pttInt};
+  statArray[i++]={"dStar", dStarInt};
+  statArray[i++]={"dmr", dmrInt};
+  statArray[i++]={"ysf", ysfInt};
+  statArray[i++]={"p25", p25Int};
+  statArray[i++]={"nxdn", nxdnInt};
+  statArray[i++]={"m17", m17Int};
+  statArray[i++]={"pocsag", pocsagInt};
+  statArray[i++]={"fm", fmInt};
+  for(int j=0; j<i; j++)
+    snprintf(statArray[j].status, 20, "off");
+  statArray[i]={"dly", dly};
+  snprintf(statArray[i++].status,20,"%u",dly);
+  statArraySize=i;
+  setIOStatus(statArray,statArraySize);
   thread* t1 = new thread(timerThread);
 }
 
@@ -70,11 +93,14 @@ void CIO::interrupt()
   TSample sample = {DC_OFFSET, MARK_NONE};
 
     m_txBuffer.get(sample);
+    char csample[256];
+    snprintf(csample,256,"tx sample: %u",sample.sample);
+    //debug(csample);
     //todo: do something with this sample
 
     //todo: create a way to input samples;
     //sample.sample = ADC->ADC_CDR[ADC_CDR_Chan];
-    sample.sample = 2048;
+    sample.sample = 1024;
     m_rxBuffer.put(sample);
 
     //todo: create a way to input rssi data
@@ -85,74 +111,88 @@ void CIO::interrupt()
 #endif
 
     m_watchdog++;
+    setIOStatus(statArray,statArraySize);
+
 }
 
 bool CIO::getCOSInt()
 {
     debug("-");
-    return true;
+    if(strcmp(cosInt,"on") == 0)
+      return true;
+    return false;
 }
 
 void CIO::setLEDInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(ledInt, 20, on ? "on" : "off");
+  debug(ledInt);
 }
 
 void CIO::setPTTInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(pttInt, 20, on ? "on" : "off");
+  debug(pttInt);
 }
 
 void CIO::setCOSInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(cosInt, 20, on ? "on" : "off");
+  debug(cosInt);
 }
 
 void CIO::setDStarInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(dStarInt, 20, on ? "on" : "off");
+  debug(dStarInt);
 }
 
 void CIO::setDMRInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(dmrInt, 20, on ? "on" : "off");
+  debug(dmrInt);
 }
 
 void CIO::setYSFInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(ysfInt, 20, on ? "on" : "off");
+  debug(ysfInt);
 }
 
 void CIO::setP25Int(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(p25Int, 20, on ? "on" : "off");
+  debug(p25Int);
 }
 
 void CIO::setNXDNInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(nxdnInt, 20, on ? "on" : "off");
+  debug(nxdnInt);
 }
 
 void CIO::setM17Int(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(m17Int, 20, on ? "on" : "off");
+  debug(m17Int);
 }
 
 void CIO::setPOCSAGInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(pocsagInt, 20, on ? "on" : "off");
+  debug(pocsagInt);
 }
 
 void CIO::setFMInt(bool on)
 {
-  debug( on ? "on" : "off" );
+  snprintf(fmInt, 20, on ? "on" : "off");
+  debug(fmInt);
 }
 
-void CIO::delayInt(unsigned int dly)
+void CIO::delayInt(unsigned int d)
 {
-  char sdly[10];
-  snprintf(sdly,10,"%u",dly);
-  debug(sdly);
+  snprintf(dly,20,"%u",d);
+  debug(dly);
 }
 
 uint8_t CIO::getCPU() const
@@ -167,4 +207,3 @@ void CIO::getUDID(uint8_t* buffer)
 }
 
 #endif
-
