@@ -307,6 +307,21 @@ release_simulator: $(BINDIR)/$(MMDVM_SIMULATOR)
 run_simulator: simulator
 	$(BINDIR)/$(MMDVM_SIMULATOR)
 
+c_run_simulator: c_build
+	podman run -it -p 4444:4444 -v $(PWD):/build mmdvm_bld
+
+c_build:
+	podman build --tag mmdvm_bld container/
+
+c_%: c_build
+	podman run -it -v $(PWD):/build --entrypoint "/bin/bash" mmdvm_bld -c "cd /build && make $(@:c_%=%)"
+
+c_clean: c_build
+	podman run -it -v $(PWD):/build --entrypoint "/bin/bash" mmdvm_bld -c "cd /build && make clean"
+	podman image rm --force mmdvm_bld
+
+c: c_all
+
 $(BINDIR):
 	$(MDDIRS)
 

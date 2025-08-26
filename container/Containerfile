@@ -1,0 +1,11 @@
+FROM debian
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y install \
+	apt-utils build-essential devscripts fakeroot debhelper git lsb-release \
+	libterm-readline-gnu-perl  libterm-readline-perl-perl libdistro-info-perl \
+    gh ca-certificates wget gcc-arm-none-eabi libnewlib-arm-none-eabi \
+	libstdc++-arm-none-eabi-newlib --no-install-recommends
+
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
