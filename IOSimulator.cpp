@@ -18,6 +18,8 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#if defined(SIMULATOR)
+
 #include "Config.h"
 #include "Globals.h"
 #include "IO.h"
@@ -32,8 +34,6 @@
 #include "Simulator_Lib/simulator.h"
 
 using namespace std;
-
-#if defined(SIMULATOR)
 
 #define PIN_COS                7
 #define PIN_PTT                8
