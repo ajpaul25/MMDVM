@@ -23,6 +23,12 @@
 #include "IO.h"
 #include <thread>
 #include <string>
+#include <cstdlib>
+//#include <sys/socket.h>
+//#include <sys/types.h> 
+//#include <arpa/inet.h> 
+#include <functional>
+#include <netinet/in.h> 
 #include "Simulator_Lib/simulator.h"
 
 using namespace std;
@@ -45,9 +51,13 @@ using namespace std;
 #define DACC_MR_USER_SEL_Chan  DACC_MR_USER_SEL_CHANNEL0 // DAC on Due DAC0
 #define DACC_CHER_Chan         DACC_CHER_CH0
 
+#define BUFSIZE 1024 
+
 char cosInt[20], ledInt[20], pttInt[20], dStarInt[20], dmrInt[20], ysfInt[20], p25Int[20], nxdnInt[20], m17Int[20], pocsagInt[20], fmInt[20], dly[20];
 status statArray[20];
 uint8_t statArraySize;
+
+CRingBuffer<TSample>  ioRXBuffer;
 
 const uint16_t DC_OFFSET = 2048U;
 
@@ -58,9 +68,18 @@ extern "C" {
   }
 }
 
+void rxIOCallback(char* buf)
+{
+  //debug(buf);
+  uint16_t s = buf[0] & 0xFF | (buf[1] & 0xFF) << 8;
+  TSample rxsamp = {s,0};
+  ioRXBuffer.put(rxsamp);
+}
+
 void CIO::initInt()
 {
   initSimulator();
+  initIOSimulator(&rxIOCallback);
   debug("loading simulator io");
   uint8_t i=0;
   statArray[i++]={"cos", cosInt};
@@ -94,15 +113,14 @@ void CIO::interrupt()
   TSample sample = {DC_OFFSET, MARK_NONE};
 
     m_txBuffer.get(sample);
-    char csample[256];
-    snprintf(csample,256,"tx sample: %u",sample.sample);
-    //debug(csample);
-    //todo: do something with this sample
+    char d[2];
+    d[0] = sample.sample & 0xFF;
+    d[1] = (sample.sample >> 8) & 0xFF;
+    sendIO(d, sizeof(sample.sample));
 
-    //todo: create a way to input samples;
-    //sample.sample = ADC->ADC_CDR[ADC_CDR_Chan];
-    sample.sample = 1024;
-    m_rxBuffer.put(sample);
+    TSample samp;
+    ioRXBuffer.get(samp);
+    m_rxBuffer.put(samp);
 
     //todo: create a way to input rssi data
 #if defined(SEND_RSSI_DATA)

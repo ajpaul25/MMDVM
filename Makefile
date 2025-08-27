@@ -77,6 +77,10 @@ STARTUP_DIR_F7=$(F7_LIB_PATH)/Device/startup
 SYS_DIR_SIMULATOR=#$(F7_LIB_PATH)/Device
 STARTUP_DIR_SIMULATOR=#$(F7_LIB_PATH)/Device/startup
 
+#Simulator UDP ports
+IO_UDP_PORT=14444
+SERIAL_UDP_PORT=14445
+
 sysCC:=$(CC)
 sysCXX:=$(CXX)
 CC=arm-none-eabi-gcc
@@ -164,7 +168,7 @@ DEFS_EDA_405=-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DSTM32F40_41xxx -DSTM32F4_EDA_4
 # WA0EDA F446 MTR2K, MASTR3 board:
 DEFS_EDA_446=-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DSTM32F446xx -DSTM32F4_EDA_446 -DHSE_VALUE=$(OSC) -DMADEBYMAKEFILE
 # SIMULATOR:
-DEFS_SIMULATOR=-DSIMULATOR -DMADEBYMAKEFILE
+DEFS_SIMULATOR=-DIO_UDP_PORT=$(IO_UDP_PORT) -DSERIAL_UDP_PORT=$(SERIAL_UDP_PORT) -DSIMULATOR -DMADEBYMAKEFILE
 
 
 # Build compiler flags
@@ -308,7 +312,7 @@ run_simulator: simulator
 	$(BINDIR)/$(MMDVM_SIMULATOR)
 
 c_run_simulator: c_build
-	podman run -it -p 4444:4444 -v $(PWD):/build mmdvm_bld
+	podman run -it -p $(IO_UDP_PORT):$(IO_UDP_PORT)/udp -p $(SERIAL_UDP_PORT):$(SERIAL_UDP_PORT)/udp -v $(PWD):/build mmdvm_bld
 
 c_build:
 	podman build --tag mmdvm_bld container/

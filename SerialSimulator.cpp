@@ -23,10 +23,21 @@
 
 #if defined(SIMULATOR)
 
+CRingBuffer<TSample>  serialRXBuffer;
+
+void rxSerialCallback(char* buf)
+{
+  //debug(buf);
+  uint16_t s = buf[0] & 0xFF | (buf[1] & 0xFF) << 8;
+  TSample rxsamp = {s,0};
+  serialRXBuffer.put(rxsamp);
+}
+
 void CSerialPort::beginInt(uint8_t n, int speed)
 {
     char msg[50];
     snprintf(msg, 50, "parameters %u and %d", n, speed);
+    initSerialSimulator(&rxSerialCallback);
     debug(msg);
 }
 
@@ -54,6 +65,10 @@ void CSerialPort::writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool
   char port[128];
   snprintf(port, 128, "port: %d, data: %d", n, *data);
   debug(port);
+  char* val;
+  for(int i=0; i<length; i++)
+    val[i] = data[i];
+  sendSerial(val,length);
 }
 
 #endif

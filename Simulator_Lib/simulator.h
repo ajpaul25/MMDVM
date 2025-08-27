@@ -5,6 +5,11 @@
 #include <cstring>
 #include <cstdio>
 #include <iostream>
+#include <sys/socket.h>
+#include "base.h"
+#include <functional>
+
+
 
 typedef int16_t 	q15_t;
 typedef int32_t 	q31_t;
@@ -81,6 +86,8 @@ void 	arm_biquad_cascade_df1_q31 (const arm_biquad_casd_df1_inst_q31 *S, const q
 
 q31_t 	arm_sin_q31 (q31_t x);
 
+
+
 void debug(const char* msg, const char* fname = __builtin_FUNCTION(), const char* file = __builtin_FILE(), const int line = __builtin_LINE());
 
 void timerThread();
@@ -96,6 +103,14 @@ struct status
 void setIOStatus(status s[20], uint8_t size);
 
 void initSimulator();
+void initIOSimulator(void(*rxcb)(char*));
+void initSerialSimulator(void(*rxcb)(char*));
+
+//void createUdp(int port, int *fd, struct sockaddr_in remaddr);
+void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*));
+
+void sendSerial(char *data, uint8_t length);
+void sendIO(char *data, uint8_t length);
 
 
 #endif // SIMULATOR_H

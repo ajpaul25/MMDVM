@@ -2,10 +2,31 @@
 #include "Globals.h"
 #include <thread>
 
+#include <stdlib.h> 
+#include <unistd.h> 
+#include <string.h> 
+#include <sys/types.h> 
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <netinet/in.h> 
+
+#include <cstring>
+#include <iostream>
+  
+#define BUFSIZE 1024 
+
 using namespace std;
 
 char screenbuf[20*50];
 char debugScreenbuf[40*100];
+
+struct sockaddr_in ioremaddr;
+socklen_t ioaddrlen;
+int iofd;
+
+struct sockaddr_in serialremaddr;
+socklen_t serialaddrlen;
+int serialfd;
 
 void arm_fir_fast_q15 	( 	const arm_fir_instance_q15 *  	S,
 		const q15_t *  	pSrc,
@@ -116,4 +137,66 @@ void initSimulator()
 {
 	//clear the screen
 	printf ("\033[2J");
+}
+
+void initIOSimulator(void(*rxcb)(char*))
+{
+#ifdef IO_UDP_PORT
+	thread* t1 = new thread(createUdp,IO_UDP_PORT,&iofd,&ioremaddr,&ioaddrlen,rxcb);
+#endif
+}
+
+void initSerialSimulator(void(*rxcb)(char*))
+{
+#ifdef SERIAL_UDP_PORT
+	thread* t2 = new thread(createUdp,SERIAL_UDP_PORT,&serialfd,&serialremaddr,&serialaddrlen,rxcb);
+#endif
+}
+
+void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*))
+{
+	struct sockaddr_in myaddr;
+	*addrlen = sizeof(*remaddr);
+	int recvlen;
+	char buf[BUFSIZE];
+
+
+	if ((*fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+			perror("error creating socket\n");
+			return;
+	}
+	int option=1;
+	setsockopt(*fd, SOL_SOCKET, SO_REUSEPORT, &option, sizeof(option));
+
+	memset((char *)&myaddr, 0, sizeof(myaddr));
+	myaddr.sin_family = AF_INET;
+	myaddr.sin_addr.s_addr = INADDR_ANY;
+	myaddr.sin_port = htons(port);
+
+	bind(*fd, (struct sockaddr*)&myaddr, sizeof(myaddr));
+
+	while(true) {
+			recvlen = recvfrom(*fd, buf, BUFSIZE, 0, (struct sockaddr *)remaddr, addrlen);
+			if (recvlen > 0) {
+					buf[recvlen] = 0;
+					//debug(buf);
+					rxcb(buf);
+					//serialRXBuffer.put(buf);
+					//m_rxBuffer.put(s);
+					//char message[100];
+					//snprintf(message,100,"fd %d\n", *fd);
+					//sendto(*fd, message, strlen(message), 0, (struct sockaddr*)remaddr, *addrlen);
+					//sendto(*fd, buf, strlen(buf), 0, (struct sockaddr*)remaddr, *addrlen);
+			}
+	}
+}
+
+void sendSerial(char *data, uint8_t length)
+{
+	sendto(serialfd, data, length, 0, (struct sockaddr*)&serialremaddr, serialaddrlen);
+}
+
+void sendIO(char *data, uint8_t length)
+{
+	sendto(iofd, data, length, 0, (struct sockaddr*)&ioremaddr, ioaddrlen);
 }
