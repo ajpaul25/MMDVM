@@ -1,0 +1,32 @@
+
+#include "Config.h"
+
+#if defined(MODE_{MODE})
+
+#include "Globals.h"
+#include "{MODE}Defines.h"
+#include "{MODE}Mode.h"
+
+C{MODE}Mode::C{MODE}Mode(MMDVM_STATE* m) :
+AbstractMode(m)
+{
+    m_idlerx = 0;
+    m_rx = new C{MODE}RX();
+    m_tx = new C{MODE}TX();
+    m_calrx = 0;
+    m_caltx = 0;
+    //m_caltx->tx = *m_tx;
+    m_orx = 0;
+    m_otx = 0;
+    m_spacepos = {MODE_SPACEPOS};
+    m_spacelen = {MODE_SPACELEN};
+    m_stateid = STATE_{MODE};
+    m_calstateid = 0;
+    m_filtertaps = {MODE_FILTER_NAME};
+    m_filterlen = {MODE_FILTER_LENGTH};
+    m_filterStateSize = {MODE_FILTER_STATE_SIZE};
+
+    filterInit();
+}
+
+#endif

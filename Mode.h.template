@@ -1,0 +1,22 @@
+
+#include "Config.h"
+#include "AbstractMode.h"
+
+#if defined(MODE_{MODE})
+
+#if !defined({MODE}MODE_H)
+#define  {MODE}MODE_H
+
+
+class C{MODE}Mode : public AbstractMode {
+public:
+  C{MODE}Mode(MMDVM_STATE* m);
+
+private:
+
+};
+
+#endif
+
+#endif
+
