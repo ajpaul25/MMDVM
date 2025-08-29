@@ -31,6 +31,7 @@ AbstractMode(m, en)
     m_stateNames[1] = "POCSAG Calibrate";
     m_conf_en_mask = 0x010000;
     m_versionCaps = 0x0100;
+    m_txLevelAddr = 15U;
 
     filterInit();
 }

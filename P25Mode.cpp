@@ -31,6 +31,7 @@ AbstractMode(m, en)
     m_stateNames[1] = "P25 1011 Hz Calibrate";
     m_conf_en_mask = 0x0800;
     m_versionCaps = 0x08;
+    m_txLevelAddr = 12U;
 
     filterInit();
 }

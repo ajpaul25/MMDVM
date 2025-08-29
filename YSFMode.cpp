@@ -28,6 +28,7 @@ AbstractMode(m, en)
     m_stateNames[0] = "System Fusion";
     m_conf_en_mask = 0x0400;
     m_versionCaps = 0x04;
+    m_txLevelAddr = 11U;
 
     filterInit();
 }

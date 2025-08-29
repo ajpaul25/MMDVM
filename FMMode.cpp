@@ -41,6 +41,7 @@ AbstractMode(m, en)
     m_stateNames[6] = "Mode set to FM 30Khz Calibrate";
     m_conf_en_mask = 0x2000;
     m_versionCaps = 0x20;
+    m_txLevelAddr = 16U;
 
     filterInit();
 }

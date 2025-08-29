@@ -37,6 +37,7 @@ AbstractMode(m, en)
     m_stateNames[1] = "NXDN 1031 Hz Calibrate";
     m_conf_en_mask = 0x1000;
     m_versionCaps = 0x10;
+    m_txLevelAddr = 13U;
 
     filterInit();
 }

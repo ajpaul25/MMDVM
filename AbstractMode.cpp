@@ -57,7 +57,7 @@ void AbstractMode::setTXStart(bool on)
 
 void AbstractMode::setTXLevel(q15_t level, bool txInvert)
 {
-    m_txlevel = m_txlevel * 128 * txInvert ? -1 : 1;
+    m_txlevel = level * 128 * txInvert ? -1 : 1;
 }
 
 bool AbstractMode::hasState(MMDVM_STATE state)

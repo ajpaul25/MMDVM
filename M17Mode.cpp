@@ -31,6 +31,7 @@ AbstractMode(m, en)
     m_stateNames[0] = "M17 Calibrate";
     m_conf_en_mask = 0x4000;
     m_versionCaps = 0x20;
+    m_txLevelAddr = 14U;
 
     filterInit();
 }

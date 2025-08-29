@@ -29,6 +29,7 @@ AbstractMode(m,en)
     m_stateNames[0] = "AX25";
     m_conf_en_mask = 0x020000;
     m_versionCaps = 0x0200;
+    m_txLevelAddr = 17U;
 
     filterInit();
 }

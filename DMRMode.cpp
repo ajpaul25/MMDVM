@@ -38,6 +38,8 @@ AbstractMode(m, en)
 
     m_conf_en_mask = 0x0200;
     m_versionCaps = 0x02;
+    m_txLevelAddr = 10U;
+
 
     filterInit();
 }

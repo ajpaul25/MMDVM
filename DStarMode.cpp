@@ -32,6 +32,7 @@ AbstractMode(m, en)
     m_stateNames[1] = "D-Star Calibrate";
     m_conf_en_mask = 0x0100;
     m_versionCaps = 0x01;
+    m_txLevelAddr = 9U;
 
 
     filterInit();

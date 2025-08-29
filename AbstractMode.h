@@ -31,6 +31,7 @@ protected:
     void filterInit();
     uint32_t m_conf_en_mask;
     uint32_t m_versionCaps;
+    uint32_t m_txLevelAddr;
 
 public:
     AbstractMode(MMDVM_STATE* m, bool* en);
@@ -53,6 +54,8 @@ public:
     const arm_fir_instance_q15& firFilter = m_firFilter;
     const q15_t& txlevel = m_txlevel;
     const uint32_t& version_caps = m_versionCaps;
+    const uint32_t txLevelAddr = m_txLevelAddr;
+
 
     bool condition();
     bool ocondition();
