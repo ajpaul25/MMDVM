@@ -31,6 +31,7 @@
 #include "DStarMode.h"
 #include "DMRRX.h"
 #include "DMRTX.h"
+#include "DMRMode.h"
 #include "YSFRX.h"
 #include "YSFTX.h"
 #include "P25RX.h"

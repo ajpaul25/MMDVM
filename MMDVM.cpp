@@ -60,6 +60,15 @@ void setup()
   int m=0;
 
   m_mode[m++] = new CDStarMode(&m_modemState);
+  m_mode[m++] = new CDMRMode(&m_modemState);
+  //m_mode[m++] = new CYSRMode(&m_modemState);
+  //m_mode[m++] = new CP25Mode(&m_modemState);
+  //m_mode[m++] = new CDNXDNMode(&m_modemState);
+  //m_mode[m++] = new CM17Mode(&m_modemState);
+  //m_mode[m++] = new CPOCSAGMode(&m_modemState);
+  //m_mode[m++] = new CFMMode(&m_modemState);
+  //m_mode[m++] = new CAX25Mode(&m_modemState);
+  
 
 /*#if defined(MODE_DSTAR)
   m_mode[m].idlerx = 0;
