@@ -28,7 +28,7 @@ AbstractMode::~AbstractMode(void) {}
 
 bool AbstractMode::condition()
 {
-    return enabled && *m_modemState == stateid;
+    return enabled && stateid && *m_modemState == stateid;
 }
 
 bool AbstractMode::ocondition()
@@ -38,7 +38,7 @@ bool AbstractMode::ocondition()
 
 bool AbstractMode::calcondition()
 {
-    return *m_modemState == calstateid;
+    return calstateid && *m_modemState == calstateid;
 }
 
 void AbstractMode::filterInit()
