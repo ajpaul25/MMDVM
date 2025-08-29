@@ -26,6 +26,7 @@ protected:
     arm_fir_instance_q15 m_firFilter;
     q15_t m_txlevel;
     MMDVM_STATE* m_modemState;
+    uint8_t m_states[10];
     void filterInit();
 
 public:

@@ -25,6 +25,8 @@ AbstractMode(m, en)
     m_filtertaps = RRC_0_5_FILTER;
     m_filterlen = RRC_0_5_FILTER_LEN;
     m_filterStateSize = 70U;
+    m_states[0] = STATE_M17;
+    m_states[1] = STATE_M17CAL;
 
     filterInit();
 }

@@ -31,6 +31,8 @@ AbstractMode(m, en)
     m_filterlen = NXDN_0_2_FILTER_LEN;
     m_filterStateSize = 110U;
 #endif
+    m_states[0] = STATE_NXDN;
+    m_states[1]  = STATE_NXDNCAL1K;
 
     filterInit();
 }

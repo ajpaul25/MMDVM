@@ -25,6 +25,8 @@ AbstractMode(m, en)
     m_filtertaps = BOXCAR5_FILTER;
     m_filterlen = BOXCAR5_FILTER_LEN;
     m_filterStateSize = 30U;
+    m_states[0] = STATE_P25;
+    m_states[1] = STATE_P25CAL1K;
 
     filterInit();
 }

@@ -25,6 +25,13 @@ AbstractMode(m, en)
     //m_filtertaps = {MODE_FILTER_NAME};
     //m_filterlen = {MODE_FILTER_LENGTH};
     //m_filterStateSize = {MODE_FILTER_STATE_SIZE};
+    m_states[0] = STATE_FM;
+    m_states[1] = STATE_FMCAL10K;
+    m_states[2] = STATE_FMCAL12K;
+    m_states[3] = STATE_FMCAL15K;
+    m_states[4] = STATE_FMCAL20K;
+    m_states[5] = STATE_FMCAL25K;
+    m_states[6] = STATE_FMCAL30K;
 
     filterInit();
 }

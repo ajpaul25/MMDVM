@@ -26,6 +26,8 @@ AbstractMode(m, en)
     m_filtertaps = GAUSSIAN_0_5_FILTER;
     m_filterlen = GAUSSIAN_0_5_FILTER_LEN;
     m_filterStateSize = 40U;
+    m_states[0] = STATE_DSTAR;
+    m_states[1] = STATE_DSTARCAL;
 
     filterInit();
 }
