@@ -43,7 +43,8 @@ bool m_duplex = true;
 bool m_tx  = false;
 bool m_dcd = false;
 
-modeStruct m_mode[24];
+AbstractMode* m_mode[24];
+uint8_t m_mode_length;
 
 CCalRSSI calRSSI;
 
@@ -58,7 +59,9 @@ void setup()
   serial.start();
   int m=0;
 
-#if defined(MODE_DSTAR)
+  m_mode[m++] = new CDStarMode(&m_modemState);
+
+/*#if defined(MODE_DSTAR)
   m_mode[m].idlerx = 0;
   m_mode[m].rx = new CDStarRX();
   m_mode[m].tx = new CDStarTX();
@@ -253,7 +256,8 @@ void setup()
   m_mode[m].enabled = &m_ax25Enable;
   m++;
 #endif //MODE_AX25
-#endif //MODE_FM
+#endif //MODE_FM*/
+  m_mode_length = m;
 }
 
 void loop()
@@ -263,18 +267,18 @@ void loop()
   io.process();
 
   // The following is for transmitting
-  for(int i=0; i<24; i++){
-    if (m_mode[i].tx)
-      if (m_mode[i].condition())
-        if(m_mode[i].ocondition())
-          m_mode[i].otx->process();
+  for(int i=0; i<m_mode_length; i++){
+    if (m_mode[i]->tx)
+      if (m_mode[i]->condition())
+        if(m_mode[i]->ocondition())
+          m_mode[i]->otx->process();
         else
-          m_mode[i].tx->process();
+          m_mode[i]->tx->process();
   }
-  for(int i=0; i<24; i++){
-    if(m_mode[i].caltx)
-      if (m_mode[i].calcondition())
-        m_mode[i].caltx->process();
+  for(int i=0; i<m_mode_length; i++){
+    if(m_mode[i]->caltx)
+      if (m_mode[i]->calcondition())
+        m_mode[i]->caltx->process();
   }
 
   if (m_modemState == STATE_IDLE)

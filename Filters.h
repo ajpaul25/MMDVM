@@ -1,3 +1,5 @@
+#if !defined(FILTERS_H)
+#define  FILTERS_H
 #if defined(MODE_DMR) || defined(MODE_YSF)
 // Generated using rcosdesign(0.2, 8, 5, 'sqrt') in MATLAB
 static q15_t RRC_0_2_FILTER[] = {401, 104, -340, -731, -847, -553, 112, 909, 1472, 1450, 683, -675, -2144, -3040, -2706, -770, 2667, 6995,
@@ -44,4 +46,6 @@ const uint16_t GAUSSIAN_0_5_FILTER_LEN = 12U;
 // One symbol boxcar filter
 static q15_t   BOXCAR5_FILTER[] = {12000, 12000, 12000, 12000, 12000, 0};
 const uint16_t BOXCAR5_FILTER_LEN = 6U;
+#endif
+
 #endif

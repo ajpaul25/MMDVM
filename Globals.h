@@ -21,40 +21,6 @@
 
 #include "base.h"
 
-//todo: not generic
-enum MMDVM_STATE {
-  STATE_IDLE      = 0,
-  STATE_DSTAR     = 1,
-  STATE_DMR       = 2,
-  STATE_YSF       = 3,
-  STATE_P25       = 4,
-  STATE_NXDN      = 5,
-  STATE_POCSAG    = 6,
-  STATE_M17       = 7,
-  STATE_FM        = 10,
-  STATE_AX25      = 11,
-
-  // Dummy states start at 90
-  STATE_NXDNCAL1K = 91,
-  STATE_DMRDMO1K  = 92,
-  STATE_P25CAL1K  = 93,
-  STATE_DMRCAL1K  = 94,
-  STATE_LFCAL     = 95,
-  STATE_RSSICAL   = 96,
-  STATE_CWID      = 97,
-  STATE_DMRCAL    = 98,
-  STATE_DSTARCAL  = 99,
-  STATE_INTCAL    = 100,
-  STATE_POCSAGCAL = 101,
-  STATE_FMCAL10K  = 102,
-  STATE_FMCAL12K  = 103,
-  STATE_FMCAL15K  = 104,
-  STATE_FMCAL20K  = 105,
-  STATE_FMCAL25K  = 106,
-  STATE_FMCAL30K  = 107,
-  STATE_M17CAL    = 108
-};
-
 #include "SerialPort.h"
 //todo: not generic
 #include "DMRIdleRX.h"
@@ -62,6 +28,7 @@ enum MMDVM_STATE {
 #include "DMRDMOTX.h"
 #include "DStarRX.h"
 #include "DStarTX.h"
+#include "DStarMode.h"
 #include "DMRRX.h"
 #include "DMRTX.h"
 #include "YSFRX.h"
@@ -91,6 +58,7 @@ enum MMDVM_STATE {
 #include "InterfaceRX.h"
 #include "InterfaceTX.h"
 #include "InterfaceCal.h"
+#include "AbstractMode.h"
 
 const uint8_t  MARK_SLOT1 = 0x08U;
 const uint8_t  MARK_SLOT2 = 0x04U;
@@ -120,7 +88,7 @@ extern bool m_m17Enable;
 extern bool m_fmEnable;
 extern bool m_ax25Enable;
 
-typedef struct {
+/*typedef struct {
   InterfaceRX* idlerx;
   InterfaceRX* rx;
   InterfaceTX* tx;
@@ -142,7 +110,10 @@ typedef struct {
   q15_t txlevel;
 }modeStruct;
 
-extern modeStruct m_mode[24];
+extern modeStruct m_mode[24];*/
+
+extern AbstractMode *m_mode[24];
+extern uint8_t m_mode_length;
 
 extern bool m_duplex;
 

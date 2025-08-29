@@ -27,11 +27,11 @@
 #include "M17Defines.h"
 
 // Generated using rcosdesign(0.5, 8, 5, 'sqrt') in MATLAB
-static q15_t RRC_0_5_FILTER[] = {0, 0, 0, 0, -290, -174, 142, 432, 438, 90, -387, -561, -155, 658, 1225, 767,
+static q15_t M17TX_RRC_0_5_FILTER[] = {0, 0, 0, 0, -290, -174, 142, 432, 438, 90, -387, -561, -155, 658, 1225, 767,
 				  -980, -3326, -4648, -3062, 2527, 11552, 21705, 29724, 32767, 29724, 21705,
 				  11552, 2527, -3062, -4648, -3326, -980, 767, 1225, 658, -155, -561, -387, 90,
 				  438, 432, 142, -174, -290}; // numTaps = 45, L = 5
-const uint16_t RRC_0_5_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
+const uint16_t M17TX_RRC_0_5_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
 
 const q15_t M17_LEVELA =  1481;
 const q15_t M17_LEVELB =  494;
@@ -57,8 +57,8 @@ m_txCount(0U)
   ::memset(m_modState, 0x00U, 16U * sizeof(q15_t));
 
   m_modFilter.L           = M17_RADIO_SYMBOL_LENGTH;
-  m_modFilter.phaseLength = RRC_0_5_FILTER_PHASE_LEN;
-  m_modFilter.pCoeffs     = RRC_0_5_FILTER;
+  m_modFilter.phaseLength = M17TX_RRC_0_5_FILTER_PHASE_LEN;
+  m_modFilter.pCoeffs     = M17TX_RRC_0_5_FILTER;
   m_modFilter.pState      = m_modState;
 }
 

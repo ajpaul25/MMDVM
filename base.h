@@ -27,4 +27,38 @@
 #include <arm_math.h>
 #endif
 
+//todo: not generic
+enum MMDVM_STATE {
+  STATE_IDLE      = 0,
+  STATE_DSTAR     = 1,
+  STATE_DMR       = 2,
+  STATE_YSF       = 3,
+  STATE_P25       = 4,
+  STATE_NXDN      = 5,
+  STATE_POCSAG    = 6,
+  STATE_M17       = 7,
+  STATE_FM        = 10,
+  STATE_AX25      = 11,
+
+  // Dummy states start at 90
+  STATE_NXDNCAL1K = 91,
+  STATE_DMRDMO1K  = 92,
+  STATE_P25CAL1K  = 93,
+  STATE_DMRCAL1K  = 94,
+  STATE_LFCAL     = 95,
+  STATE_RSSICAL   = 96,
+  STATE_CWID      = 97,
+  STATE_DMRCAL    = 98,
+  STATE_DSTARCAL  = 99,
+  STATE_INTCAL    = 100,
+  STATE_POCSAGCAL = 101,
+  STATE_FMCAL10K  = 102,
+  STATE_FMCAL12K  = 103,
+  STATE_FMCAL15K  = 104,
+  STATE_FMCAL20K  = 105,
+  STATE_FMCAL25K  = 106,
+  STATE_FMCAL30K  = 107,
+  STATE_M17CAL    = 108
+};
+
 #endif // BASE_H

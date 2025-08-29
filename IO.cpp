@@ -54,7 +54,7 @@ m_dacOverflow(0U),
 m_watchdog(0U),
 m_lockout(false)
 {
-  for( int i=0; i<24; i++ )
+  /*for( int i=0; i<24; i++ )
   {
     if( m_mode[i].rx )
     {
@@ -64,7 +64,7 @@ m_lockout(false)
       m_mode[i].firFilter.pState = state;
       m_mode[i].firFilter.pCoeffs = m_mode[i].filtertaps;
     }
-  }
+  }*/
 #if defined(USE_DCBLOCKER)
   ::memset(m_dcState, 0x00U, 4U * sizeof(q31_t));
   m_dcFilter.numStages = DC_FILTER_STAGES;
@@ -221,8 +221,8 @@ void CIO::process()
       //todo: not generic
       if (m_modemState == STATE_DSTAR || m_modemState == STATE_DMR || m_modemState == STATE_YSF || m_modemState == STATE_P25 || m_modemState == STATE_NXDN || m_modemState == STATE_M17 || m_modemState == STATE_POCSAG) {
         for (int i=0; i<24; i++)
-          if( m_modemState == m_mode[i].stateid and m_tx )
-            m_mode[i].tx->setStart(false);
+          if( m_modemState == m_mode[i]->stateid and m_tx )
+            m_mode[i]->setTXStart(false);
         setMode(STATE_IDLE);
       }
 
@@ -303,39 +303,39 @@ void CIO::process()
 
     for( int i=0; i<24; i++ )
     {
-      if( m_mode[i].rx )
+      if( m_mode[i]->rx )
       {
         q15_t modeVals[RX_BLOCK_SIZE];
-        InterfaceRX *rx = m_mode[i].rx;
+        InterfaceRX *rx = m_mode[i]->rx;
 #if defined(MODE_FM)
-        if( m_mode[i].stateid == STATE_FM ) //todo: not generic
+        if( m_mode[i]->stateid == STATE_FM ) //todo: not generic
         {
           bool cos = getCOSInt();
-          CFM fm = *(static_cast<CFM*>(m_mode[i].tx));
+          CFM fm = *(static_cast<CFM*>(m_mode[i]->tx));
           fm.samples(cos, pfSamples, RX_BLOCK_SIZE);
         }
         else
 #endif
-        if ( m_mode[i].stateid == STATE_DSTARCAL ) //todo: not generic
+        if ( m_mode[i]->stateid == STATE_DSTARCAL ) //todo: not generic
         {
-          CCalDStarRX caldstarrx = *(static_cast<CCalDStarRX*>(m_mode[i].calrx));
-          ::arm_fir_fast_q15(&m_mode[i].firFilter, pfSamples, modeVals, RX_BLOCK_SIZE);
+          CCalDStarRX caldstarrx = *(static_cast<CCalDStarRX*>(m_mode[i]->calrx));
+          ::arm_fir_fast_q15(&m_mode[i]->firFilter, pfSamples, modeVals, RX_BLOCK_SIZE);
           caldstarrx.samples(modeVals,RX_BLOCK_SIZE);
         }
         else
         {
-          ::arm_fir_fast_q15(&m_mode[i].firFilter, pfSamples, modeVals, RX_BLOCK_SIZE); //main filtering step
-          if( m_mode[i].stateid == STATE_DMR ) //todo: not generic
+          ::arm_fir_fast_q15(&m_mode[i]->firFilter, pfSamples, modeVals, RX_BLOCK_SIZE); //main filtering step
+          if( m_mode[i]->stateid == STATE_DMR ) //todo: not generic
           {
             if (m_duplex)
               if (!m_tx || m_modemState == STATE_IDLE)
-                rx = m_mode[i].idlerx;
+                rx = m_mode[i]->idlerx;
             else
-              rx = m_mode[i].orx;
+              rx = m_mode[i]->orx;
           }
   #if defined (MODE_NXDN)
   #if !defined(USE_NXDN_BOXCAR)
-          else if( m_mode[i].stateid == STATE_NXDN ) //todo: not generic
+          else if( m_mode[i]->stateid == STATE_NXDN ) //todo: not generic
           {
             q15_t tmpModeVals[RX_BLOCK_SIZE];
             ::arm_fir_fast_q15(&m_nxdnISincFilter, modeVals, tmpModeVals, RX_BLOCK_SIZE); //additional filter for NXDN
@@ -371,8 +371,8 @@ void CIO::write(MMDVM_STATE mode, q15_t* samples, uint16_t length, const uint8_t
 
   q15_t txLevel = m_cwIdTXLevel;
   for( int i=0; i<24; i++ )
-    if( m_mode[i].tx && m_mode[i].stateid==mode )
-      txLevel = m_mode[i].txlevel;
+    if( m_mode[i]->tx && m_mode[i]->stateid==mode )
+      txLevel = m_mode[i]->txlevel;
 
   for (uint16_t i = 0U; i < length; i++) {
     q31_t res1 = samples[i] * txLevel;
@@ -453,10 +453,10 @@ void CIO::setParameters(bool rxInvert, bool txInvert, bool pttInvert, uint8_t rx
 
   for( int i=0; i<24; i++ )
   {
-    if( m_mode[i].tx )
+    if( m_mode[i]->tx )
     {
       q15_t tmpTxLevel = 0;
-      switch( m_mode[i].stateid )
+      switch( m_mode[i]->stateid )
       {
         case STATE_DSTAR:   tmpTxLevel = dstarTXLevel;  break;
         case STATE_DMR:     tmpTxLevel = dmrTXLevel;    break;
@@ -468,7 +468,7 @@ void CIO::setParameters(bool rxInvert, bool txInvert, bool pttInvert, uint8_t rx
         case STATE_FM:      tmpTxLevel = fmTXLevel;     break;
         case STATE_AX25:    tmpTxLevel = ax25TXLevel;   break;
       }
-      m_mode[i].txlevel = q15_t(tmpTxLevel * 128 * txInvert ? -1 : 1);
+      //m_mode[i].setTXLevel(q15_t(tmpTxLevel * 128 * txInvert ? -1 : 1));
     }
   }
 

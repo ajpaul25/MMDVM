@@ -171,14 +171,14 @@ void CSerialPort::getStatus()
 
   for(int i=0; i<24; i++)
   {
-    if (m_mode[i].spacelen > 0)
+    if (m_mode[i]->spacelen > 0)
     {
-      InterfaceTX tx = m_mode[i].ocondition() ? *m_mode[i].otx : *m_mode[i].tx;
-      if (m_mode[i].spacelen > 1 )
-        for(uint8_t j = 0; j < m_mode[i].spacelen; j++)
-          reply[m_mode[i].spacepos+j] = tx.getSpace(j);
+      InterfaceTX tx = m_mode[i]->ocondition() ? *m_mode[i]->otx : *m_mode[i]->tx;
+      if (m_mode[i]->spacelen > 1 )
+        for(uint8_t j = 0; j < m_mode[i]->spacelen; j++)
+          reply[m_mode[i]->spacepos+j] = tx.getSpace(j);
       else
-        reply[m_mode[i].spacepos] = tx.getSpace();
+        reply[m_mode[i]->spacepos] = tx.getSpace();
     }
   }
 
@@ -417,16 +417,16 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 
   for(int i=0; i<24; i++)
   {
-    if (m_mode[i].tx)
-      m_mode[i].tx->setConfig(data,length);
-    if (m_mode[i].rx)
-      m_mode[i].rx->setConfig(data,length);
-    if (m_mode[i].otx)
-      m_mode[i].otx->setConfig(data,length);
-    if (m_mode[i].orx)
-      m_mode[i].orx->setConfig(data,length);
-    if (m_mode[i].idlerx)
-      m_mode[i].idlerx->setConfig(data,length);
+    if (m_mode[i]->tx)
+      m_mode[i]->tx->setConfig(data,length);
+    if (m_mode[i]->rx)
+      m_mode[i]->rx->setConfig(data,length);
+    if (m_mode[i]->otx)
+      m_mode[i]->otx->setConfig(data,length);
+    if (m_mode[i]->orx)
+      m_mode[i]->orx->setConfig(data,length);
+    if (m_mode[i]->idlerx)
+      m_mode[i]->idlerx->setConfig(data,length);
   }
 #if defined(MODE_DSTAR)
   m_dstarEnable  = dstarEnable;
@@ -647,18 +647,18 @@ void CSerialPort::setMode(MMDVM_STATE modemState)
 
   for(int i=0; i<24; i++)
   {
-    if(modemState != m_mode[i].stateid)
+    if(modemState != m_mode[i]->stateid)
     {
-      if (m_mode[i].rx)
-        m_mode[i].rx->reset();
-      if (m_mode[i].idlerx)
-        m_mode[i].idlerx->reset();
-      if (m_mode[i].orx)
-        m_mode[i].orx->reset();
+      if (m_mode[i]->rx)
+        m_mode[i]->rx->reset();
+      if (m_mode[i]->idlerx)
+        m_mode[i]->idlerx->reset();
+      if (m_mode[i]->orx)
+        m_mode[i]->orx->reset();
 #if defined(MODE_FM)
-      if (m_mode[i].stateid == STATE_FM)
+      if (m_mode[i]->stateid == STATE_FM)
       {
-        CFM fm = *(static_cast<CFM*>(m_mode[i].tx));
+        CFM fm = *(static_cast<CFM*>(m_mode[i]->tx));
         fm.reset();
       }
 #endif
@@ -831,8 +831,8 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
 
     case MMDVM_CAL_DATA:
       for (int i=0; i<24; i++) //step through all of our mode structs
-        if( m_mode[i].caltx )
-          err = m_mode[i].caltx->processMessage( type, buffer, length );
+        if( m_mode[i]->caltx )
+          err = m_mode[i]->caltx->processMessage( type, buffer, length );
 
       if (err == 0U) {
         sendACK(type);
@@ -876,18 +876,18 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
     default:
       bool success = false;
       for (int i=0; i<24; i++) //step through all of our mode structs
-        if(m_mode[i].tx)
-          if (m_modemState == STATE_IDLE || m_mode[i].condition())
+        if(m_mode[i]->tx)
+          if (m_modemState == STATE_IDLE || m_mode[i]->condition())
           {
-            if (m_mode[i].ocondition())
-              err = m_mode[i].otx->processMessage( type, buffer, length);
+            if (m_mode[i]->ocondition())
+              err = m_mode[i]->otx->processMessage( type, buffer, length);
             else
-              err = m_mode[i].tx->processMessage( type, buffer, length);
+              err = m_mode[i]->tx->processMessage( type, buffer, length);
             if (err == 0 or err == 255) // 255 is also success but no subsequent state change
             {
               success = true;
               if (m_modemState == STATE_IDLE and err == 0)
-                setMode(MMDVM_STATE(m_mode[i].stateid));
+                setMode(MMDVM_STATE(m_mode[i]->stateid));
             }
           }
       if( !success ) // Handle this, send a NAK back

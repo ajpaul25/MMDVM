@@ -27,13 +27,13 @@
 #include "NXDNDefines.h"
 
 // Generated using rcosdesign(0.2, 8, 10, 'sqrt') in MATLAB
-static q15_t RRC_0_2_FILTER[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 850, 592, 219, -234, -720, -1179, -1548, -1769, -1795, -1597, -1172,
+static q15_t NXDN_RRC_0_2_FILTER[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 850, 592, 219, -234, -720, -1179, -1548, -1769, -1795, -1597, -1172,
                                  -544, 237, 1092, 1927, 2637, 3120, 3286, 3073, 2454, 1447, 116, -1431, -3043, -4544, -5739, -6442,
                                  -6483, -5735, -4121, -1633, 1669, 5651, 10118, 14822, 19484, 23810, 27520, 30367, 32156, 32767,
                                  32156, 30367, 27520, 23810, 19484, 14822, 10118, 5651, 1669, -1633, -4121, -5735, -6483, -6442,
                                  -5739, -4544, -3043, -1431, 116, 1447, 2454, 3073, 3286, 3120, 2637, 1927, 1092, 237, -544, -1172,
                                  -1597, -1795, -1769, -1548, -1179, -720, -234, 219, 592, 850}; // numTaps = 90, L = 10
-const uint16_t RRC_0_2_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
+const uint16_t NXDN_RRC_0_2_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
 
 static q15_t NXDN_SINC_FILTER[] = {572, -1003, -253, 254, 740, 1290, 1902, 2527, 3090, 3517, 3747, 3747, 3517, 3090, 2527, 1902,
                                    1290, 740, 254, -253, -1003, 572};
@@ -65,8 +65,8 @@ m_txCount(0U)
   ::memset(m_sincState,  0x00U, 70U * sizeof(q15_t));
 
   m_modFilter.L           = NXDN_RADIO_SYMBOL_LENGTH;
-  m_modFilter.phaseLength = RRC_0_2_FILTER_PHASE_LEN;
-  m_modFilter.pCoeffs     = RRC_0_2_FILTER;
+  m_modFilter.phaseLength = NXDN_RRC_0_2_FILTER_PHASE_LEN;
+  m_modFilter.pCoeffs     = NXDN_RRC_0_2_FILTER;
   m_modFilter.pState      = m_modState;
 
   m_sincFilter.numTaps = NXDN_SINC_FILTER_LEN;

@@ -27,10 +27,10 @@
 #include "DMRSlotType.h"
 
 // Generated using rcosdesign(0.2, 8, 5, 'sqrt') in MATLAB
-static q15_t RRC_0_2_FILTER[] = {0, 0, 0, 0, 850, 219, -720, -1548, -1795, -1172, 237, 1927, 3120, 3073, 1447, -1431, -4544, -6442,
+static q15_t DMRDMOTX_RRC_0_2_FILTER[] = {0, 0, 0, 0, 850, 219, -720, -1548, -1795, -1172, 237, 1927, 3120, 3073, 1447, -1431, -4544, -6442,
                                  -5735, -1633, 5651, 14822, 23810, 30367, 32767, 30367, 23810, 14822, 5651, -1633, -5735, -6442,
                                  -4544, -1431, 1447, 3073, 3120, 1927, 237, -1172, -1795, -1548, -720, 219, 850}; // numTaps = 45, L = 5
-const uint16_t RRC_0_2_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
+const uint16_t DMRDMOTX_RRC_0_2_FILTER_PHASE_LEN = 9U; // phaseLength = numTaps/L
 
 const q15_t DMR_LEVELA =  1362;
 const q15_t DMR_LEVELB =  454;
@@ -64,8 +64,8 @@ m_txDelay(240U)       // 200ms
   ::memset(m_modState, 0x00U, 16U * sizeof(q15_t));
 
   m_modFilter.L           = DMR_RADIO_SYMBOL_LENGTH;
-  m_modFilter.phaseLength = RRC_0_2_FILTER_PHASE_LEN;
-  m_modFilter.pCoeffs     = RRC_0_2_FILTER;
+  m_modFilter.phaseLength = DMRDMOTX_RRC_0_2_FILTER_PHASE_LEN;
+  m_modFilter.pCoeffs     = DMRDMOTX_RRC_0_2_FILTER;
   m_modFilter.pState      = m_modState;
 }
 
