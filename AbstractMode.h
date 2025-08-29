@@ -28,6 +28,7 @@ protected:
     MMDVM_STATE* m_modemState;
     uint8_t m_states[10];
     void filterInit();
+    uint16_t m_conf_en_mask;
 
 public:
     AbstractMode(MMDVM_STATE* m, bool* en);
@@ -56,6 +57,9 @@ public:
 
     void setTXStart(bool on);
     void setTXLevel(q15_t level,bool txInvert=false);
+    bool hasState(MMDVM_STATE state);
+    uint8_t setConfig(const uint8_t* data, uint16_t length);
+
 
 };
 

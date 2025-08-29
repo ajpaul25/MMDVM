@@ -60,3 +60,17 @@ void AbstractMode::setTXLevel(q15_t level, bool txInvert)
     m_txlevel = m_txlevel * 128 * txInvert ? -1 : 1;
 }
 
+bool AbstractMode::hasState(MMDVM_STATE state)
+{
+    for(int i=0; i<sizeof(m_states); i++)
+        if(m_states[i] == state)
+            return true;
+    return false;
+}
+
+uint8_t AbstractMode::setConfig(const uint8_t* data, uint16_t length)
+{
+    const uint32_t* d = reinterpret_cast<const uint32_t*>(data);
+    *m_enabled = (d[0] & m_conf_en_mask) == m_conf_en_mask;
+    return 0;
+}

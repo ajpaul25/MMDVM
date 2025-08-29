@@ -32,6 +32,7 @@ AbstractMode(m, en)
     m_states[4] = STATE_FMCAL20K;
     m_states[5] = STATE_FMCAL25K;
     m_states[6] = STATE_FMCAL30K;
+    m_conf_en_mask = 0x2000;
 
     filterInit();
 }

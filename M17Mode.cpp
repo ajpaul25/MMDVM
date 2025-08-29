@@ -27,6 +27,7 @@ AbstractMode(m, en)
     m_filterStateSize = 70U;
     m_states[0] = STATE_M17;
     m_states[1] = STATE_M17CAL;
+    m_conf_en_mask = 0x4000;
 
     filterInit();
 }

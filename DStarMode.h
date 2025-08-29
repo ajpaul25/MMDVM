@@ -11,6 +11,7 @@
 class CDStarMode : public AbstractMode {
 public:
   CDStarMode(MMDVM_STATE* m, bool* en);
+  uint8_t setConfig(const uint8_t* data, uint16_t length);
 
 private:
 

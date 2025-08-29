@@ -28,8 +28,14 @@ AbstractMode(m, en)
     m_filterStateSize = 40U;
     m_states[0] = STATE_DSTAR;
     m_states[1] = STATE_DSTARCAL;
+    m_conf_en_mask = 0x0100;
 
     filterInit();
+}
+
+uint8_t CDStarMode::setConfig(const uint8_t* data, uint16_t length)
+{
+    return AbstractMode::setConfig(data,length);
 }
 
 #endif

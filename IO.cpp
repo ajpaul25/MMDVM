@@ -481,6 +481,29 @@ void CIO::setParameters(bool rxInvert, bool txInvert, bool pttInvert, uint8_t rx
     m_rxLevel = -m_rxLevel;
 }
 
+void CIO::setParameters(const uint8_t* data, uint16_t length)
+{
+  bool rxInvert        = (data[0U] & 0x01U) == 0x01U;
+  bool txInvert        = (data[0U] & 0x02U) == 0x02U;
+  bool pttInvert       = (data[0U] & 0x04U) == 0x04U;
+  bool useCOSAsLockout = (data[0U] & 0x20U) == 0x20U;
+  int16_t txDCOffset = int16_t(data[5U]) - 128;
+  int16_t rxDCOffset = int16_t(data[6U]) - 128;
+  uint8_t rxLevel = data[7U];
+  uint8_t cwIdTXLevel   = data[8U];
+  uint8_t dstarTXLevel  = data[9U];
+  uint8_t dmrTXLevel    = data[10U];
+  uint8_t ysfTXLevel    = data[11U];
+  uint8_t p25TXLevel    = data[12U];
+  uint8_t nxdnTXLevel   = data[13U];
+  uint8_t m17TXLevel    = data[14U];
+  uint8_t pocsagTXLevel = data[15U];
+  uint8_t fmTXLevel     = data[16U];
+  uint8_t ax25TXLevel   = data[17U];
+
+  setParameters(rxInvert, txInvert, pttInvert, rxLevel, cwIdTXLevel, dstarTXLevel, dmrTXLevel, ysfTXLevel, p25TXLevel, nxdnTXLevel, m17TXLevel, pocsagTXLevel, fmTXLevel, ax25TXLevel, txDCOffset, rxDCOffset, useCOSAsLockout);
+}
+
 void CIO::getOverflow(bool& adcOverflow, bool& dacOverflow)
 {
   adcOverflow = m_adcOverflow > 0U;

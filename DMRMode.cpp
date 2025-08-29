@@ -29,6 +29,8 @@ AbstractMode(m, en)
     m_states[1] = STATE_DMRDMO1K;
     m_states[2] = STATE_DMRCAL;
     m_states[3] = STATE_DMRCAL1K;
+    m_states[4] = STATE_LFCAL;
+    m_conf_en_mask = 0x0200;
 
     filterInit();
 }

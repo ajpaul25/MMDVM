@@ -63,6 +63,7 @@ public:
   void getUDID(uint8_t* buffer);
 
   void selfTest();
+  void setParameters(const uint8_t* data, uint16_t length);
 
 private:
   bool                  m_started;

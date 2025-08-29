@@ -244,50 +244,12 @@ void CSerialPort::getVersion()
   writeInt(1U, reply, count);
 }
 
-//todo: not generic
 uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 {
   if (length < 37U)
     return 4U;
 
-  bool rxInvert        = (data[0U] & 0x01U) == 0x01U;
-  bool txInvert        = (data[0U] & 0x02U) == 0x02U;
-  bool pttInvert       = (data[0U] & 0x04U) == 0x04U;
-#if defined(MODE_YSF)
-  bool ysfLoDev        = (data[0U] & 0x08U) == 0x08U;
-#endif
-  bool useCOSAsLockout = (data[0U] & 0x20U) == 0x20U;
-  bool simplex         = (data[0U] & 0x80U) == 0x80U;
-
   m_debug = (data[0U] & 0x10U) == 0x10U;
-
-#if defined(MODE_DSTAR)
-  bool dstarEnable  = (data[1U] & 0x01U) == 0x01U;
-#endif
-#if defined(MODE_DMR)
-  bool dmrEnable    = (data[1U] & 0x02U) == 0x02U;
-#endif
-#if defined(MODE_YSF)
-  bool ysfEnable    = (data[1U] & 0x04U) == 0x04U;
-#endif
-#if defined(MODE_P25)
-  bool p25Enable    = (data[1U] & 0x08U) == 0x08U;
-#endif
-#if defined(MODE_NXDN)
-  bool nxdnEnable   = (data[1U] & 0x10U) == 0x10U;
-#endif
-#if defined(MODE_FM)
-  bool fmEnable     = (data[1U] & 0x20U) == 0x20U;
-#endif
-#if defined(MODE_M17)
-  bool m17Enable    = (data[1U] & 0x40U) == 0x40U;
-#endif
-#if defined(MODE_POCSAG)
-  bool pocsagEnable = (data[2U] & 0x01U) == 0x01U;
-#endif
-#if defined(MODE_AX25)
-  bool ax25Enable   = (data[2U] & 0x02U) == 0x02U;
-#endif
 
   uint8_t txDelay = data[3U];
   if (txDelay > 50U)
@@ -295,127 +257,32 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
 
   MMDVM_STATE modemState = MMDVM_STATE(data[4U]);
 
-  if (modemState != STATE_IDLE && modemState != STATE_DSTAR && modemState != STATE_DMR && modemState != STATE_YSF && modemState != STATE_P25 && modemState != STATE_NXDN && modemState != STATE_M17 && modemState != STATE_POCSAG && modemState != STATE_FM &&
-      modemState != STATE_DSTARCAL && modemState != STATE_DMRCAL && modemState != STATE_RSSICAL && modemState != STATE_LFCAL && modemState != STATE_DMRCAL1K && modemState != STATE_P25CAL1K && modemState != STATE_DMRDMO1K && modemState != STATE_NXDNCAL1K && modemState != STATE_M17CAL && modemState != STATE_POCSAGCAL &&
-      modemState != STATE_FMCAL10K && modemState != STATE_FMCAL12K && modemState != STATE_FMCAL15K && modemState != STATE_FMCAL20K && modemState != STATE_FMCAL25K && modemState != STATE_FMCAL30K)
+  bool matched = false;
+  for( int i=0; i<m_mode_length; i++)
+  {
+    m_mode[i]->setConfig(data, length);
+    if( m_mode[i]->hasState(modemState) )
+    {
+      matched = true;
+      if( !m_mode[i]->enabled )
+        return 4U;
+    }
+  }
+  switch(modemState){
+    case STATE_IDLE:
+    case STATE_RSSICAL:
+      matched = true;
+  }
+  if(!matched)
     return 4U;
 
-#if defined(MODE_DSTAR)
-  if (modemState == STATE_DSTAR && !dstarEnable)
-    return 4U;
-#else
-  if (modemState == STATE_DSTAR)
-    return 4U;
-#endif
-
-#if defined(MODE_DMR)
-  if (modemState == STATE_DMR && !dmrEnable)
-    return 4U;
-#else
-  if (modemState == STATE_DMR)
-    return 4U;
-#endif
-
-#if defined(MODE_YSF)
-  if (modemState == STATE_YSF && !ysfEnable)
-    return 4U;
-#else
-  if (modemState == STATE_YSF)
-    return 4U;
-#endif
-
-#if defined(MODE_P25)
-  if (modemState == STATE_P25 && !p25Enable)
-    return 4U;
-#else
-  if (modemState == STATE_P25)
-    return 4U;
-#endif
-
-#if defined(MODE_NXDN)
-  if (modemState == STATE_NXDN && !nxdnEnable)
-    return 4U;
-#else
-  if (modemState == STATE_NXDN)
-    return 4U;
-#endif
-
-#if defined(MODE_M17)
-  if (modemState == STATE_M17 && !m17Enable)
-    return 4U;
-#else
-  if (modemState == STATE_M17)
-    return 4U;
-#endif
-
-#if defined(MODE_POCSAG)
-  if (modemState == STATE_POCSAG && !pocsagEnable)
-    return 4U;
-#else
-  if (modemState == STATE_POCSAG)
-    return 4U;
-#endif
-
-#if defined(MODE_FM)
-  if (modemState == STATE_FM && !fmEnable)
-    return 4U;
-#else
-  if (modemState == STATE_FM)
-    return 4U;
-#endif
-
-  int16_t txDCOffset = int16_t(data[5U]) - 128;
-  int16_t rxDCOffset = int16_t(data[6U]) - 128;
-
-  uint8_t rxLevel = data[7U];
-
-  uint8_t cwIdTXLevel   = data[8U];
-  uint8_t dstarTXLevel  = data[9U];
-  uint8_t dmrTXLevel    = data[10U];
-  uint8_t ysfTXLevel    = data[11U];
-  uint8_t p25TXLevel    = data[12U];
-  uint8_t nxdnTXLevel   = data[13U];
-  uint8_t m17TXLevel    = data[14U];
-  uint8_t pocsagTXLevel = data[15U];
-  uint8_t fmTXLevel     = data[16U];
-  uint8_t ax25TXLevel   = data[17U];
-
-#if defined(MODE_YSF)
-  uint8_t ysfTXHang     = data[20U];
-#endif
-#if defined(MODE_P25)
-  uint8_t p25TXHang     = data[21U];
-#endif
-#if defined(MODE_NXDN)
-  uint8_t nxdnTXHang    = data[22U];
-#endif
-#if defined(MODE_M17)
-  uint8_t m17TXHang     = data[23U];
-#endif
-
-#if defined(MODE_DMR)
-  uint8_t colorCode = data[26U];
-  if (colorCode > 15U)
-    return 4U;
-
-  uint8_t dmrDelay = data[27U];
-#endif
-
-#if defined(MODE_AX25)
-  int8_t ax25RXTwist    = int8_t(data[28U]) - 128;
-  if (ax25RXTwist < -4 || ax25RXTwist > 10)
-    return 4U;
-
-  uint8_t ax25TXDelay   = data[29U];
-  uint8_t ax25SlotTime  = data[30U];
-  uint8_t ax25PPersist  = data[31U];
-#endif
 
   setMode(modemState);
 
+  bool simplex         = (data[0U] & 0x80U) == 0x80U;
   m_duplex       = !simplex;
 
-  for(int i=0; i<24; i++)
+  for(int i=0; i<m_mode_length; i++)
   {
     if (m_mode[i]->tx)
       m_mode[i]->tx->setConfig(data,length);
@@ -428,61 +295,14 @@ uint8_t CSerialPort::setConfig(const uint8_t* data, uint16_t length)
     if (m_mode[i]->idlerx)
       m_mode[i]->idlerx->setConfig(data,length);
   }
-#if defined(MODE_DSTAR)
-  m_dstarEnable  = dstarEnable;
-  //dstarTX.setTXDelay(txDelay);
-#endif
-#if defined(MODE_DMR)
-  m_dmrEnable    = dmrEnable;
-  //dmrDMOTX.setTXDelay(txDelay);
 
-  //dmrTX.setColorCode(colorCode);
-  //dmrRX.setColorCode(colorCode);
-  //dmrRX.setDelay(dmrDelay);
-  //dmrDMORX.setColorCode(colorCode);
-  //dmrIdleRX.setColorCode(colorCode);
-#endif
-#if defined(MODE_YSF)
-  m_ysfEnable    = ysfEnable;
-  //ysfTX.setTXDelay(txDelay);
-  //ysfTX.setParams(ysfLoDev, ysfTXHang);
-#endif
-#if defined(MODE_P25)
-  m_p25Enable    = p25Enable;
-  //p25TX.setTXDelay(txDelay);
-  //p25TX.setParams(p25TXHang);
-#endif
-#if defined(MODE_NXDN)
-  m_nxdnEnable   = nxdnEnable;
-  //nxdnTX.setTXDelay(txDelay);
-  //nxdnTX.setParams(nxdnTXHang);
-#endif
-#if defined(MODE_M17)
-  m_m17Enable    = m17Enable;
-  //m17TX.setTXDelay(txDelay);
-  //m17TX.setParams(m17TXHang);
-#endif
-#if defined(MODE_POCSAG)
-  m_pocsagEnable = pocsagEnable;
-  //pocsagTX.setTXDelay(txDelay);
-#endif
-#if defined(MODE_AX25)
-  m_ax25Enable   = ax25Enable;
-  //ax25TX.setTXDelay(ax25TXDelay);
-  //ax25RX.setParams(ax25RXTwist, ax25SlotTime, ax25PPersist);
-#endif
-#if defined(MODE_FM)
-  m_fmEnable     = fmEnable;
-#endif
-
-  io.setParameters(rxInvert, txInvert, pttInvert, rxLevel, cwIdTXLevel, dstarTXLevel, dmrTXLevel, ysfTXLevel, p25TXLevel, nxdnTXLevel, m17TXLevel, pocsagTXLevel, fmTXLevel, ax25TXLevel, txDCOffset, rxDCOffset, useCOSAsLockout);
+  io.setParameters(data, length);
 
   io.start();
 
   return 0U;
 }
 
-//todo: not generic
 uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
 {
   if (length < 1U)
@@ -492,75 +312,25 @@ uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
 
   if (modemState == m_modemState)
     return 0U;
-
-  if (modemState != STATE_IDLE && modemState != STATE_DSTAR && modemState != STATE_DMR && modemState != STATE_YSF && modemState != STATE_P25 && modemState != STATE_NXDN && modemState != STATE_M17 && modemState != STATE_POCSAG && modemState != STATE_FM &&
-      modemState != STATE_DSTARCAL && modemState != STATE_DMRCAL && modemState != STATE_RSSICAL && modemState != STATE_LFCAL && modemState != STATE_DMRCAL1K && modemState != STATE_P25CAL1K && modemState != STATE_DMRDMO1K && modemState != STATE_NXDNCAL1K && modemState != STATE_M17CAL && modemState != STATE_POCSAGCAL &&
-      modemState != STATE_FMCAL10K  && modemState != STATE_FMCAL12K && modemState != STATE_FMCAL15K && modemState != STATE_FMCAL20K && modemState != STATE_FMCAL25K && modemState != STATE_FMCAL30K)
+  
+  bool matched = false;
+  for( int i=0; i<m_mode_length; i++)
+  {
+    m_mode[i]->setConfig(data, length);
+    if( m_mode[i]->hasState(modemState) )
+    {
+      matched = true;
+      if( !m_mode[i]->enabled )
+        return 4U;
+    }
+  }
+  switch(modemState){
+    case STATE_IDLE:
+    case STATE_RSSICAL:
+      matched = true;
+  }
+  if(!matched)
     return 4U;
-
-#if defined(MODE_DSTAR)
-  if (modemState == STATE_DSTAR && !m_dstarEnable)
-    return 4U;
-#else
-  if (modemState == STATE_DSTAR)
-    return 4U;
-#endif
-
-#if defined(MODE_DMR)
-  if (modemState == STATE_DMR && !m_dmrEnable)
-    return 4U;
-#else
-  if (modemState == STATE_DMR)
-    return 4U;
-#endif
-
-#if defined(MODE_YSF)
-  if (modemState == STATE_YSF && !m_ysfEnable)
-    return 4U;
-#else
-  if (modemState == STATE_YSF)
-    return 4U;
-#endif
-
-#if defined(MODE_P25)
-  if (modemState == STATE_P25 && !m_p25Enable)
-    return 4U;
-#else
-  if (modemState == STATE_P25)
-    return 4U;
-#endif
-
-#if defined(MODE_NXDN)
-  if (modemState == STATE_NXDN && !m_nxdnEnable)
-    return 4U;
-#else
-  if (modemState == STATE_NXDN)
-    return 4U;
-#endif
-
-#if defined(MODE_M17)
-  if (modemState == STATE_M17 && !m_m17Enable)
-    return 4U;
-#else
-  if (modemState == STATE_M17)
-    return 4U;
-#endif
-
-#if defined(MODE_POCSAG)
-  if (modemState == STATE_POCSAG && !m_pocsagEnable)
-    return 4U;
-#else
-  if (modemState == STATE_POCSAG)
-    return 4U;
-#endif
-
-#if defined(MODE_FM)
-  if (modemState == STATE_FM && !m_fmEnable)
-    return 4U;
-#else
-  if (modemState == STATE_FM)
-    return 4U;
-#endif
 
   setMode(modemState);
 
