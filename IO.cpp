@@ -54,17 +54,6 @@ m_dacOverflow(0U),
 m_watchdog(0U),
 m_lockout(false)
 {
-  /*for( int i=0; i<24; i++ )
-  {
-    if( m_mode[i].rx )
-    {
-      q15_t state[m_mode[i].filterStateSize];
-      ::memset(state, 0x00U, m_mode[i].filterStateSize * sizeof(q15_t));
-      m_mode[i].firFilter.numTaps = m_mode[i].filterlen;
-      m_mode[i].firFilter.pState = state;
-      m_mode[i].firFilter.pCoeffs = m_mode[i].filtertaps;
-    }
-  }*/
 #if defined(USE_DCBLOCKER)
   ::memset(m_dcState, 0x00U, 4U * sizeof(q31_t));
   m_dcFilter.numStages = DC_FILTER_STAGES;
@@ -218,16 +207,13 @@ void CIO::process()
   if (m_started) {
     // Two seconds timeout
     if (m_watchdog >= 48000U) {
-      //todo: not generic
-      if (m_modemState == STATE_DSTAR || m_modemState == STATE_DMR || m_modemState == STATE_YSF || m_modemState == STATE_P25 || m_modemState == STATE_NXDN || m_modemState == STATE_M17 || m_modemState == STATE_POCSAG) {
-        for (int i=0; i<24; i++)
-          if( m_modemState == m_mode[i]->stateid and m_tx )
-            m_mode[i]->setTXStart(false);
-        setMode(STATE_IDLE);
-      }
-
-      m_watchdog = 0U;
+      for (int i=0; i<m_mode_length; i++)
+        if( m_modemState == m_mode[i]->stateid and m_tx )
+          m_mode[i]->setTXStart(false);
+      setMode(STATE_IDLE);
     }
+
+    m_watchdog = 0U;
 
 #if defined(CONSTANT_SRV_LED)
     setLEDInt(true);
