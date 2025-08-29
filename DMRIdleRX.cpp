@@ -159,7 +159,7 @@ void CDMRIdleRX::processSample(q15_t sample)
 
     if (colorCode == m_colorCode && dataType == DT_CSBK) {
       frame[0U] = CONTROL_IDLE | CONTROL_DATA | DT_CSBK;
-      serial.writeDMRData(false, frame, DMR_FRAME_LENGTH_BYTES + 1U);
+      writeData(frame, DMR_FRAME_LENGTH_BYTES + 1U);
     }
 
     m_endPtr  = NOENDPTR;
@@ -173,6 +173,27 @@ void CDMRIdleRX::processSample(q15_t sample)
   m_bitPtr++;
   if (m_bitPtr >= DMR_RADIO_SYMBOL_LENGTH)
     m_bitPtr = 0U;
+}
+
+void CDMRIdleRX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_DMR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dmrEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_DMR_DATA1);
+}
+
+void CDMRIdleRX::writeLost()
+{
+
+}
+
+void CDMRIdleRX::writeEOT()
+{
+
 }
 
 void CDMRIdleRX::samplesToBits(uint16_t start, uint8_t count, uint8_t* buffer, uint16_t offset, q15_t centre, q15_t threshold)

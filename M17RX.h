@@ -70,6 +70,10 @@ private:
   void samplesToBits(uint16_t start, uint16_t count, uint8_t* buffer, uint16_t offset, q15_t centre, q15_t threshold);
   void writeRSSILinkSetup(uint8_t* data);
   void writeRSSIStream(uint8_t* data);
+  void writeLinkSetup(const uint8_t* data, uint8_t length);
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
 };
 
 #endif

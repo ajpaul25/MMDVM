@@ -192,7 +192,7 @@ void CM17RX::processData(q15_t sample)
     io.setDecode(false);
     io.setADCDetection(false);
 
-    serial.writeM17EOT();
+    writeEOT();
 
     m_state      = M17RXS_NONE;
     m_endPtr     = NOENDPTR;
@@ -238,7 +238,7 @@ void CM17RX::processData(q15_t sample)
       io.setDecode(false);
       io.setADCDetection(false);
 
-      serial.writeM17Lost();
+      writeLost();
 
       m_state      = M17RXS_NONE;
       m_endPtr     = NOENDPTR;
@@ -449,12 +449,12 @@ void CM17RX::writeRSSILinkSetup(uint8_t* data)
     data[49U] = (rssi >> 8) & 0xFFU;
     data[50U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeM17LinkSetup(data, M17_FRAME_LENGTH_BYTES + 3U);
+    writeLinkSetup(data, M17_FRAME_LENGTH_BYTES + 3U);
   } else {
-    serial.writeM17LinkSetup(data, M17_FRAME_LENGTH_BYTES + 1U);
+    writeLinkSetup(data, M17_FRAME_LENGTH_BYTES + 1U);
   }
 #else
-  serial.writeM17LinkSetup(data, M17_FRAME_LENGTH_BYTES + 1U);
+  writeLinkSetup(data, M17_FRAME_LENGTH_BYTES + 1U);
 #endif
 
   m_rssiAccum = 0U;
@@ -470,16 +470,54 @@ void CM17RX::writeRSSIStream(uint8_t* data)
     data[49U] = (rssi >> 8) & 0xFFU;
     data[50U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeM17Stream(data, M17_FRAME_LENGTH_BYTES + 3U);
+    writeData(data, M17_FRAME_LENGTH_BYTES + 3U);
   } else {
-    serial.writeM17Stream(data, M17_FRAME_LENGTH_BYTES + 1U);
+    writeData(data, M17_FRAME_LENGTH_BYTES + 1U);
   }
 #else
-  serial.writeM17Stream(data, M17_FRAME_LENGTH_BYTES + 1U);
+  writeData(data, M17_FRAME_LENGTH_BYTES + 1U);
 #endif
 
   m_rssiAccum = 0U;
   m_rssiCount = 0U;
+}
+
+void CM17RX::writeLinkSetup(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_m17Enable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_M17_LINK_SETUP);
+}
+
+void CM17RX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_m17Enable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_M17_STREAM);
+}
+
+void CM17RX::writeLost()
+{
+  if (m_modemState != STATE_M17 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_m17Enable)
+    return;
+
+  serial.writeModeLost(MMDVM_M17_LOST);
+}
+
+void CM17RX::writeEOT()
+{
+
 }
 
 #endif

@@ -405,7 +405,7 @@ void CDStarRX::processData()
     io.setDecode(false);
     io.setADCDetection(false);
 
-    serial.writeDStarEOT();
+    writeEOT();
 
     m_maxFrameCorr = 0;
     m_maxDataCorr  = 0;
@@ -430,7 +430,7 @@ void CDStarRX::processData()
     io.setDecode(false);
     io.setADCDetection(false);
 
-    serial.writeDStarLost();
+    writeLost();
 
     m_maxFrameCorr = 0;
     m_maxDataCorr  = 0;
@@ -454,7 +454,7 @@ void CDStarRX::processData()
 
       writeRSSIData(buffer);
     } else {
-      serial.writeDStarData(buffer, DSTAR_DATA_LENGTH_BYTES);
+      writeData(buffer, DSTAR_DATA_LENGTH_BYTES);
     }
 
     m_frameCount++;
@@ -473,12 +473,12 @@ void CDStarRX::writeRSSIHeader(unsigned char* header)
     header[41U] = (rssi >> 8) & 0xFFU;
     header[42U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeDStarHeader(header, DSTAR_HEADER_LENGTH_BYTES + 2U);
+    writeHeader(header, DSTAR_HEADER_LENGTH_BYTES + 2U);
   } else {
-    serial.writeDStarHeader(header, DSTAR_HEADER_LENGTH_BYTES + 0U);
+    writeHeader(header, DSTAR_HEADER_LENGTH_BYTES + 0U);
   }
 #else
-  serial.writeDStarHeader(header, DSTAR_HEADER_LENGTH_BYTES + 0U);
+  writeHeader(header, DSTAR_HEADER_LENGTH_BYTES + 0U);
 #endif
 
   m_rssiAccum = 0U;
@@ -494,16 +494,60 @@ void CDStarRX::writeRSSIData(unsigned char* data)
     data[12U] = (rssi >> 8) & 0xFFU;
     data[13U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeDStarData(data, DSTAR_DATA_LENGTH_BYTES + 2U);
+    writeData(data, DSTAR_DATA_LENGTH_BYTES + 2U);
   } else {
-    serial.writeDStarData(data, DSTAR_DATA_LENGTH_BYTES + 0U);
+    writeData(data, DSTAR_DATA_LENGTH_BYTES + 0U);
   }
 #else
-  serial.writeDStarData(data, DSTAR_DATA_LENGTH_BYTES + 0U);
+  writeData(data, DSTAR_DATA_LENGTH_BYTES + 0U);
 #endif
 
   m_rssiAccum = 0U;
   m_rssiCount = 0U;
+}
+
+void CDStarRX::writeHeader(const uint8_t* header, uint8_t length)
+{
+  if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dstarEnable)
+    return;
+
+  serial.writeModeData(header, length, MMDVM_DSTAR_HEADER);
+}
+
+void CDStarRX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dstarEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_DSTAR_DATA);
+}
+
+void CDStarRX::writeLost()
+{
+  if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dstarEnable)
+    return;
+
+  serial.writeModeLost(MMDVM_DSTAR_LOST);
+}
+
+void CDStarRX::writeEOT()
+{
+  if (m_modemState != STATE_DSTAR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dstarEnable)
+    return;
+
+  serial.writeModeEOT(MMDVM_DSTAR_EOT);
 }
 
 bool CDStarRX::correlateFrameSync()

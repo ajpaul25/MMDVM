@@ -103,7 +103,7 @@ void CAX25RX::samples(const q15_t* samples, const uint16_t* rssi, uint8_t length
     if (frame.m_fcs != m_lastFCS || m_count > 2U) {
       m_lastFCS = frame.m_fcs;
       m_count   = 0U;
-      serial.writeAX25Data(frame.m_data, frame.m_length - 2U);
+      writeData(frame.m_data, frame.m_length - 2U);
     }
     DEBUG1("Decoder 1 reported");
   }
@@ -113,7 +113,7 @@ void CAX25RX::samples(const q15_t* samples, const uint16_t* rssi, uint8_t length
     if (frame.m_fcs != m_lastFCS || m_count > 2U) {
       m_lastFCS = frame.m_fcs;
       m_count   = 0U;
-      serial.writeAX25Data(frame.m_data, frame.m_length - 2U);
+      writeData(frame.m_data, frame.m_length - 2U);
     }
     DEBUG1("Decoder 2 reported");
   }
@@ -123,7 +123,7 @@ void CAX25RX::samples(const q15_t* samples, const uint16_t* rssi, uint8_t length
     if (frame.m_fcs != m_lastFCS || m_count > 2U) {
       m_lastFCS = frame.m_fcs;
       m_count   = 0U;
-      serial.writeAX25Data(frame.m_data, frame.m_length - 2U);
+      writeData(frame.m_data, frame.m_length - 2U);
     }
     DEBUG1("Decoder 3 reported");
   }
@@ -214,6 +214,27 @@ uint8_t CAX25RX::setConfig(const uint8_t* data, uint16_t length)
 {
   setParams(int8_t(data[28U]) - 128, data[30U], data[31U]);
   return 0;
+}
+
+void CAX25RX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_AX25 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_ax25Enable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_AX25_DATA);
+}
+
+void CAX25RX::writeLost()
+{
+
+}
+
+void CAX25RX::writeEOT()
+{
+
 }
 
 #endif

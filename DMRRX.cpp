@@ -79,5 +79,20 @@ uint8_t CDMRRX::setConfig(const uint8_t* data, uint16_t length)
   return 0;
 }
 
+void CDMRRX::writeData(const uint8_t* data, uint8_t length)
+{
+
+}
+
+void CDMRRX::writeLost()
+{
+
+}
+
+void CDMRRX::writeEOT()
+{
+
+}
+
 #endif
 

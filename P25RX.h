@@ -73,6 +73,10 @@ private:
   void calculateLevels(uint16_t start, uint16_t count);
   void samplesToBits(uint16_t start, uint16_t count, uint8_t* buffer, uint16_t offset, q15_t centre, q15_t threshold);
   void writeRSSILdu(uint8_t* ldu);
+  void writeLdu(const uint8_t* data, uint8_t length);
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
 };
 
 #endif

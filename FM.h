@@ -77,7 +77,7 @@ public:
 
   uint8_t getSpace() const;
 
-  uint8_t writeData(const uint8_t* data, uint16_t length);
+  uint8_t writeError(const uint8_t* data, uint16_t length);
 
   uint8_t processMessage(uint8_t type, const uint8_t* buffer, uint16_t length);
 
@@ -162,6 +162,11 @@ private:
 
   void insertDelay(uint16_t ms);
   void insertSilence(uint16_t ms);
+
+  void writeStatus(const FM_STATE data);
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
 };
 
 #endif

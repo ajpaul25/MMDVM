@@ -191,7 +191,7 @@ void CYSFRX::processData(q15_t sample)
       io.setDecode(false);
       io.setADCDetection(false);
 
-      serial.writeYSFLost();
+      writeLost();
 
       m_state      = YSFRXS_NONE;
       m_endPtr     = NOENDPTR;
@@ -395,16 +395,43 @@ void CYSFRX::writeRSSIData(uint8_t* data)
     data[121U] = (rssi >> 8) & 0xFFU;
     data[122U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeYSFData(data, YSF_FRAME_LENGTH_BYTES + 3U);
+    writeData(data, YSF_FRAME_LENGTH_BYTES + 3U);
   } else {
-    serial.writeYSFData(data, YSF_FRAME_LENGTH_BYTES + 1U);
+    writeData(data, YSF_FRAME_LENGTH_BYTES + 1U);
   }
 #else
-  serial.writeYSFData(data, YSF_FRAME_LENGTH_BYTES + 1U);
+  writeData(data, YSF_FRAME_LENGTH_BYTES + 1U);
 #endif
 
   m_rssiAccum = 0U;
   m_rssiCount = 0U;
+}
+
+void CYSFRX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_YSF && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_ysfEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_YSF_DATA);
+}
+
+void CYSFRX::writeLost()
+{
+  if (m_modemState != STATE_YSF && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_ysfEnable)
+    return;
+
+  serial.writeModeLost(MMDVM_YSF_LOST);
+}
+
+void CYSFRX::writeEOT()
+{
+
 }
 
 #endif

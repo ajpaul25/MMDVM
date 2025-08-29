@@ -196,7 +196,7 @@ bool CDMRDMORX::processSample(q15_t sample, uint16_t rssi)
       if (m_state != DMORXS_NONE) {
         m_syncCount++;
         if (m_syncCount >= MAX_SYNC_LOST_FRAMES) {
-          serial.writeDMRLost(true);
+          writeLost();
           reset();
         }
       }
@@ -209,7 +209,7 @@ bool CDMRDMORX::processSample(q15_t sample, uint16_t rssi)
           frame[0U] = ++m_n;
         }
 
-        serial.writeDMRData(true, frame, DMR_FRAME_LENGTH_BYTES + 1U);
+        writeData(frame, DMR_FRAME_LENGTH_BYTES + 1U);
       } else if (m_state == DMORXS_DATA) {
         if (m_type != 0x00U) {
           frame[0U] = CONTROL_DATA | m_type;
@@ -422,10 +422,37 @@ void CDMRDMORX::writeRSSIData(uint8_t* frame)
   frame[34U] = (avg >> 8) & 0xFFU;
   frame[35U] = (avg >> 0) & 0xFFU;
 
-  serial.writeDMRData(true, frame, DMR_FRAME_LENGTH_BYTES + 3U);
+  writeData(frame, DMR_FRAME_LENGTH_BYTES + 3U);
 #else
-  serial.writeDMRData(true, frame, DMR_FRAME_LENGTH_BYTES + 1U);
+  writeData(frame, DMR_FRAME_LENGTH_BYTES + 1U);
 #endif
+}
+
+void CDMRDMORX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_DMR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dmrEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_DMR_DATA2);
+}
+
+void CDMRDMORX::writeLost()
+{
+  if (m_modemState != STATE_DMR && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_dmrEnable)
+    return;
+
+  serial.writeModeLost(MMDVM_DMR_LOST2);
+}
+
+void CDMRDMORX::writeEOT()
+{
+
 }
 
 uint8_t CDMRDMORX::setConfig(const uint8_t* data, uint16_t length)

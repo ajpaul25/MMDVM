@@ -43,6 +43,9 @@ public:
 private:
   CDMRSlotRX m_slot1RX;
   CDMRSlotRX m_slot2RX;
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
 };
 
 #endif

@@ -80,6 +80,14 @@ private:
   void    viterbiDecode(int* data);
   void    traceBack();
   bool    checksum(const uint8_t* header) const;
+
+  void writeHeader(const uint8_t* data, uint8_t length);
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
+
+
+
 };
 
 #endif

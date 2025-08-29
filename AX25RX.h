@@ -59,6 +59,10 @@ private:
   
   void initRand();
   uint8_t rand();
+
+  void writeData(const uint8_t* data, uint8_t length);
+  void writeLost();
+  void writeEOT();
 };
 
 #endif

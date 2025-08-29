@@ -200,7 +200,7 @@ void CP25RX::processHdr(q15_t sample)
                 samplesToBits(m_hdrStartPtr, P25_HDR_FRAME_LENGTH_SYMBOLS, frame, 8U, m_centreVal, m_thresholdVal);
 
                 frame[0U] = 0x01U;
-                serial.writeP25Hdr(frame, P25_HDR_FRAME_LENGTH_BYTES + 1U);
+                writeData(frame, P25_HDR_FRAME_LENGTH_BYTES + 1U);
             }
             break;
 		case P25_DUID_PDU: {
@@ -212,7 +212,7 @@ void CP25RX::processHdr(q15_t sample)
 				samplesToBits(m_hdrSyncPtr, P25_PDU_HDR_FRAME_LENGTH_SYMBOLS, frame, 8U, m_centreVal, m_thresholdVal);
 
 				frame[0U] = 0x01U;
-				serial.writeP25Hdr(frame, P25_PDU_HDR_FRAME_LENGTH_BYTES + 1U);
+				writeData(frame, P25_PDU_HDR_FRAME_LENGTH_BYTES + 1U);
 			}
 			break;
 		case P25_DUID_TSDU: {
@@ -224,7 +224,7 @@ void CP25RX::processHdr(q15_t sample)
                 samplesToBits(m_hdrStartPtr, P25_TSDU_FRAME_LENGTH_SYMBOLS, frame, 8U, m_centreVal, m_thresholdVal);
 
                 frame[0U] = 0x01U;
-                serial.writeP25Hdr(frame, P25_TSDU_FRAME_LENGTH_BYTES + 1U);
+                writeData(frame, P25_TSDU_FRAME_LENGTH_BYTES + 1U);
             }
             break;
         case P25_DUID_TDU: {
@@ -236,7 +236,7 @@ void CP25RX::processHdr(q15_t sample)
                 samplesToBits(m_hdrStartPtr, P25_TERM_FRAME_LENGTH_SYMBOLS, frame, 8U, m_centreVal, m_thresholdVal);
 
                 frame[0U] = 0x01U;
-                serial.writeP25Hdr(frame, P25_TERM_FRAME_LENGTH_BYTES + 1U);
+                writeData(frame, P25_TERM_FRAME_LENGTH_BYTES + 1U);
             }
             break;
         case P25_DUID_TDULC: {
@@ -248,7 +248,7 @@ void CP25RX::processHdr(q15_t sample)
                 samplesToBits(m_hdrStartPtr, P25_TERMLC_FRAME_LENGTH_SYMBOLS, frame, 8U, m_centreVal, m_thresholdVal);
 
                 frame[0U] = 0x01U;
-                serial.writeP25Hdr(frame, P25_TERMLC_FRAME_LENGTH_BYTES + 1U);
+                writeData(frame, P25_TERMLC_FRAME_LENGTH_BYTES + 1U);
             }
             break;
         default:
@@ -305,7 +305,7 @@ void CP25RX::processLdu(q15_t sample)
       io.setDecode(false);
       io.setADCDetection(false);
 
-      serial.writeP25Lost();
+      writeLost();
 
       m_state      = P25RXS_NONE;
       m_lduEndPtr  = NOENDPTR;
@@ -528,16 +528,54 @@ void CP25RX::writeRSSILdu(uint8_t* ldu)
     ldu[217U] = (rssi >> 8) & 0xFFU;
     ldu[218U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeP25Ldu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 3U);
+    writeLdu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 3U);
   } else {
-    serial.writeP25Ldu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 1U);
+    writeLdu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 1U);
   }
 #else
-  serial.writeP25Ldu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 1U);
+  writeLdu(ldu, P25_LDU_FRAME_LENGTH_BYTES + 1U);
 #endif
 
   m_rssiAccum = 0U;
   m_rssiCount = 0U;
+}
+
+void CP25RX::writeLdu(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_P25 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_p25Enable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_P25_LDU);
+}
+
+void CP25RX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_P25 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_p25Enable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_P25_HDR);
+}
+
+void CP25RX::writeLost()
+{
+  if (m_modemState != STATE_P25 && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_p25Enable)
+    return;
+
+  serial.writeModeLost(MMDVM_P25_LOST);
+}
+
+void CP25RX::writeEOT()
+{
+
 }
 
 #endif

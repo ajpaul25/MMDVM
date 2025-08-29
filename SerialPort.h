@@ -36,52 +36,6 @@ public:
 
   void process();
 
-  //todo: not generic
-#if defined(MODE_DSTAR)
-  void writeDStarHeader(const uint8_t* header, uint8_t length);
-  void writeDStarData(const uint8_t* data, uint8_t length);
-  void writeDStarLost();
-  void writeDStarEOT();
-#endif
-
-#if defined(MODE_DMR)
-  void writeDMRData(bool slot, const uint8_t* data, uint8_t length);
-  void writeDMRLost(bool slot);
-#endif
-
-#if defined(MODE_YSF)
-  void writeYSFData(const uint8_t* data, uint8_t length);
-  void writeYSFLost();
-#endif
-
-#if defined(MODE_P25)
-  void writeP25Hdr(const uint8_t* data, uint8_t length);
-  void writeP25Ldu(const uint8_t* data, uint8_t length);
-  void writeP25Lost();
-#endif
-
-#if defined(MODE_NXDN)
-  void writeNXDNData(const uint8_t* data, uint8_t length);
-  void writeNXDNLost();
-#endif
-
-#if defined(MODE_M17)
-  void writeM17LinkSetup(const uint8_t* data, uint8_t length);
-  void writeM17Stream(const uint8_t* data, uint8_t length);
-  void writeM17Lost();
-  void writeM17EOT();
-#endif
-
-#if defined(MODE_AX25)
-  void writeAX25Data(const uint8_t* data, uint16_t length);
-#endif
-
-#if defined(MODE_FM)
-  void writeFMData(const uint8_t* data, uint16_t length);
-  void writeFMStatus(uint8_t status);
-  void writeFMEOT();
-#endif
-
 #if defined(SERIAL_REPEATER)
   void writeSerialData(const uint8_t* data, uint8_t length);
 #endif
@@ -99,6 +53,10 @@ public:
   void writeDebug(const char* text, int16_t n1, int16_t n2, int16_t n3);
   void writeDebug(const char* text, int16_t n1, int16_t n2, int16_t n3, int16_t n4);
   void writeDebugDump(const uint8_t* data, uint16_t length);
+  void writeMode(const uint8_t* data, uint8_t length, uint8_t modeFunctionId, uint8_t offset = 0);
+  void writeModeData(const uint8_t* data, uint8_t length, uint8_t modeDataId);
+  void writeModeLost(uint8_t modeLostId);
+  void writeModeEOT(uint8_t modeEOTId);
 
 private:
   uint8_t   m_buffer[512U];
@@ -132,7 +90,8 @@ private:
   int     availableForReadInt(uint8_t n);
   int     availableForWriteInt(uint8_t n);
   uint8_t readInt(uint8_t n);
-  void    writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush = false);
+  void writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush = false);
+
 };
 
 #endif

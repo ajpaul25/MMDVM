@@ -191,7 +191,7 @@ void CNXDNRX::processData(q15_t sample)
       io.setDecode(false);
       io.setADCDetection(false);
 
-      serial.writeNXDNLost();
+      writeLost();
 
       m_state      = NXDNRXS_NONE;
       m_endPtr     = NOENDPTR;
@@ -395,16 +395,43 @@ void CNXDNRX::writeRSSIData(uint8_t* data)
     data[49U] = (rssi >> 8) & 0xFFU;
     data[50U] = (rssi >> 0) & 0xFFU;
 
-    serial.writeNXDNData(data, NXDN_FRAME_LENGTH_BYTES + 3U);
+    writeData(data, NXDN_FRAME_LENGTH_BYTES + 3U);
   } else {
-    serial.writeNXDNData(data, NXDN_FRAME_LENGTH_BYTES + 1U);
+    writeData(data, NXDN_FRAME_LENGTH_BYTES + 1U);
   }
 #else
-  serial.writeNXDNData(data, NXDN_FRAME_LENGTH_BYTES + 1U);
+  writeData(data, NXDN_FRAME_LENGTH_BYTES + 1U);
 #endif
 
   m_rssiAccum = 0U;
   m_rssiCount = 0U;
+}
+
+void CNXDNRX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_NXDN && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_nxdnEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_NXDN_DATA);
+}
+
+void CNXDNRX::writeLost()
+{
+  if (m_modemState != STATE_NXDN && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_nxdnEnable)
+    return;
+
+  serial.writeModeLost(MMDVM_NXDN_LOST);
+}
+
+void CNXDNRX::writeEOT()
+{
+
 }
 
 #endif

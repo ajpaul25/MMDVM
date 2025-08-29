@@ -363,7 +363,7 @@ void CFM::process()
       for (uint16_t j = 0U; j < length; j++)
         m_downSampler.getPackedData(serialSamples[j]);
 
-      serial.writeFMData((uint8_t*)serialSamples, length * sizeof(TSamplePairPack));
+      writeData((uint8_t*)serialSamples, length * sizeof(TSamplePairPack));
     }
   }
 }
@@ -373,7 +373,7 @@ uint8_t CFM::processMessage(uint8_t type, const uint8_t* buffer, uint16_t length
   uint8_t err = 2U;
   switch (type) {
     case MMDVM_FM_DATA:
-      err = writeData(buffer, length);
+      err = writeError(buffer, length);
       if (err != 0U)
         DEBUG2("Received invalid FM data", err);
       break;
@@ -704,7 +704,7 @@ void CFM::clock(uint8_t length)
   m_reverseTimer.clock(length);
 
   if (m_statusTimer.isRunning() && m_statusTimer.hasExpired()) {
-    serial.writeFMStatus(m_state);
+    writeStatus(m_state);
     m_statusTimer.start();
   }
 }
@@ -737,7 +737,7 @@ void CFM::listeningStateDuplex(bool validRFSignal, bool validExtSignal)
       io.setADCDetection(true);
 
       m_statusTimer.start();
-      serial.writeFMStatus(m_state);
+      writeStatus(m_state);
     }
   } else if (validExtSignal) {
     if (m_kerchunkTimer.getTimeout() > 0U) {
@@ -762,7 +762,7 @@ void CFM::listeningStateDuplex(bool validRFSignal, bool validExtSignal)
       m_reverseTimer.stop();
 
       m_statusTimer.start();
-      serial.writeFMStatus(m_state);
+      writeStatus(m_state);
     }
   }
 }
@@ -780,7 +780,7 @@ void CFM::listeningStateSimplex(bool validRFSignal, bool validExtSignal)
     m_reverseTimer.stop();
 
     m_statusTimer.start();
-    serial.writeFMStatus(m_state);
+    writeStatus(m_state);
   } else if (validExtSignal) {
     DEBUG1("State to RELAYING_EXT");
     m_state = FS_RELAYING_EXT;
@@ -791,7 +791,7 @@ void CFM::listeningStateSimplex(bool validRFSignal, bool validExtSignal)
     m_reverseTimer.stop();
 
     m_statusTimer.start();
-    serial.writeFMStatus(m_state);
+    writeStatus(m_state);
   }
 }
 
@@ -820,7 +820,7 @@ void CFM::kerchunkRFStateDuplex(bool validSignal)
     m_statusTimer.stop();
     m_needReverse = true;
     if (m_extEnabled)
-      serial.writeFMEOT();
+      writeEOT();
   }
 }
 
@@ -835,7 +835,7 @@ void CFM::relayingRFStateDuplex(bool validSignal)
       m_timeoutTone.start();
 
       if (m_extEnabled)
-        serial.writeFMEOT();
+        writeEOT();
     }
   } else {
     io.setDecode(false);
@@ -846,7 +846,7 @@ void CFM::relayingRFStateDuplex(bool validSignal)
     m_ackDelayTimer.start();
 
     if (m_extEnabled)
-      serial.writeFMEOT();
+      writeEOT();
   }
 
   if (m_callsignTimer.isRunning() && m_callsignTimer.hasExpired()) {
@@ -865,7 +865,7 @@ void CFM::relayingRFStateSimplex(bool validSignal)
       m_timeoutTimer.stop();
 
       if (m_extEnabled)
-        serial.writeFMEOT();
+        writeEOT();
     }
   } else {
     io.setDecode(false);
@@ -876,7 +876,7 @@ void CFM::relayingRFStateSimplex(bool validSignal)
     m_ackDelayTimer.start();
 
     if (m_extEnabled)
-      serial.writeFMEOT();
+      writeEOT();
   }
 }
 
@@ -1249,7 +1249,7 @@ void CFM::linkStateMachine(bool validRFSignal, bool validExtSignal)
       DEBUG1("State to RELAYING_RF");
       m_state = FS_RELAYING_RF;
       m_statusTimer.start();
-      serial.writeFMStatus(m_state);
+      writeStatus(m_state);
     }
 
     m_rfSignal = true;
@@ -1260,7 +1260,7 @@ void CFM::linkStateMachine(bool validRFSignal, bool validExtSignal)
       DEBUG1("State to RELAYING_EXT");
       m_state = FS_RELAYING_EXT;
       m_statusTimer.start();
-      serial.writeFMStatus(m_state);
+      writeStatus(m_state);
     }
 
     insertSilence(50U);
@@ -1281,7 +1281,7 @@ void CFM::linkStateMachine(bool validRFSignal, bool validExtSignal)
     m_rfSignal = false;
 
     if (m_extEnabled)
-      serial.writeFMEOT();
+      writeEOT();
   }
 
   if (!validExtSignal && m_extSignal) {
@@ -1322,11 +1322,51 @@ uint8_t CFM::getSpace() const
   return m_inputExtRB.getSpace() / FM_SERIAL_BLOCK_SIZE_BYTES;
 }
 
-uint8_t CFM::writeData(const uint8_t* data, uint16_t length)
+uint8_t CFM::writeError(const uint8_t* data, uint16_t length)
 {
   //todo check if length is a multiple of 3
   m_inputExtRB.addData(data, length);
   return 0U;
+}
+
+void CFM::writeStatus(const FM_STATE data)
+{
+  if (m_modemState != STATE_FM && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_fmEnable)
+    return;
+
+  uint8_t status[] = {static_cast<uint8_t>(data)};
+
+  serial.writeModeData(status, 1, MMDVM_FM_STATUS);
+}
+
+void CFM::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_FM && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_fmEnable)
+    return;
+
+  serial.writeModeData(data, length, MMDVM_FM_DATA);
+}
+
+void CFM::writeLost()
+{
+
+}
+
+void CFM::writeEOT()
+{
+  if (m_modemState != STATE_FM && m_modemState != STATE_IDLE)
+    return;
+
+  if (!m_fmEnable)
+    return;
+
+  serial.writeModeEOT(MMDVM_FM_EOT);
 }
 
 void CFM::insertDelay(uint16_t ms)
