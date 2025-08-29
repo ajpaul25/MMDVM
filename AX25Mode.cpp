@@ -1,0 +1,32 @@
+
+#include "Config.h"
+
+#if defined(MODE_AX25)
+
+#include "Globals.h"
+#include "AX25Defines.h"
+#include "AX25Mode.h"
+
+CAX25Mode::CAX25Mode(MMDVM_STATE* m) :
+AbstractMode(m)
+{
+    m_idlerx = 0;
+    m_rx = new CAX25RX();
+    m_tx = new CAX25TX();
+    m_calrx = 0;
+    m_caltx = 0;
+    //m_caltx->tx = *m_tx;
+    m_orx = 0;
+    m_otx = 0;
+    m_spacepos = 15;
+    m_spacelen = 1U;
+    m_stateid = STATE_AX25;
+    m_calstateid = 0;
+    //m_filtertaps = {MODE_FILTER_NAME};
+    //m_filterlen = {MODE_FILTER_LENGTH};
+    //m_filterStateSize = {MODE_FILTER_STATE_SIZE};
+
+    filterInit();
+}
+
+#endif
