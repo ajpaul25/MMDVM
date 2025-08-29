@@ -515,7 +515,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       break;
 
     case MMDVM_CAL_DATA:
-      for (int i=0; i<24; i++) //step through all of our mode structs
+      for (int i=0; i<m_mode_length; i++) //step through all of our mode structs
         if( m_mode[i]->caltx )
           err = m_mode[i]->caltx->processMessage( type, buffer, length );
 
@@ -560,7 +560,7 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
 
     default:
       bool success = false;
-      for (int i=0; i<24; i++) //step through all of our mode structs
+      for (int i=0; i<m_mode_length; i++) //step through all of our mode structs
         if(m_mode[i]->tx)
           if (m_modemState == STATE_IDLE || m_mode[i]->condition())
           {

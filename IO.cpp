@@ -287,7 +287,7 @@ void CIO::process()
   pfSamples = samples;
 #endif
 
-    for( int i=0; i<24; i++ )
+    for( int i=0; i<m_mode_length; i++ )
     {
       if( m_mode[i]->rx )
       {
@@ -356,7 +356,7 @@ void CIO::write(MMDVM_STATE mode, q15_t* samples, uint16_t length, const uint8_t
   }
 
   q15_t txLevel = m_cwIdTXLevel;
-  for( int i=0; i<24; i++ )
+  for( int i=0; i<m_mode_length; i++ )
     if( m_mode[i]->tx && m_mode[i]->stateid==mode )
       txLevel = m_mode[i]->txlevel;
 
