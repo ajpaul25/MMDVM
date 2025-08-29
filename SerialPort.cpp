@@ -589,16 +589,6 @@ void CSerialPort::processMessage(uint8_t type, const uint8_t* buffer, uint16_t l
       sendACK(type);
       break;
 
-//todo: not generic
-/*#if !defined(MODE_FM)
-    case MMDVM_FM_PARAMS1:
-    case MMDVM_FM_PARAMS2:
-    case MMDVM_FM_PARAMS3:
-    case MMDVM_FM_PARAMS4:
-      sendACK(type);
-      break;
-#endif*/
-
     case MMDVM_CAL_DATA:
       for (int i=0; i<24; i++) //step through all of our mode structs
         if( m_mode[i]->caltx )
