@@ -100,7 +100,7 @@ void CCalDStarRX::process(q15_t value)
       buffer[3U] = (min >> 8) & 0xFFU;
       buffer[4U] = (min >> 0) & 0xFFU;
 
-      serial.writeCalData(buffer, 5U);
+      writeData(buffer, 5U);
     }
   }
 
@@ -125,7 +125,7 @@ void CCalDStarRX::process(q15_t value)
       buffer[3U] = (min >> 8) & 0xFFU;
       buffer[4U] = (min >> 0) & 0xFFU;
 
-      serial.writeCalData(buffer, 5U);
+      writeData(buffer, 5U);
     }
   }
 }
@@ -133,6 +133,15 @@ void CCalDStarRX::process(q15_t value)
 uint8_t CCalDStarRX::setConfig(const uint8_t* data, uint16_t length)
 {
   return 0;
+}
+
+void CCalDStarRX::writeData(const uint8_t* data, uint8_t length)
+{
+  if (m_modemState != STATE_DSTARCAL)
+    return;
+
+  const uint8_t MMDVM_CAL_DATA     = 0x08U;
+  serial.writeModeData(data, length, MMDVM_CAL_DATA);
 }
 
 #endif

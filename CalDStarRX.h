@@ -39,6 +39,8 @@ private:
   uint32_t m_patternBuffer;
   q15_t    m_rxBuffer[3U * 8U];
   uint8_t  m_ptr;
+  void writeData(const uint8_t* data, uint8_t length);
+
 
   void    process(q15_t value);
 };
