@@ -30,7 +30,14 @@ AbstractMode(m, en)
     m_states[2] = STATE_DMRCAL;
     m_states[3] = STATE_DMRCAL1K;
     m_states[4] = STATE_LFCAL;
+    m_stateNames[0] = "DMR";
+    m_stateNames[1] = "DMR MS 1031 Hz Calibrate";
+    m_stateNames[2] = "DMR Calibrate";
+    m_stateNames[3] = "DMR Calibrate 1k";
+    m_stateNames[4] = "80 Hz Calibrate";
+
     m_conf_en_mask = 0x0200;
+    m_versionCaps = 0x02;
 
     filterInit();
 }

@@ -25,7 +25,9 @@ AbstractMode(m, en)
     m_filterlen = RRC_0_2_FILTER_LEN;
     m_filterStateSize = 70U;
     m_states[0] = STATE_YSF;
+    m_stateNames[0] = "System Fusion";
     m_conf_en_mask = 0x0400;
+    m_versionCaps = 0x04;
 
     filterInit();
 }

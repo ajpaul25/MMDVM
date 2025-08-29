@@ -27,8 +27,10 @@ protected:
     q15_t m_txlevel;
     MMDVM_STATE* m_modemState;
     uint8_t m_states[10];
+    char* m_stateNames[10];
     void filterInit();
-    uint16_t m_conf_en_mask;
+    uint32_t m_conf_en_mask;
+    uint32_t m_versionCaps;
 
 public:
     AbstractMode(MMDVM_STATE* m, bool* en);
@@ -50,6 +52,7 @@ public:
     const uint8_t& filterStateSize = m_filterStateSize;
     const arm_fir_instance_q15& firFilter = m_firFilter;
     const q15_t& txlevel = m_txlevel;
+    const uint32_t& version_caps = m_versionCaps;
 
     bool condition();
     bool ocondition();
@@ -59,7 +62,7 @@ public:
     void setTXLevel(q15_t level,bool txInvert=false);
     bool hasState(MMDVM_STATE state);
     uint8_t setConfig(const uint8_t* data, uint16_t length);
-
+    void getModeStateName(char* name, uint8_t modeStateId);
 
 };
 

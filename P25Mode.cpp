@@ -27,7 +27,10 @@ AbstractMode(m, en)
     m_filterStateSize = 30U;
     m_states[0] = STATE_P25;
     m_states[1] = STATE_P25CAL1K;
+    m_stateNames[0] = "P25";
+    m_stateNames[1] = "P25 1011 Hz Calibrate";
     m_conf_en_mask = 0x0800;
+    m_versionCaps = 0x08;
 
     filterInit();
 }

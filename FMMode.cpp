@@ -32,7 +32,15 @@ AbstractMode(m, en)
     m_states[4] = STATE_FMCAL20K;
     m_states[5] = STATE_FMCAL25K;
     m_states[6] = STATE_FMCAL30K;
+    m_stateNames[0] = "FM";
+    m_stateNames[1] = "FM 10Khz Calibrate";
+    m_stateNames[2] = "FM 12.5Khz Calibrate";
+    m_stateNames[3] = "FM 15Khz Calibrate";
+    m_stateNames[4] = "FM 20Khz Calibrate";
+    m_stateNames[5] = "FM 10Khz Calibrate";
+    m_stateNames[6] = "Mode set to FM 30Khz Calibrate";
     m_conf_en_mask = 0x2000;
+    m_versionCaps = 0x20;
 
     filterInit();
 }

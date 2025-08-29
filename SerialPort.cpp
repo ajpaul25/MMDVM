@@ -26,6 +26,7 @@
 
 #include "SerialPort.h"
 #include "Version.h"
+#include <cstdio>
 
 const uint8_t MMDVM_FRAME_START  = 0xE0U;
 
@@ -169,7 +170,7 @@ void CSerialPort::getStatus()
 
   reply[5U] = 0x00U;
 
-  for(int i=0; i<24; i++)
+  for(int i=0; i<m_mode_length; i++)
   {
     if (m_mode[i]->spacelen > 0)
     {
@@ -195,38 +196,13 @@ void CSerialPort::getVersion()
 
   reply[3U] = PROTOCOL_VERSION;
 
-  //todo: not generic
-  // Return two bytes of mode capabilities
-  reply[4U] = 0x00U;
-#if defined(MODE_DSTAR)
-  reply[4U] |= 0x01U;
-#endif
-#if defined(MODE_DMR)
-  reply[4U] |= 0x02U;
-#endif
-#if defined(MODE_YSF)
-  reply[4U] |= 0x04U;
-#endif
-#if defined(MODE_P25)
-  reply[4U] |= 0x08U;
-#endif
-#if defined(MODE_NXDN)
-  reply[4U] |= 0x10U;
-#endif
-#if defined(MODE_M17)
-  reply[4U] |= 0x20U;
-#endif
-#if defined(MODE_FM)
-  reply[4U] |= 0x40U;
-#endif
-
-  reply[5U] = 0x00U;
-#if defined(MODE_POCSAG)
-  reply[5U] |= 0x01U;
-#endif
-#if defined(MODE_AX25)
-  reply[5U] |= 0x02U;
-#endif
+  uint16_t caps = 0x00;
+  for(int i=0; i<m_mode_length; i++)
+  {
+    caps |= m_mode[i]->version_caps;
+  }
+  reply[4U] = caps & 0xFF;
+  reply[5U] = (caps >> 8) & 0xFF;
 
   // CPU type/manufacturer. 0=Atmel ARM, 1=NXP ARM, 2=St-Micro ARM
   reply[6U] = io.getCPU();
@@ -337,85 +313,33 @@ uint8_t CSerialPort::setMode(const uint8_t* data, uint16_t length)
   return 0U;
 }
 
-//todo: not generic
 void CSerialPort::setMode(MMDVM_STATE modemState)
 {
   switch (modemState) {
-    case STATE_DSTAR:
-      DEBUG1("Mode set to D-Star");
-      break;
-    case STATE_DMR:
-      DEBUG1("Mode set to DMR");
-      break;
-    case STATE_YSF:
-      DEBUG1("Mode set to System Fusion");
-      break;
-    case STATE_P25:
-      DEBUG1("Mode set to P25");
-      break;
-    case STATE_NXDN:
-      DEBUG1("Mode set to NXDN");
-      break;
-    case STATE_M17:
-      DEBUG1("Mode set to M17");
-      break;
-    case STATE_POCSAG:
-      DEBUG1("Mode set to POCSAG");
-      break;
-    case STATE_FM:
-      DEBUG1("Mode set to FM");
-      break;
-    case STATE_DSTARCAL:
-      DEBUG1("Mode set to D-Star Calibrate");
-      break;
-    case STATE_DMRCAL:
-      DEBUG1("Mode set to DMR Calibrate");
-      break;
     case STATE_RSSICAL:
       DEBUG1("Mode set to RSSI Calibrate");
       break;
-    case STATE_LFCAL:
-      DEBUG1("Mode set to 80 Hz Calibrate");
-      break;
-    case STATE_FMCAL10K:
-      DEBUG1("Mode set to FM 10Khz Calibrate");
-      break;
-    case STATE_FMCAL12K:
-      DEBUG1("Mode set to FM 12.5Khz Calibrate");
-      break;
-    case STATE_FMCAL15K:
-      DEBUG1("Mode set to FM 15Khz Calibrate");
-      break;
-    case STATE_FMCAL20K:
-      DEBUG1("Mode set to FM 20Khz Calibrate");
-      break;
-    case STATE_FMCAL25K:
-      DEBUG1("Mode set to FM 10Khz Calibrate");
-      break;
-    case STATE_FMCAL30K:
-      DEBUG1("Mode set to FM 30Khz Calibrate");
-      break;
-    case STATE_P25CAL1K:
-      DEBUG1("Mode set to P25 1011 Hz Calibrate");
-      break;
-    case STATE_DMRDMO1K:
-      DEBUG1("Mode set to DMR MS 1031 Hz Calibrate");
-      break;
-    case STATE_NXDNCAL1K:
-      DEBUG1("Mode set to NXDN 1031 Hz Calibrate");
-      break;
-    case STATE_POCSAGCAL:
-      DEBUG1("Mode set to POCSAG Calibrate");
-      break;
-    case STATE_M17CAL:
-      DEBUG1("Mode set to M17 Calibrate");
-      break;
-    default:        // STATE_IDLE
-      DEBUG1("Mode set to Idle");
+    default:
+      char name[50];
+      bool modeStateFound = false;
+      for( int i=0; i<m_mode_length; i++)
+      {
+        if (m_mode[i]->hasState(modemState) && !modeStateFound)
+        {
+          modeStateFound = true;
+          char debugText[80];
+          char modeStateName[50];
+          m_mode[i]->getModeStateName(modeStateName, modemState);
+          snprintf(debugText, 80, "Mode set to %s", modeStateName);
+          DEBUG1(debugText);
+        }
+      }
+      if(!modeStateFound)
+        DEBUG1("Mode set to Idle");
       break;
   }
 
-  for(int i=0; i<24; i++)
+  for(int i=0; i<m_mode_length; i++)
   {
     if(modemState != m_mode[i]->stateid)
     {
@@ -425,6 +349,7 @@ void CSerialPort::setMode(MMDVM_STATE modemState)
         m_mode[i]->idlerx->reset();
       if (m_mode[i]->orx)
         m_mode[i]->orx->reset();
+//todo - make this generic
 #if defined(MODE_FM)
       if (m_mode[i]->stateid == STATE_FM)
       {

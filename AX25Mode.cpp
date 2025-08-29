@@ -25,9 +25,10 @@ AbstractMode(m,en)
     //m_filtertaps = {MODE_FILTER_NAME};
     //m_filterlen = {MODE_FILTER_LENGTH};
     //m_filterStateSize = {MODE_FILTER_STATE_SIZE};
-    m_states[0] = STATE_P25;
-    m_states[1] = STATE_P25CAL1K;
+    m_states[0] = STATE_AX25;
+    m_stateNames[0] = "AX25";
     m_conf_en_mask = 0x020000;
+    m_versionCaps = 0x0200;
 
     filterInit();
 }

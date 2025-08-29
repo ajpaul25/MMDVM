@@ -74,3 +74,10 @@ uint8_t AbstractMode::setConfig(const uint8_t* data, uint16_t length)
     *m_enabled = (d[0] & m_conf_en_mask) == m_conf_en_mask;
     return 0;
 }
+
+void AbstractMode::getModeStateName(char* name, uint8_t modeStateId)
+{
+    for(int i=0; i<10; i++)
+        if(m_states[i] == modeStateId)
+          name = m_stateNames[i];
+}

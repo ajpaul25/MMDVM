@@ -27,7 +27,10 @@ AbstractMode(m, en)
     //m_filterStateSize = {MODE_FILTER_STATE_SIZE};
     m_states[0] = STATE_POCSAG;
     m_states[1] = STATE_POCSAGCAL;
+    m_stateNames[0] = "POCSAG";
+    m_stateNames[1] = "POCSAG Calibrate";
     m_conf_en_mask = 0x010000;
+    m_versionCaps = 0x0100;
 
     filterInit();
 }

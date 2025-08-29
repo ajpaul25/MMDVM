@@ -28,7 +28,11 @@ AbstractMode(m, en)
     m_filterStateSize = 40U;
     m_states[0] = STATE_DSTAR;
     m_states[1] = STATE_DSTARCAL;
+    m_stateNames[0] = "D-Star";
+    m_stateNames[1] = "D-Star Calibrate";
     m_conf_en_mask = 0x0100;
+    m_versionCaps = 0x01;
+
 
     filterInit();
 }

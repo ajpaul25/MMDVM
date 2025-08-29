@@ -27,7 +27,10 @@ AbstractMode(m, en)
     m_filterStateSize = 70U;
     m_states[0] = STATE_M17;
     m_states[1] = STATE_M17CAL;
+    m_stateNames[0] = "M17";
+    m_stateNames[0] = "M17 Calibrate";
     m_conf_en_mask = 0x4000;
+    m_versionCaps = 0x20;
 
     filterInit();
 }

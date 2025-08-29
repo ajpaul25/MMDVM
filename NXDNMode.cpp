@@ -33,7 +33,10 @@ AbstractMode(m, en)
 #endif
     m_states[0] = STATE_NXDN;
     m_states[1]  = STATE_NXDNCAL1K;
+    m_stateNames[0] = "NXDN";
+    m_stateNames[1] = "NXDN 1031 Hz Calibrate";
     m_conf_en_mask = 0x1000;
+    m_versionCaps = 0x10;
 
     filterInit();
 }
