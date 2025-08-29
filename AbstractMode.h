@@ -29,7 +29,7 @@ protected:
     void filterInit();
 
 public:
-    AbstractMode(MMDVM_STATE* m);
+    AbstractMode(MMDVM_STATE* m, bool* en);
     virtual ~AbstractMode(void);
     InterfaceRX* idlerx = m_idlerx;
     InterfaceRX* rx = m_rx;
@@ -42,7 +42,7 @@ public:
     const uint8_t& spacepos = m_spacepos;
     const uint8_t& stateid = m_stateid;
     const uint8_t& calstateid = m_calstateid;
-    const bool* enabled = m_enabled;
+    bool* enabled = m_enabled;
     const q15_t* filtertaps = m_filtertaps;
     const uint16_t& filterlen = m_filterlen;
     const uint8_t& filterStateSize = m_filterStateSize;

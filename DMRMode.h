@@ -10,7 +10,7 @@
 
 class CDMRMode : public AbstractMode {
 public:
-  CDMRMode(MMDVM_STATE* m);
+  CDMRMode(MMDVM_STATE* m, bool* en);
 
 private:
 

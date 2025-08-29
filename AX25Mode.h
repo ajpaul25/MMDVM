@@ -10,7 +10,7 @@
 
 class CAX25Mode : public AbstractMode {
 public:
-  CAX25Mode(MMDVM_STATE* m);
+  CAX25Mode(MMDVM_STATE* m, bool* en);
 
 private:
 

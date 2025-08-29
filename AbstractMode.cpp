@@ -1,6 +1,6 @@
 #include "AbstractMode.h"
 
-AbstractMode::AbstractMode(MMDVM_STATE* m)
+AbstractMode::AbstractMode(MMDVM_STATE* m, bool* en)
 {
     m_modemState=m;
     //m_idlerx = 0;
@@ -15,7 +15,7 @@ AbstractMode::AbstractMode(MMDVM_STATE* m)
     //m_spacelen = 0;
     //m_stateid = 0;
     //m_calstateid = 0;
-    //m_enabled = 0;
+    m_enabled = en;
     m_filtertaps = {};
     //m_filterlen = 0;
     //m_filterStateSize = 0;

@@ -7,8 +7,8 @@
 #include "AX25Defines.h"
 #include "AX25Mode.h"
 
-CAX25Mode::CAX25Mode(MMDVM_STATE* m) :
-AbstractMode(m)
+CAX25Mode::CAX25Mode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m,en)
 {
     m_idlerx = 0;
     m_rx = new CAX25RX();

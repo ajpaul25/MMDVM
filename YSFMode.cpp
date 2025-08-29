@@ -7,8 +7,8 @@
 #include "YSFDefines.h"
 #include "YSFMode.h"
 
-CYSFMode::CYSFMode(MMDVM_STATE* m) :
-AbstractMode(m)
+CYSFMode::CYSFMode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = new CYSFRX();

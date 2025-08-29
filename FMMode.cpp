@@ -7,8 +7,8 @@
 //#include "FMDefines.h"
 #include "FMMode.h"
 
-CFMMode::CFMMode(MMDVM_STATE* m) :
-AbstractMode(m)
+CFMMode::CFMMode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = 0;

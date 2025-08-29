@@ -59,30 +59,30 @@ void setup()
   serial.start();
   int m=0;
 #if defined(MODE_DSTAR)
-  m_mode[m++] = new CDStarMode(&m_modemState);
+  m_mode[m++] = new CDStarMode(&m_modemState, &m_dstarEnable);
 #endif
 #if defined(MODE_DMR)
-  m_mode[m++] = new CDMRMode(&m_modemState);
+  m_mode[m++] = new CDMRMode(&m_modemState, &m_dmrEnable);
 #endif
 #if defined(MODE_YSF)
-  m_mode[m++] = new CYSFMode(&m_modemState);
+  m_mode[m++] = new CYSFMode(&m_modemState, &m_ysfEnable);
 #endif
 #if defined(MODE_P25)
-  m_mode[m++] = new CP25Mode(&m_modemState);
+  m_mode[m++] = new CP25Mode(&m_modemState, &m_p25Enable);
 #endif
 #if defined(MODE_NXDN)
-  m_mode[m++] = new CNXDNMode(&m_modemState);
+  m_mode[m++] = new CNXDNMode(&m_modemState, &m_nxdnEnable);
 #endif
 #if defined(MODE_M17)
-  m_mode[m++] = new CM17Mode(&m_modemState);
+  m_mode[m++] = new CM17Mode(&m_modemState, &m_m17Enable);
 #endif
 #if defined(MODE_POCSAG)
-  m_mode[m++] = new CPOCSAGMode(&m_modemState);
+  m_mode[m++] = new CPOCSAGMode(&m_modemState, &m_pocsagEnable);
 #endif
 #if defined(MODE_FM)
-  m_mode[m++] = new CFMMode(&m_modemState);
+  m_mode[m++] = new CFMMode(&m_modemState, &m_fmEnable );
 #if defined(MODE_AX25)
-  m_mode[m++] = new CAX25Mode(&m_modemState);
+  m_mode[m++] = new CAX25Mode(&m_modemState, &m_ax25Enable);
 #endif  //MODE_AX25
 #endif  //MODE_FM
   

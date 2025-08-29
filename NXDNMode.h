@@ -10,7 +10,7 @@
 
 class CNXDNMode : public AbstractMode {
 public:
-  CNXDNMode(MMDVM_STATE* m);
+  CNXDNMode(MMDVM_STATE* m, bool* en);
 
 private:
 

@@ -7,8 +7,8 @@
 #include "DMRDefines.h"
 #include "DMRMode.h"
 
-CDMRMode::CDMRMode(MMDVM_STATE* m) :
-AbstractMode(m)
+CDMRMode::CDMRMode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = new CDMRIdleRX();
     m_rx = new CDMRRX();

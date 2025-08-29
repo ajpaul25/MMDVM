@@ -10,7 +10,7 @@
 
 class CYSFMode : public AbstractMode {
 public:
-  CYSFMode(MMDVM_STATE* m);
+  CYSFMode(MMDVM_STATE* m, bool* en);
 
 private:
 

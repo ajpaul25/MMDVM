@@ -10,7 +10,7 @@
 
 class CPOCSAGMode : public AbstractMode {
 public:
-  CPOCSAGMode(MMDVM_STATE* m);
+  CPOCSAGMode(MMDVM_STATE* m, bool* en);
 
 private:
   bool condition();

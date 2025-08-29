@@ -7,8 +7,8 @@
 #include "P25Defines.h"
 #include "P25Mode.h"
 
-CP25Mode::CP25Mode(MMDVM_STATE* m) :
-AbstractMode(m)
+CP25Mode::CP25Mode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = new CP25RX();

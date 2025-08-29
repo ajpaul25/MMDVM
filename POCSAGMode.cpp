@@ -7,8 +7,8 @@
 //#include "POCSAGDefines.h"
 #include "POCSAGMode.h"
 
-CPOCSAGMode::CPOCSAGMode(MMDVM_STATE* m) :
-AbstractMode(m)
+CPOCSAGMode::CPOCSAGMode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = 0;

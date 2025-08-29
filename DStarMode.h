@@ -10,7 +10,7 @@
 
 class CDStarMode : public AbstractMode {
 public:
-  CDStarMode(MMDVM_STATE* m);
+  CDStarMode(MMDVM_STATE* m, bool* en);
 
 private:
 

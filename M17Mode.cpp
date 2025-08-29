@@ -7,8 +7,8 @@
 #include "M17Defines.h"
 #include "M17Mode.h"
 
-CM17Mode::CM17Mode(MMDVM_STATE* m) :
-AbstractMode(m)
+CM17Mode::CM17Mode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = new CM17RX();

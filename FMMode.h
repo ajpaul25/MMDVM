@@ -10,7 +10,7 @@
 
 class CFMMode : public AbstractMode {
 public:
-  CFMMode(MMDVM_STATE* m);
+  CFMMode(MMDVM_STATE* m, bool* en);
 
 private:
   bool calcondition();

@@ -10,7 +10,7 @@
 
 class CM17Mode : public AbstractMode {
 public:
-  CM17Mode(MMDVM_STATE* m);
+  CM17Mode(MMDVM_STATE* m, bool* en);
 
 private:
 

@@ -7,8 +7,8 @@
 #include "DStarDefines.h"
 #include "DStarMode.h"
 
-CDStarMode::CDStarMode(MMDVM_STATE* m) :
-AbstractMode(m)
+CDStarMode::CDStarMode(MMDVM_STATE* m, bool* en) :
+AbstractMode(m, en)
 {
     m_idlerx = 0;
     m_rx = new CDStarRX();

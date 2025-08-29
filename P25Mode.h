@@ -10,7 +10,7 @@
 
 class CP25Mode : public AbstractMode {
 public:
-  CP25Mode(MMDVM_STATE* m);
+  CP25Mode(MMDVM_STATE* m, bool* en);
 
 private:
 
