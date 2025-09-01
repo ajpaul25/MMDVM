@@ -68,7 +68,7 @@ extern "C" {
   }
 }
 
-void rxIOCallback(char* buf)
+void rxIOCallback(char* buf, uint8_t length)
 {
   //debug(buf);
   uint16_t s = buf[0] & 0xFF | (buf[1] & 0xFF) << 8;
@@ -109,7 +109,7 @@ void CIO::startInt()
 
 void CIO::interrupt()
 {
-  debug("-");
+  //debug("-");
   TSample sample = {DC_OFFSET, MARK_NONE};
 
     m_txBuffer.get(sample);

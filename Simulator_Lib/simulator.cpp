@@ -107,7 +107,7 @@ void timerThread()
   		io.interrupt();
 		printAt(screenbuf,1,120,20,50,1);
 		printAt(debugScreenbuf,1,1,40,100,1);
-  		this_thread::sleep_for(std::chrono::milliseconds(200));
+  		this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 }
 
@@ -139,25 +139,25 @@ void initSimulator()
 	printf ("\033[2J");
 }
 
-void initIOSimulator(void(*rxcb)(char*))
+void initIOSimulator(void(*rxcb)(char*,uint8_t))
 {
 #ifdef IO_UDP_PORT
 	thread* t1 = new thread(createUdp,IO_UDP_PORT,&iofd,&ioremaddr,&ioaddrlen,rxcb);
 #endif
 }
 
-void initSerialSimulator(void(*rxcb)(char*))
+void initSerialSimulator(void(*rxcb)(char*,uint8_t))
 {
 #ifdef SERIAL_UDP_PORT
 	thread* t2 = new thread(createUdp,SERIAL_UDP_PORT,&serialfd,&serialremaddr,&serialaddrlen,rxcb);
 #endif
 }
 
-void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*))
+void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*,uint8_t))
 {
 	struct sockaddr_in myaddr;
 	*addrlen = sizeof(*remaddr);
-	int recvlen;
+	uint8_t recvlen;
 	char buf[BUFSIZE];
 
 
@@ -178,9 +178,16 @@ void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrle
 	while(true) {
 			recvlen = recvfrom(*fd, buf, BUFSIZE, 0, (struct sockaddr *)remaddr, addrlen);
 			if (recvlen > 0) {
-					buf[recvlen] = 0;
+					//buf[recvlen++] = '!';
+
+					//char out[10];
+					//for(int i=0; i<recvlen; i++)
+					//{
+					//	snprintf(out,10,"0x%02x",buf[i]);
+					//	debug(out);
+					//}
 					//debug(buf);
-					rxcb(buf);
+					rxcb(buf, recvlen);
 					//serialRXBuffer.put(buf);
 					//m_rxBuffer.put(s);
 					//char message[100];
@@ -193,7 +200,20 @@ void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrle
 
 void sendSerial(char *data, uint8_t length)
 {
-	sendto(serialfd, data, length, 0, (struct sockaddr*)&serialremaddr, serialaddrlen);
+	char d[length*3+1];
+	d[length*3] = 0;
+	for(int i=0; i<length; i++)
+	{
+		char c[3];
+		snprintf(c,3,"%02x",data[i]);
+		d[i*3] = c[0];
+		d[i*3+1] = c[1];
+		d[i*3+2] = ' ';
+	}
+	debug(d);
+	int ret = sendto(serialfd, data, length, 0, (struct sockaddr*)&serialremaddr, serialaddrlen);
+	if(ret==-1)
+	  debug("problem sending");
 }
 
 void sendIO(char *data, uint8_t length)

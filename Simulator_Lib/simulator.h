@@ -103,11 +103,10 @@ struct status
 void setIOStatus(status s[20], uint8_t size);
 
 void initSimulator();
-void initIOSimulator(void(*rxcb)(char*));
-void initSerialSimulator(void(*rxcb)(char*));
+void initIOSimulator(void(*rxcb)(char*,uint8_t));
+void initSerialSimulator(void(*rxcb)(char*,uint8_t));
 
-//void createUdp(int port, int *fd, struct sockaddr_in remaddr);
-void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*));
+void createUdp(int port, int *fd, struct sockaddr_in *remaddr, socklen_t *addrlen, void(*rxcb)(char*,uint8_t));
 
 void sendSerial(char *data, uint8_t length);
 void sendIO(char *data, uint8_t length);

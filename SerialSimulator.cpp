@@ -23,14 +23,20 @@
 
 #if defined(SIMULATOR)
 
-CRingBuffer<TSample>  serialRXBuffer;
+CRingBuffer<uint8_t>  serialRXBuffer(4096);
 
-void rxSerialCallback(char* buf)
+void rxSerialCallback(char* buf, uint8_t length)
 {
-  //debug(buf);
-  uint16_t s = buf[0] & 0xFF | (buf[1] & 0xFF) << 8;
-  TSample rxsamp = {s,0};
-  serialRXBuffer.put(rxsamp);
+  debug("");
+  //char out[1024];
+  for(int i=0; i<length; i++)
+  {
+    //if(buf[i] == '!')
+      //break;
+    //snprintf(out,110,"put 0x%02X",buf[i]);
+    //debug(out);
+    serialRXBuffer.put(buf[i]);
+  }
 }
 
 void CSerialPort::beginInt(uint8_t n, int speed)
@@ -43,9 +49,13 @@ void CSerialPort::beginInt(uint8_t n, int speed)
 
 int CSerialPort::availableForReadInt(uint8_t n)
 {
-  debug("-");
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
-  return false;
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  int ret = serialRXBuffer.getData();
+  //int ret = serialRXBuffer.getSpace() < 370U;
+  char out[10];
+  snprintf(out,10,"%u",ret);
+  debug(out);
+  return ret;
 }
 
 int CSerialPort::availableForWriteInt(uint8_t n)
@@ -57,17 +67,28 @@ int CSerialPort::availableForWriteInt(uint8_t n)
 uint8_t CSerialPort::readInt(uint8_t n)
 {
   debug("-");
-  return 0U;
+  uint8_t s;
+  serialRXBuffer.get(s);
+  return s;
 }
 
 void CSerialPort::writeInt(uint8_t n, const uint8_t* data, uint16_t length, bool flush)
 {
-  char port[128];
-  snprintf(port, 128, "port: %d, data: %d", n, *data);
-  debug(port);
-  char* val;
+  char d[length*3+1];
+  snprintf(d, 128, "port: %d, data: %d, length: %d", n, *data, length);
+  debug(d);
+  char val[length];
+  d[length*3]=0;
   for(int i=0; i<length; i++)
+  {
     val[i] = data[i];
+    char c[3];
+    snprintf(c,3,"%02x",data[i]);
+		d[i*3] = c[0];
+		d[i*3+1] = c[1];
+		d[i*3+2] = ' ';
+  }
+  debug(d);
   sendSerial(val,length);
 }
 
